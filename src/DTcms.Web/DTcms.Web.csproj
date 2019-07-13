@@ -660,6 +660,7 @@
     <Content Include="plugins\feedback\plugin.config" />
     <Content Include="plugins\link\ajax.ashx" />
     <Content Include="plugins\link\plugin.config" />
+    <Content Include="libman.json" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\cuplayer\CuSunV4set.xml" />
     <Content Include="Scripts\cuplayer\CuSunV4set15.xml" />
@@ -824,7 +825,7 @@
     <Content Include="Views\Admin\Channel\Tags_edit.cshtml" />
     <Content Include="Views\Admin\Article\Category_edit.cshtml" />
     <Content Include="Views\Admin\Article\comment_list.cshtml" />
-    <Content Include="Views\Admin\Article\article_edit.cshtml" />
+    <Content Include="Views\Admin\Article\Article_edit.cshtml" />
     <Content Include="Views\Admin\Article\comment_edit.cshtml" />
     <Content Include="Views\Admin\Manager\Role_list.cshtml" />
     <Content Include="Views\Admin\Manager\Manager_edit.cshtml" />

@@ -4,7 +4,7 @@
 
                 Layout = null;
 }
-<%@ Import namespace="DTcms.Common" %>
+@using DTcms.Common
 
 <!DOCTYPE html>
 <html>
@@ -13,10 +13,10 @@
     <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <title>修改收货信息窗口</title>
-    <link href="../skin/default/style.css" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" charset="utf-8" src="../../scripts/jquery/jquery-1.11.2.min.js"></script>
+    <link href="~/Content/admin/skin/default/style.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" charset="utf-8" src="~/scripts/jquery/jquery-1.11.2.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="../../scripts/jquery/PCASClass.js"></script>
-    <script type="text/javascript" charset="utf-8" src="../js/common.js"></script>
+    <script type="text/javascript" charset="utf-8" src="~/Content/admin/js/common.js"></script>
     <script type="text/javascript">
     var api = top.dialog.get(window); //获取窗体对象
     var W = api.data;
