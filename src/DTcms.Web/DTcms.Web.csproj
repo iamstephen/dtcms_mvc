@@ -191,10 +191,15 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Dic.cs" />
+    <Compile Include="Models\Ids.cs" />
     <Compile Include="plugins\msg\bll.cs" />
     <Compile Include="plugins\msg\dal.cs" />
     <Compile Include="plugins\msg\feedback.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="tools\admin_action.ashx.cs">
+      <DependentUpon>admin_action.ashx</DependentUpon>
+    </Compile>
     <Compile Include="tools\admin_ajax.ashx.cs">
       <DependentUpon>admin_ajax.ashx</DependentUpon>
     </Compile>
@@ -882,10 +887,10 @@
     <Content Include="Views\Admin\Dialog\Dialog_group_price.cshtml" />
     <Content Include="Views\Admin\Dialog\Dialog_article_attach.cshtml" />
     <Content Include="Views\Admin\Dialog\Dialog_picture.cshtml" />
+    <Content Include="tools\admin_action.ashx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

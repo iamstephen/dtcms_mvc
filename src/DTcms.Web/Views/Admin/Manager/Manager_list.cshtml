@@ -25,7 +25,7 @@
         <!--导航栏-->
         <div class="location">
             <a href="javascript:history.back(-1);" class="back"><i class="iconfont icon-up"></i><span>返回上一页</span></a>
-            <a href="../center.aspx" class="home"><i class="iconfont icon-home"></i><span>首页</span></a>
+            <a href="/admin/center" class="home"><i class="iconfont icon-home"></i><span>首页</span></a>
             <i class="arrow iconfont icon-arrow-right"></i>
             <span>管理员列表</span>
         </div>
@@ -72,13 +72,13 @@
                             <asp:CheckBox ID="chkId" CssClass="checkall" runat="server" style="vertical-align:middle;" />
                             <asp:HiddenField ID="hidId" Value='<%#Eval("id")%>' runat="server" />
                         </td>
-                        <td><a href="manager_edit.aspx?action=<%#DTEnums.ActionEnum.Edit %>&id=<%#Eval(" id")%>"><%# Eval("user_name") %></a></td>
+                        <td><a href="manager_edit.aspx?action=@DTEnums.ActionEnum.Edit&id=<%#Eval(" id")%>"><%# Eval("user_name") %></a></td>
                         <td><%# Eval("real_name") %></td>
                         <td><%#new DTcms.BLL.manager_role().GetTitle(Convert.ToInt32(Eval("role_id")))%></td>
                         <td><%# Eval("telephone") %></td>
                         <td><%#string.Format("{0:g}",Eval("add_time"))%></td>
                         <td align="center"><%#Eval("is_lock").ToString().Trim() == "0" ? "正常" : "禁用"%></td>
-                        <td align="center"><a href="manager_edit.aspx?action=<%#DTEnums.ActionEnum.Edit %>&id=<%#Eval(" id")%>">修改</a></td>
+                        <td align="center"><a href="manager_edit.aspx?action=@DTEnums.ActionEnum.Edit&id=<%#Eval(" id")%>">修改</a></td>
                     </tr>
                 </ItemTemplate>
                 <FooterTemplate>

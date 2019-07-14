@@ -78,6 +78,43 @@ namespace DTcms.Web.UI
         /// </summary>
         /// <param name="nav_name">菜单名称</param>
         /// <param name="action_type">操作类型</param>
+        public void ChkAdminLevel(HttpContext context,string nav_name, string action_type)
+        {
+            Model.manager model = GetAdminInfo(context);
+            BLL.manager_role bll = new BLL.manager_role();
+            bool result = bll.Exists(model.role_id, nav_name, action_type);
+
+            if (!result)
+            {
+                RedirectToAction("Error", "Admin", new { msg = "您没有管理该页面的权限，请勿非法进入！" });
+            }
+        }
+
+        /// <summary>
+        /// 写入管理日志
+        /// </summary>
+        /// <param name="action_type"></param>
+        /// <param name="remark"></param>
+        /// <returns></returns>
+        public bool AddAdminLog(HttpContext context,string action_type, string remark)
+        {
+            if (sysConfig.logstatus > 0)
+            {
+                Model.manager model = GetAdminInfo(context);
+                int newId = new BLL.manager_log().Add(model.id, model.user_name, action_type, remark);
+                if (newId > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 检查管理员权限
+        /// </summary>
+        /// <param name="nav_name">菜单名称</param>
+        /// <param name="action_type">操作类型</param>
         public void ChkAdminLevel(string nav_name, string action_type)
         {
             Model.manager model = GetAdminInfo();

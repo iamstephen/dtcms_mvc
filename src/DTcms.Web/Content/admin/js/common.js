@@ -5,15 +5,15 @@
  *作者：一些事情
 ====================================*/
 //绑定需要浮动的表头
-$(function(){
+$(function () {
     $(".ltable tr:nth-child(odd)").addClass("odd_bg"); //隔行变色
     $("#floatHead").smartFloat();
-	$(".rule-single-checkbox").ruleSingleCheckbox();
-	$(".rule-multi-checkbox").ruleMultiCheckbox();
-	$(".rule-multi-radio").ruleMultiRadio();
-	$(".rule-single-select").ruleSingleSelect();
-	$(".rule-multi-porp").ruleMultiPorp();
-	$(".rule-date-input").ruleDateInput();
+    $(".rule-single-checkbox").ruleSingleCheckbox();
+    $(".rule-multi-checkbox").ruleMultiCheckbox();
+    $(".rule-multi-radio").ruleMultiRadio();
+    $(".rule-single-select").ruleSingleSelect();
+    $(".rule-multi-porp").ruleMultiPorp();
+    $(".rule-date-input").ruleDateInput();
 });
 //全选取消按钮函数
 function checkAll(chkobj) {
@@ -44,7 +44,7 @@ function checkForFloat(obj, e) {
         (key > 47 && key < 60) ||  //大键盘上的0到9  
         (key == 110 && obj.value.indexOf(".") < 0) || //小键盘上的.而且以前没有输入.  
         (key == 190 && obj.value.indexOf(".") < 0) || //大键盘上的.而且以前没有输入.  
-         key == 8 || key == 9 || key == 46 || key == 37 || key == 39) {
+        key == 8 || key == 9 || key == 46 || key == 37 || key == 39) {
         isOK = true;
     } else {
         if (window.event) { //IE
@@ -52,8 +52,8 @@ function checkForFloat(obj, e) {
         } else { //Firefox 
             e.preventDefault();
         }
-    }  
-    return isOK;  
+    }
+    return isOK;
 }
 //检查短信字数
 function checktxt(obj, txtId) {
@@ -136,7 +136,7 @@ function ShowMaxDialog(tit, url) {
     }).showModal();
 }
 //执行回传函数
-function ExePostBack(objId, objmsg) {
+function ExePostBack(objId, objmsg, callback, callback_para) {
     if ($(".checkall input:checked").size() < 1) {
         parent.dialog({
             title: '提示',
@@ -155,7 +155,8 @@ function ExePostBack(objId, objmsg) {
         content: msg,
         okValue: '确定',
         ok: function () {
-            __doPostBack(objId, '');
+            if (typeof (callback) === "function")
+                callback(callback_para);
         },
         cancelValue: '取消',
         cancel: function () { }
@@ -199,6 +200,44 @@ function ExeNoCheckPostBack(objId, objmsg) {
     }).showModal();
 
     return false;
+}
+//列表页保存
+function btnSave(action, channel_id, channel_name) {
+    var arr = new Array()
+    $(".checkall input").each(function () {
+        arr.push({ id: $(this).val(), Value: $(this).parents(".tbody").find(".sort").val() });
+    })
+    var data = {
+        channel_id: channel_id, channel_name: channel_name, sort_data: JSON.stringify(arr)
+    };
+    var obj = { action: action, data: data };
+    __doPostBack(obj);
+}
+//列表页删除
+function btnDelete(action, channel_id, channel_name, deletip) {
+    var arr = new Array()
+    $(".checkall input:checked").each(function () {
+        arr.push({ id: $(this).val() });
+    });
+    var data = {
+        channel_id: channel_id, channel_name: channel_name, delete_data: JSON.stringify(arr)
+    };
+    var obj = { action: action, data: data };
+    ExePostBack('btnDelete', deletip, __doPostBack, obj);
+}
+//异步请求
+function __doPostBack(obj) {
+    $.ajax({
+        type: "post",
+        url: "/tools/admin_action.ashx?action=" + obj.action,
+        data: obj.data,
+        dataType: "json",
+        success: function (data) {
+            parent.jsprint(data.msg, data.url);
+        }, error: function (data) {
+            parent.jsprint("请求错误", location.href);
+        }
+    });
 }
 //======================以上基于artdialog插件======================
 
@@ -247,37 +286,37 @@ $.fn.initValidform = function () {
 //======================以上基于Validform插件======================
 
 //智能浮动层函数
-$.fn.smartFloat = function() {
-	var position = function(element) {
-		var obj = element.children("div");
-		var top = obj.position().top;
-		var pos = obj.css("position");
-		$(window).scroll(function() {
-			var scrolls = $(this).scrollTop();
-			if (scrolls > top) {
-				obj.width(element.width());
-				element.height(obj.outerHeight());
-				if (window.XMLHttpRequest) {
-					obj.css({
-						position: "fixed",
-						top: 0
-					});	
-				} else {
-					obj.css({
-						top: scrolls
-					});	
-				}
-			}else {
-				obj.css({
-					position: pos,
-					top: top
-				});	
-			}
-		});
-	};
-	return $(this).each(function() {
-		position($(this));						 
-	});
+$.fn.smartFloat = function () {
+    var position = function (element) {
+        var obj = element.children("div");
+        var top = obj.position().top;
+        var pos = obj.css("position");
+        $(window).scroll(function () {
+            var scrolls = $(this).scrollTop();
+            if (scrolls > top) {
+                obj.width(element.width());
+                element.height(obj.outerHeight());
+                if (window.XMLHttpRequest) {
+                    obj.css({
+                        position: "fixed",
+                        top: 0
+                    });
+                } else {
+                    obj.css({
+                        top: scrolls
+                    });
+                }
+            } else {
+                obj.css({
+                    position: pos,
+                    top: top
+                });
+            }
+        });
+    };
+    return $(this).each(function () {
+        position($(this));
+    });
 };
 
 //复选框
@@ -291,9 +330,9 @@ $.fn.ruleSingleCheckbox = function () {
         parentObj.children().hide();
         //添加元素及样式
         var newObj = $('<a href="javascript:;">'
-		+ '<i class="off">否</i>'
-		+ '<i class="on">是</i>'
-		+ '</a>').prependTo(parentObj);
+            + '<i class="off">否</i>'
+            + '<i class="on">是</i>'
+            + '</a>').prependTo(parentObj);
         parentObj.addClass("single-checkbox");
         //判断是否选中
         if (checkObj.prop("checked") == true) {
@@ -328,110 +367,110 @@ $.fn.ruleSingleCheckbox = function () {
 };
 
 //多项复选框
-$.fn.ruleMultiCheckbox = function() {
-	var multiCheckbox = function(parentObj){
-		parentObj.addClass("multi-checkbox"); //添加样式
+$.fn.ruleMultiCheckbox = function () {
+    var multiCheckbox = function (parentObj) {
+        parentObj.addClass("multi-checkbox"); //添加样式
         parentObj.children('.boxwrap').remove(); //防止重复初始化
-		parentObj.children().hide(); //隐藏内容
-		var divObj = $('<div class="boxwrap"></div>').prependTo(parentObj); //前插入一个DIV
-		parentObj.find(":checkbox").each(function(){
-			var indexNum = parentObj.find(":checkbox").index(this); //当前索引
-			var newObj = $('<a href="javascript:;">' + parentObj.find('label').eq(indexNum).text() + '</a>').appendTo(divObj); //查找对应Label创建选项
-			if($(this).prop("checked") == true){
-				newObj.addClass("selected"); //默认选中
-			}
-			//检查控件是否启用
-			if($(this).prop("disabled") == true){
-				newObj.css("cursor","default");
-				return;
-			}
-			//绑定事件
-			$(newObj).click(function(){
-				if($(this).hasClass("selected")){
-					$(this).removeClass("selected");
-					//parentObj.find(':checkbox').eq(indexNum).prop("checked",false);
-				}else{
-					$(this).addClass("selected");
-					//parentObj.find(':checkbox').eq(indexNum).prop("checked",true);
-				}
-				parentObj.find(':checkbox').eq(indexNum).trigger("click"); //触发对应的checkbox的click事件
-				//alert(parentObj.find(':checkbox').eq(indexNum).prop("checked"));
-			});
-		});
-	};
-	return $(this).each(function() {
-		multiCheckbox($(this));						 
-	});
+        parentObj.children().hide(); //隐藏内容
+        var divObj = $('<div class="boxwrap"></div>').prependTo(parentObj); //前插入一个DIV
+        parentObj.find(":checkbox").each(function () {
+            var indexNum = parentObj.find(":checkbox").index(this); //当前索引
+            var newObj = $('<a href="javascript:;">' + parentObj.find('label').eq(indexNum).text() + '</a>').appendTo(divObj); //查找对应Label创建选项
+            if ($(this).prop("checked") == true) {
+                newObj.addClass("selected"); //默认选中
+            }
+            //检查控件是否启用
+            if ($(this).prop("disabled") == true) {
+                newObj.css("cursor", "default");
+                return;
+            }
+            //绑定事件
+            $(newObj).click(function () {
+                if ($(this).hasClass("selected")) {
+                    $(this).removeClass("selected");
+                    //parentObj.find(':checkbox').eq(indexNum).prop("checked",false);
+                } else {
+                    $(this).addClass("selected");
+                    //parentObj.find(':checkbox').eq(indexNum).prop("checked",true);
+                }
+                parentObj.find(':checkbox').eq(indexNum).trigger("click"); //触发对应的checkbox的click事件
+                //alert(parentObj.find(':checkbox').eq(indexNum).prop("checked"));
+            });
+        });
+    };
+    return $(this).each(function () {
+        multiCheckbox($(this));
+    });
 }
 
 //多项选项PROP
-$.fn.ruleMultiPorp = function() {
-	var multiPorp = function(parentObj){
-		parentObj.addClass("multi-porp"); //添加样式
+$.fn.ruleMultiPorp = function () {
+    var multiPorp = function (parentObj) {
+        parentObj.addClass("multi-porp"); //添加样式
         parentObj.children('ul').remove(); //防止重复初始化
-		parentObj.children().hide(); //隐藏内容
-		var divObj = $('<ul></ul>').prependTo(parentObj); //前插入一个DIV
-		parentObj.find(":checkbox").each(function(){
-			var indexNum = parentObj.find(":checkbox").index(this); //当前索引
-			var liObj = $('<li></li>').appendTo(divObj)
-			var newObj = $('<a href="javascript:;">' + parentObj.find('label').eq(indexNum).text() + '</a><i class="iconfont icon-check-mark"></i>').appendTo(liObj); //查找对应Label创建选项
-			if($(this).prop("checked") == true){
-				liObj.addClass("selected"); //默认选中
-			}
-			//检查控件是否启用
-			if($(this).prop("disabled") == true){
-				newObj.css("cursor","default");
-				return;
-			}
-			//绑定事件
-			$(newObj).click(function(){
-				if($(this).parent().hasClass("selected")){
-					$(this).parent().removeClass("selected");
-				}else{
-					$(this).parent().addClass("selected");
-				}
-				parentObj.find(':checkbox').eq(indexNum).trigger("click"); //触发对应的checkbox的click事件
-				//alert(parentObj.find(':checkbox').eq(indexNum).prop("checked"));
-			});
-		});
-	};
-	return $(this).each(function() {
-		multiPorp($(this));						 
-	});
+        parentObj.children().hide(); //隐藏内容
+        var divObj = $('<ul></ul>').prependTo(parentObj); //前插入一个DIV
+        parentObj.find(":checkbox").each(function () {
+            var indexNum = parentObj.find(":checkbox").index(this); //当前索引
+            var liObj = $('<li></li>').appendTo(divObj)
+            var newObj = $('<a href="javascript:;">' + parentObj.find('label').eq(indexNum).text() + '</a><i class="iconfont icon-check-mark"></i>').appendTo(liObj); //查找对应Label创建选项
+            if ($(this).prop("checked") == true) {
+                liObj.addClass("selected"); //默认选中
+            }
+            //检查控件是否启用
+            if ($(this).prop("disabled") == true) {
+                newObj.css("cursor", "default");
+                return;
+            }
+            //绑定事件
+            $(newObj).click(function () {
+                if ($(this).parent().hasClass("selected")) {
+                    $(this).parent().removeClass("selected");
+                } else {
+                    $(this).parent().addClass("selected");
+                }
+                parentObj.find(':checkbox').eq(indexNum).trigger("click"); //触发对应的checkbox的click事件
+                //alert(parentObj.find(':checkbox').eq(indexNum).prop("checked"));
+            });
+        });
+    };
+    return $(this).each(function () {
+        multiPorp($(this));
+    });
 }
 
 //多项单选
-$.fn.ruleMultiRadio = function() {
-	var multiRadio = function(parentObj){
-		parentObj.addClass("multi-radio"); //添加样式
+$.fn.ruleMultiRadio = function () {
+    var multiRadio = function (parentObj) {
+        parentObj.addClass("multi-radio"); //添加样式
         parentObj.children('.boxwrap').remove(); //防止重复初始化
-		parentObj.children().hide(); //隐藏内容
-		var divObj = $('<div class="boxwrap"></div>').prependTo(parentObj); //前插入一个DIV
-		parentObj.find('input[type="radio"]').each(function(){
-			var indexNum = parentObj.find('input[type="radio"]').index(this); //当前索引
-			var newObj = $('<a href="javascript:;">' + parentObj.find('label').eq(indexNum).text() + '</a>').appendTo(divObj); //查找对应Label创建选项
-			if($(this).prop("checked") == true){
-				newObj.addClass("selected"); //默认选中
-			}
-			//检查控件是否启用
-			if($(this).prop("disabled") == true){
-				newObj.css("cursor","default");
-				return;
-			}
-			//绑定事件
-			$(newObj).click(function(){
-				$(this).siblings().removeClass("selected");
-				$(this).addClass("selected");
-				parentObj.find('input[type="radio"]').prop("checked",false);
-				parentObj.find('input[type="radio"]').eq(indexNum).prop("checked",true);
-				parentObj.find('input[type="radio"]').eq(indexNum).trigger("click"); //触发对应的radio的click事件
-				//alert(parentObj.find('input[type="radio"]').eq(indexNum).prop("checked"));
-			});
-		});
-	};
-	return $(this).each(function() {
-		multiRadio($(this));						 
-	});
+        parentObj.children().hide(); //隐藏内容
+        var divObj = $('<div class="boxwrap"></div>').prependTo(parentObj); //前插入一个DIV
+        parentObj.find('input[type="radio"]').each(function () {
+            var indexNum = parentObj.find('input[type="radio"]').index(this); //当前索引
+            var newObj = $('<a href="javascript:;">' + parentObj.find('label').eq(indexNum).text() + '</a>').appendTo(divObj); //查找对应Label创建选项
+            if ($(this).prop("checked") == true) {
+                newObj.addClass("selected"); //默认选中
+            }
+            //检查控件是否启用
+            if ($(this).prop("disabled") == true) {
+                newObj.css("cursor", "default");
+                return;
+            }
+            //绑定事件
+            $(newObj).click(function () {
+                $(this).siblings().removeClass("selected");
+                $(this).addClass("selected");
+                parentObj.find('input[type="radio"]').prop("checked", false);
+                parentObj.find('input[type="radio"]').eq(indexNum).prop("checked", true);
+                parentObj.find('input[type="radio"]').eq(indexNum).trigger("click"); //触发对应的radio的click事件
+                //alert(parentObj.find('input[type="radio"]').eq(indexNum).prop("checked"));
+            });
+        });
+    };
+    return $(this).each(function () {
+        multiRadio($(this));
+    });
 }
 
 //单选下拉框
@@ -494,27 +533,27 @@ $.fn.ruleSingleSelect = function () {
                 itemObj.css("z-index", "1");
                 //显示下拉框
                 itemObj.show();
-                
+
                 //5.0新增判断下拉框上或下呈现
-                if(parentObj.parents('.tab-content').length > 0){
+                if (parentObj.parents('.tab-content').length > 0) {
                     var tabObj = parentObj.parents('.tab-content');
                     //容器高度-下拉框TOP坐标值-容器TOP坐标值
                     var itemBttomVal = tabObj.innerHeight() - itemObj.offset().top + tabObj.offset().top - 12;
-                    if(itemBttomVal < itemObj.height()){
+                    if (itemBttomVal < itemObj.height()) {
                         var itemTopVal = tabObj.innerHeight() - itemBttomVal - 61;
-                        if(itemBttomVal > itemTopVal){
+                        if (itemBttomVal > itemTopVal) {
                             itemObj.children('ul').height(itemBttomVal);
-                        }else{
-                            if(itemTopVal < itemObj.height()){
+                        } else {
+                            if (itemTopVal < itemObj.height()) {
                                 itemObj.children('ul').height(itemTopVal);
                             }
-                            if(!parentObj.hasClass('up')){
+                            if (!parentObj.hasClass('up')) {
                                 parentObj.addClass("up"); //添加样式
                             }
                         }
                     }
                 }
-                
+
             } else {
                 //位于其它无素的上面
                 itemObj.css("z-index", "");
@@ -534,12 +573,12 @@ $.fn.ruleSingleSelect = function () {
 }
 
 //日期控件
-$.fn.ruleDateInput = function() {
-	var dateInput = function(parentObj){
-		parentObj.wrap('<div class="date-input"></div>');
-		parentObj.before('<i class="iconfont icon-date"></i>');
-	};
-	return $(this).each(function() {
-		dateInput($(this));						 
-	});
+$.fn.ruleDateInput = function () {
+    var dateInput = function (parentObj) {
+        parentObj.wrap('<div class="date-input"></div>');
+        parentObj.before('<i class="iconfont icon-date"></i>');
+    };
+    return $(this).each(function () {
+        dateInput($(this));
+    });
 }

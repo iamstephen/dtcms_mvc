@@ -87,3 +87,12 @@ C:\macbck\myProject\Dtcms_mvc\src\DTcms.DBUtility\obj\Debug\DTcms.DBUtility.cspr
 C:\macbck\myProject\Dtcms_mvc\src\DTcms.DBUtility\obj\Debug\DTcms.DBUtility.csproj.CopyComplete
 C:\macbck\myProject\Dtcms_mvc\src\DTcms.DBUtility\obj\Debug\DTcms.DBUtility.dll
 C:\macbck\myProject\Dtcms_mvc\src\DTcms.DBUtility\obj\Debug\DTcms.DBUtility.pdb
+C:\macbck\myProject\Dtcms_mvc\dtcms_mvc\src\DTcms.DBUtility\bin\Debug\DTcms.DBUtility.dll
+C:\macbck\myProject\Dtcms_mvc\dtcms_mvc\src\DTcms.DBUtility\bin\Debug\DTcms.DBUtility.pdb
+C:\macbck\myProject\Dtcms_mvc\dtcms_mvc\src\DTcms.DBUtility\bin\Debug\DTcms.Common.dll
+C:\macbck\myProject\Dtcms_mvc\dtcms_mvc\src\DTcms.DBUtility\bin\Debug\DTcms.Common.pdb
+C:\macbck\myProject\Dtcms_mvc\dtcms_mvc\src\DTcms.DBUtility\obj\Debug\DTcms.DBUtility.csprojAssemblyReference.cache
+C:\macbck\myProject\Dtcms_mvc\dtcms_mvc\src\DTcms.DBUtility\obj\Debug\DTcms.DBUtility.csproj.CoreCompileInputs.cache
+C:\macbck\myProject\Dtcms_mvc\dtcms_mvc\src\DTcms.DBUtility\obj\Debug\DTcms.DBUtility.csproj.CopyComplete
+C:\macbck\myProject\Dtcms_mvc\dtcms_mvc\src\DTcms.DBUtility\obj\Debug\DTcms.DBUtility.dll
+C:\macbck\myProject\Dtcms_mvc\dtcms_mvc\src\DTcms.DBUtility\obj\Debug\DTcms.DBUtility.pdb

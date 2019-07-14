@@ -25,7 +25,7 @@
         <!--导航栏-->
         <div class="location">
             <a href="javascript:history.back(-1);" class="back"><i class="iconfont icon-up"></i><span>返回上一页</span></a>
-            <a href="../center.aspx" class="home"><i class="iconfont icon-home"></i><span>首页</span></a>
+            <a href="/admin/center" class="home"><i class="iconfont icon-home"></i><span>首页</span></a>
             <i class="arrow iconfont icon-arrow-right"></i>
             <a href="manager_list.aspx"><span>管理员</span></a>
             <i class="arrow iconfont icon-arrow-right"></i>
@@ -70,9 +70,9 @@
                             <asp:CheckBox ID="chkId" CssClass="checkall" runat="server" Enabled='<%#bool.Parse((Convert.ToInt32(Eval("is_sys"))==0 ).ToString())%>' style="vertical-align:middle;" />
                             <asp:HiddenField ID="hidId" Value='<%#Eval("id")%>' runat="server" />
                         </td>
-                        <td><a href="role_edit.aspx?action=<%#DTEnums.ActionEnum.Edit %>&id=<%#Eval(" id")%>"><%#Eval("role_name")%></a></td>
+                        <td><a href="role_edit.aspx?action=@DTEnums.ActionEnum.Edit&id=<%#Eval(" id")%>"><%#Eval("role_name")%></a></td>
                         <td><%#GetTypeName( Convert.ToInt32(Eval("role_type")))%></td>
-                        <td align="center"><a href="role_edit.aspx?action=<%#DTEnums.ActionEnum.Edit %>&id=<%#Eval(" id")%>">修改</a></td>
+                        <td align="center"><a href="role_edit.aspx?action=@DTEnums.ActionEnum.Edit&id=<%#Eval(" id")%>">修改</a></td>
                     </tr>
                 </ItemTemplate>
                 <FooterTemplate>

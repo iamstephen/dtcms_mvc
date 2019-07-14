@@ -109,7 +109,7 @@
         <!--导航栏-->
         <div class="location">
             <a href="javascript:history.back(-1);" class="back"><i class="iconfont icon-up"></i><span>返回上一页</span></a>
-            <a href="../center.aspx" class="home"><i class="iconfont icon-home"></i><span>首页</span></a>
+            <a href="/admin/center" class="home"><i class="iconfont icon-home"></i><span>首页</span></a>
             <i class="arrow iconfont icon-arrow-right"></i>
             <span>会员管理</span>
             <i class="arrow iconfont icon-arrow-right"></i>
@@ -172,7 +172,7 @@
                             <input name="hidMobile" type="hidden" value="<%#Eval(" mobile")%>" />
                         </td>
                         <td width="64">
-                            <a class="user-avatar" href="user_edit.aspx?action=<%#DTEnums.ActionEnum.Edit %>&id=<%#Eval(" id")%>
+                            <a class="user-avatar" href="user_edit.aspx?action=@DTEnums.ActionEnum.Edit&id=<%#Eval(" id")%>
                                 ">
                                 <%#Eval("avatar").ToString() != "" ? "<img width=\"64\" height=\"64\" src=\"" + Eval("avatar") + "\" />" : "<i class=\"iconfont icon-user-full\"></i>"%>
                             </a>
@@ -195,7 +195,7 @@
                         <td align="center"><%#Eval("amount")%></td>
                         <td align="center"><%#Eval("point")%></td>
                         <td align="center"><%#GetUserStatus(Convert.ToInt32(Eval("status")))%></td>
-                        <td align="center"><a href="user_edit.aspx?action=<%#DTEnums.ActionEnum.Edit %>&id=<%#Eval(" id")%>">修改</a></td>
+                        <td align="center"><a href="user_edit.aspx?action=@DTEnums.ActionEnum.Edit&id=<%#Eval(" id")%>">修改</a></td>
                     </tr>
                 </ItemTemplate>
                 <FooterTemplate>

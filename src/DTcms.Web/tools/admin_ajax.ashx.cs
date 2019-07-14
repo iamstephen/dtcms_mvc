@@ -438,7 +438,7 @@ namespace DTcms.Web.tools
         private void edit_order_status(HttpContext context)
         {
             //取得管理员登录信息
-            Model.manager adminInfo = new Web.UI.ManagePage().GetAdminInfo();
+            Model.manager adminInfo = new Web.UI.ManagePage().GetAdminInfo(context);
             if (adminInfo == null)
             {
                 context.Response.Write("{\"status\": 0, \"msg\": \"未登录或已超时，请重新登录！\"}");
@@ -1069,7 +1069,7 @@ namespace DTcms.Web.tools
         #region 获取要生成静态的地址============================
         private void get_builder_urls(HttpContext context)
         {
-            int state = get_builder_status();
+            int state = get_builder_status(context);
             if (state == 1)
             {
                 new HtmlBuilder().getpublishsite(context);
@@ -1084,7 +1084,7 @@ namespace DTcms.Web.tools
         #region 生成静态页面====================================
         private void get_builder_html(HttpContext context)
         {
-            int state = get_builder_status();
+            int state = get_builder_status(context);
             if (state == 1)
             {
                 new HtmlBuilder().handleHtml(context);
@@ -1099,10 +1099,10 @@ namespace DTcms.Web.tools
         #endregion
 
         #region 判断是否登陆以及是否开启静态====================
-        private int get_builder_status()
+        private int get_builder_status(HttpContext context)
         {
             //取得管理员登录信息
-            Model.manager adminInfo = new Web.UI.ManagePage().GetAdminInfo();
+            Model.manager adminInfo = new Web.UI.ManagePage().GetAdminInfo(context);
             if (adminInfo == null)
             {
                 return -1;

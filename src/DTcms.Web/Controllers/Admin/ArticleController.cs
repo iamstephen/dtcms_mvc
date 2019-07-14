@@ -199,8 +199,20 @@ namespace DTcms.Web.Controllers.Admin
         #endregion
 
         #region category_list
-        public ActionResult Category_list() {
-            return View();
+        public ActionResult Category_list()
+        {
+            this.channel_id = DTRequest.GetQueryInt("channel_id");
+            this.channel_name = new BLL.site_channel().GetChannelName(this.channel_id); //取得频道名称
+            if (this.channel_id == 0)
+            {
+                return RedirectToAction("Error", "Admin", new { msg = "频道参数不正确！" });
+            }
+            ChkAdminLevel("channel_" + this.channel_name + "_category", DTEnums.ActionEnum.View.ToString()); //检查权限
+            BLL.article_category bll = new BLL.article_category();
+            DataTable dt = bll.GetList(0, this.channel_id);
+            ViewBag.channel_id = channel_id;
+            ViewBag.channel_name = channel_name;
+            return View(dt);
         }
         #endregion
 

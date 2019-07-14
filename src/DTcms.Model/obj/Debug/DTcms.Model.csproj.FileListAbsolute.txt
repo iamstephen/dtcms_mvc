@@ -87,3 +87,12 @@ C:\macbck\myProject\Dtcms_mvc\src\DTcms.Model\obj\Debug\DTcms.Model.csproj.CoreC
 C:\macbck\myProject\Dtcms_mvc\src\DTcms.Model\obj\Debug\DTcms.Model.csproj.CopyComplete
 C:\macbck\myProject\Dtcms_mvc\src\DTcms.Model\obj\Debug\DTcms.Model.dll
 C:\macbck\myProject\Dtcms_mvc\src\DTcms.Model\obj\Debug\DTcms.Model.pdb
+C:\macbck\myProject\Dtcms_mvc\dtcms_mvc\src\DTcms.Model\bin\Debug\DTcms.Model.dll
+C:\macbck\myProject\Dtcms_mvc\dtcms_mvc\src\DTcms.Model\bin\Debug\DTcms.Model.pdb
+C:\macbck\myProject\Dtcms_mvc\dtcms_mvc\src\DTcms.Model\bin\Debug\DTcms.Common.dll
+C:\macbck\myProject\Dtcms_mvc\dtcms_mvc\src\DTcms.Model\bin\Debug\DTcms.Common.pdb
+C:\macbck\myProject\Dtcms_mvc\dtcms_mvc\src\DTcms.Model\obj\Debug\DTcms.Model.csprojAssemblyReference.cache
+C:\macbck\myProject\Dtcms_mvc\dtcms_mvc\src\DTcms.Model\obj\Debug\DTcms.Model.csproj.CoreCompileInputs.cache
+C:\macbck\myProject\Dtcms_mvc\dtcms_mvc\src\DTcms.Model\obj\Debug\DTcms.Model.csproj.CopyComplete
+C:\macbck\myProject\Dtcms_mvc\dtcms_mvc\src\DTcms.Model\obj\Debug\DTcms.Model.dll
+C:\macbck\myProject\Dtcms_mvc\dtcms_mvc\src\DTcms.Model\obj\Debug\DTcms.Model.pdb

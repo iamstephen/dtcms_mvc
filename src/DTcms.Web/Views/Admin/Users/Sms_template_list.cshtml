@@ -27,7 +27,7 @@
         <!--导航栏-->
         <div class="location">
             <a href="javascript:history.back(-1);" class="back"><i class="iconfont icon-up"></i><span>返回上一页</span></a>
-            <a href="../center.aspx" class="home"><i class="iconfont icon-home"></i><span>首页</span></a>
+            <a href="/admin/center" class="home"><i class="iconfont icon-home"></i><span>首页</span></a>
             <i class="arrow iconfont icon-arrow-right"></i>
             <span>会员设置</span>
             <i class="arrow iconfont icon-arrow-right"></i>
@@ -74,9 +74,9 @@
                             <asp:HiddenField ID="hidId" Value='<%#Eval("id")%>' runat="server" />
                         </td>
                         <td><%#Eval("call_index")%></td>
-                        <td><a href="sms_template_edit.aspx?action=<%#DTEnums.ActionEnum.Edit %>&id=<%#Eval(" id")%>"><%#Eval("title")%></a></td>
+                        <td><a href="sms_template_edit.aspx?action=@DTEnums.ActionEnum.Edit&id=<%#Eval(" id")%>"><%#Eval("title")%></a></td>
                         <td align="center"><%#Convert.ToInt32(Eval("is_sys")) == 1 ? "√" : "×"%></td>
-                        <td align="center"><a href="sms_template_edit.aspx?action=<%#DTEnums.ActionEnum.Edit %>&id=<%#Eval(" id")%>">修改</a></td>
+                        <td align="center"><a href="sms_template_edit.aspx?action=@DTEnums.ActionEnum.Edit&id=<%#Eval(" id")%>">修改</a></td>
                     </tr>
                 </ItemTemplate>
                 <FooterTemplate>
