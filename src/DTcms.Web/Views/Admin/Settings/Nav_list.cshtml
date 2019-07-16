@@ -86,7 +86,7 @@
                     <a class="menu-btn"><i class="iconfont icon-more"></i></a>
                     <div class="l-list">
                         <ul class="icon-list">
-                            <li><a href="nav_edit.aspx?action=<%=DTEnums.ActionEnum.Add %>"><i class="iconfont icon-close"></i><span>新增</span></a></li>
+                            <li><a href="nav_edit?action=<%=DTEnums.ActionEnum.Add %>"><i class="iconfont icon-close"></i><span>新增</span></a></li>
                             <li><a id="btnSave" onclick="btnSave()"><i class="iconfont icon-save"></i><span>保存</span></a></li>
                             <li><a href="javascript:;" onclick="checkAll(this);"><i class="iconfont icon-check"></i><span>全选</span></a></li>
                             <li><asp:LinkButton ID="btnDelete" runat="server" OnClientClick="return ExePostBack('btnDelete','本操作会删除本导航及下属子导航，是否继续？');" onclick="btnDelete_Click"><i class="iconfont icon-delete"></i><span>删除</span></asp:LinkButton></li>
@@ -122,7 +122,7 @@
                                         <%#Eval("name")%>
                                     </div>
                                     <div class="col index col-3">
-                                        <a href="nav_edit.aspx?action=@DTEnums.ActionEnum.Edit&id=<%#Eval(" id")%>"><%#Eval("title")%></a>
+                                        <a href="nav_edit?action=@DTEnums.ActionEnum.Edit&id=<%#Eval(" id")%>"><%#Eval("title")%></a>
                                         <%#Eval("link_url").ToString() == "" ? "" : "(链接：" + Eval("link_url") + ")"%>
                                     </div>
                                     <div class="col col-4">
@@ -135,8 +135,8 @@
                                         <asp:TextBox ID="txtSortId" runat="server" Text='<%#Eval("sort_id")%>' CssClass="sort" onkeydown="return checkNumber(event);" />
                                     </div>
                                     <div class="col col-7">
-                                        <a href="nav_edit.aspx?action=@DTEnums.ActionEnum.Add&id=<%#Eval(" id")%>">添子级</a>
-                                        <a href="nav_edit.aspx?action=@DTEnums.ActionEnum.Edit&id=<%#Eval(" id")%>">修改</a>
+                                        <a href="nav_edit?action=@DTEnums.ActionEnum.Add&id=<%#Eval(" id")%>">添子级</a>
+                                        <a href="nav_edit?action=@DTEnums.ActionEnum.Edit&id=<%#Eval(" id")%>">修改</a>
                                     </div>
                                 </div>
                             </li>

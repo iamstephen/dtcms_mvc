@@ -80,7 +80,7 @@
                         <td><%# Convert.ToDecimal(Eval("amount")) > 0 ? "+" + Eval("amount").ToString() : Eval("amount").ToString()%></td>
                         <td><%#Convert.ToInt32(Eval("status")) == 1 ? "已完成(" + string.Format("{0:g}", Eval("complete_time")) + ")" : "未完成"%></td>
                         <td><%#string.Format("{0:g}", Eval("add_time"))%></td>
-                        <td align="center"><a href="recharge_edit.aspx?username=<%#Eval(" user_name")%>">充值</a></td>
+                        <td align="center"><a href="recharge_edit?username=<%#Eval(" user_name")%>">充值</a></td>
                     </tr>
                 </ItemTemplate>
                 <FooterTemplate>

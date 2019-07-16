@@ -39,7 +39,7 @@
                     <a class="menu-btn"><i class="iconfont icon-more"></i></a>
                     <div class="l-list">
                         <ul class="icon-list">
-                            <li><a href="message_edit.aspx?action=<%=DTEnums.ActionEnum.Add %>"><i class="iconfont icon-close"></i><span>发送</span></a></li>
+                            <li><a href="message_edit?action=<%=DTEnums.ActionEnum.Add %>"><i class="iconfont icon-close"></i><span>发送</span></a></li>
                             <li><a href="javascript:;" onclick="checkAll(this);"><i class="iconfont icon-check"></i><span>全选</span></a></li>
                             <li><asp:LinkButton ID="btnDelete" runat="server" OnClientClick="return ExePostBack('btnDelete');" onclick="btnDelete_Click"><i class="iconfont icon-delete"></i><span>删除</span></asp:LinkButton></li>
                         </ul>
@@ -88,7 +88,7 @@
                         <td><%#Eval("title")%></td>
                         <td><%#Convert.ToInt32(Eval("is_read")) == 1 ? "已阅读" : "未阅读"%></td>
                         <td><%#string.Format("{0:g}", Eval("post_time"))%></td>
-                        <td align="center"><a href="message_edit.aspx?action=<%#DTEnums.ActionEnum.View %>&id=<%#Eval(" id")%>">查看</a>
+                        <td align="center"><a href="message_edit?action=<%#DTEnums.ActionEnum.View %>&id=<%#Eval(" id")%>">查看</a>
                     </tr>
                 </ItemTemplate>
                 <FooterTemplate>

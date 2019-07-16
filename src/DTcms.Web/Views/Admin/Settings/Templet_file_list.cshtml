@@ -70,10 +70,10 @@
                             <asp:CheckBox ID="chkId" CssClass="checkall" runat="server" style="vertical-align:middle;" />
                             <asp:HiddenField ID="hideName" runat="server" Value='<%#Eval("name") %>' />
                         </td>
-                        <td><a href="templet_file_edit.aspx?path=<%#Eval(" skinname")%>&filename=<%#Eval("name")%>"><%#Eval("name")%></a></td>
+                        <td><a href="templet_file_edit?path=<%#Eval(" skinname")%>&filename=<%#Eval("name")%>"><%#Eval("name")%></a></td>
                         <td><%#Eval("creationtime")%></td>
                         <td><%#Eval("updatetime")%></td>
-                        <td align="center"><a href="templet_file_edit.aspx?path=<%#Eval(" skinname")%>&filename=<%#Eval("name")%>">编辑</a></td>
+                        <td align="center"><a href="templet_file_edit?path=<%#Eval(" skinname")%>&filename=<%#Eval("name")%>">编辑</a></td>
                     </tr>
                 </ItemTemplate>
                 <FooterTemplate>

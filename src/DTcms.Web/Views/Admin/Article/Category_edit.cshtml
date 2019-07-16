@@ -1,10 +1,8 @@
 ﻿@{
-                /**/
-
-                Layout = null;
+    Layout = null;
 }
 @using DTcms.Common
-
+@model DTcms.Model.article_category
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,7 +30,7 @@
             //初始化上传控件
             $(".upload-img").InitUploader({ sendurl: "../../tools/upload_ajax.ashx", swf: "../../scripts/webuploader/uploader.swf" });
             //初始化编辑器
-            var ue = UE.getEditor('txtContent', {
+            var ue = UE.getEditor('content', {
                 serverUrl: '../../../tools/upload_ajax.ashx',
                 toolbars: [[
                     'fullscreen', 'source', '|', 'undo', 'redo', '|',
@@ -46,15 +44,16 @@
 
     </script>
 </head>
-
 <body class="mainbody">
-    <form id="form1" runat="server">
+    @using (Html.BeginForm("Category_edit", "Article", new {id= DTRequest.GetString("id"),channel_id= DTRequest.GetString("channel_id"), submitAction = DTRequest.GetString("action") }, FormMethod.Post,new {id="form1" }))
+    {
+        @Html.AntiForgeryToken()
         <!--导航栏-->
         <div class="location">
-            <a href="category_list.aspx?channel_id=<%=this.channel_id %>" class="back"><i class="iconfont icon-up"></i><span>返回列表页</span></a>
-            <a href="../center.aspx"><i class="iconfont icon-home"></i><span>首页</span></a>
+            <a href="category_list?channel_id=@ViewBag.channel_id" class="back"><i class="iconfont icon-up"></i><span>返回列表页</span></a>
+            <a href="/admin/center"><i class="iconfont icon-home"></i><span>首页</span></a>
             <i class="arrow iconfont icon-arrow-right"></i>
-            <a href="category_list.aspx?channel_id=<%=this.channel_id %>"><span>栏目类别</span></a>
+            <a href="category_list?channel_id=@ViewBag.channel_id"><span>栏目类别</span></a>
             <i class="arrow iconfont icon-arrow-right"></i>
             <span>编辑类别</span>
         </div>
@@ -77,46 +76,46 @@
                 <dt>所属父类别</dt>
                 <dd>
                     <div class="rule-single-select">
-                        <asp:DropDownList id="ddlParentId" runat="server"></asp:DropDownList>
+                        @Html.DropDownList("parent_id", ViewBag.ddlParentId as List<SelectListItem>)
                     </div>
                 </dd>
             </dl>
             <dl>
                 <dt>排序数字</dt>
                 <dd>
-                    <asp:TextBox ID="txtSortId" runat="server" CssClass="input small" datatype="n" sucmsg=" ">99</asp:TextBox>
+                    <input type="text" id="sort_id" name="sort_id" class="input small" datatype="n" sucmsg=" " value="@Model.sort_id" />
                     <span class="Validform_checktip">*数字，越小越向前</span>
                 </dd>
             </dl>
             <dl>
                 <dt>类别名称</dt>
-                <dd><asp:TextBox ID="txtTitle" runat="server" CssClass="input normal" datatype="*1-100" sucmsg=" "></asp:TextBox> <span class="Validform_checktip">*类别中文名称，100字符内</span></dd>
+                <dd><input type="text" id="title" name="title" class="input normal" datatype="*1-100" sucmsg=" " value="@Model.title" /> <span class="Validform_checktip">*类别中文名称，100字符内</span></dd>
             </dl>
             <dl>
                 <dt>调用别名</dt>
                 <dd>
-                    <asp:TextBox ID="txtCallIndex" runat="server" CssClass="input normal" datatype="/^\s*$|^[a-zA-Z0-9\-\_]{2,50}$/" errormsg="请填写正确的别名" sucmsg=" "></asp:TextBox>
+                    <input name="call_index" type="text" id="call_index" class="input normal" datatype="/^\s*$|^[a-zA-Z0-9\-\_]{2,50}$/" errormsg="请填写正确的别名" sucmsg=" " value="@Model.call_index" />
                     <span class="Validform_checktip">类别的调用别名，只允许字母、数字、下划线</span>
                 </dd>
             </dl>
             <dl>
                 <dt>SEO标题</dt>
                 <dd>
-                    <asp:TextBox ID="txtSeoTitle" runat="server" maxlength="255" CssClass="input normal" datatype="s0-100" sucmsg=" " />
+                    <input name="seo_title" type="text" maxlength="255" id="seo_title" class="input normal" datatype="s0-100" sucmsg=" " value="@Model.seo_title" />
                     <span class="Validform_checktip">255个字符以内</span>
                 </dd>
             </dl>
             <dl>
                 <dt>SEO关健字</dt>
                 <dd>
-                    <asp:TextBox ID="txtSeoKeywords" runat="server" CssClass="input" TextMode="MultiLine"></asp:TextBox>
+                    <textarea name="seo_keywords" rows="2" cols="20" id="seo_keywords" class="input">@Model.seo_keywords</textarea>
                     <span class="Validform_checktip">以“,”逗号区分开，255个字符以内</span>
                 </dd>
             </dl>
             <dl>
                 <dt>SEO描述</dt>
                 <dd>
-                    <asp:TextBox ID="txtSeoDescription" runat="server" CssClass="input" TextMode="MultiLine"></asp:TextBox>
+                    <textarea name="seo_description" rows="2" cols="20" id="seo_description" class="input">@Model.seo_description</textarea>
                     <span class="Validform_checktip">255个字符以内</span>
                 </dd>
             </dl>
@@ -126,33 +125,34 @@
             <dl>
                 <dt>URL链接</dt>
                 <dd>
-                    <asp:TextBox ID="txtLinkUrl" runat="server" maxlength="255" CssClass="input normal" />
+                    <input name="link_url" type="text" maxlength="255" id="link_url" class="input normal" value="@Model.link_url" />
                     <span class="Validform_checktip">填写后直接跳转到该网址</span>
                 </dd>
             </dl>
             <dl>
                 <dt>显示图片</dt>
                 <dd>
-                    <asp:TextBox ID="txtImgUrl" runat="server" CssClass="input normal upload-path" />
+                    <input name="img_url" type="text" id="img_url" class="input normal upload-path" value="@Model.img_url" />
                     <div class="upload-box upload-img"></div>
                 </dd>
             </dl>
             <dl>
                 <dt>类别介绍</dt>
                 <dd>
-                    <textarea id="txtContent" class="editor" runat="server" style="width:100%;height:280px;"></textarea>
+                    <textarea name="content" id="content" class="editor" style="width:100%;height:280px;">@Model.content</textarea>
                 </dd>
             </dl>
+
         </div>
         <!--/内容-->
         <!--工具栏-->
         <div class="page-footer">
             <div class="btn-wrap">
-                <asp:Button ID="btnSubmit" runat="server" Text="提交保存" CssClass="btn" onclick="btnSubmit_Click" />
+                <input type="submit" name="btnSubmit" value="提交保存" id="btnSubmit" class="btn">
                 <input name="btnReturn" type="button" value="返回上一页" class="btn yellow" onclick="javascript:history.back(-1);" />
             </div>
         </div>
         <!--/工具栏-->
-    </form>
+    }
 </body>
 </html>

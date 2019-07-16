@@ -9,6 +9,7 @@ using DTcms.Web.UI;
 using System.Data;
 using System.Text.RegularExpressions;
 using System.Text;
+using DTcms.Model;
 
 namespace DTcms.Web.Controllers.Admin
 {
@@ -25,6 +26,12 @@ namespace DTcms.Web.Controllers.Admin
         protected string property = string.Empty;
         protected string keywords = string.Empty;
         protected string prolistview = string.Empty;
+
+        private string action = DTEnums.ActionEnum.Add.ToString(); //操作类型
+        private int id = 0;
+        protected Model.site_channel channelModel = new Model.site_channel(); //频道实体
+
+
         #region article_list
         // GET: article
         public ActionResult Article_list()
@@ -57,8 +64,8 @@ namespace DTcms.Web.Controllers.Admin
             BLL.article_category bll = new BLL.article_category();
             DataTable dt = bll.GetList(0, _channel_id);
 
-            //this.ddlCategoryId.Items.Clear();
-            //this.ddlCategoryId.Items.Add(new ListItem("所有类别", ""));
+            //ddlCategoryId.Items.Clear();
+            //ddlCategoryId.Items.Add(new ListItem("所有类别", ""));
             //foreach (DataRow dr in dt.Rows)
             //{
             //    string Id = dr["id"].ToString();
@@ -67,13 +74,13 @@ namespace DTcms.Web.Controllers.Admin
 
             //    if (ClassLayer == 1)
             //    {
-            //        this.ddlCategoryId.Items.Add(new ListItem(Title, Id));
+            //        ddlCategoryId.Items.Add(new ListItem(Title, Id));
             //    }
             //    else
             //    {
             //        Title = "├ " + Title;
             //        Title = Utils.StringOfChar(ClassLayer - 1, "　") + Title;
-            //        this.ddlCategoryId.Items.Add(new ListItem(Title, Id));
+            //        ddlCategoryId.Items.Add(new ListItem(Title, Id));
             //    }
             //}
         }
@@ -82,33 +89,33 @@ namespace DTcms.Web.Controllers.Admin
         #region 数据绑定=================================
         private void RptBind(int _channel_id, int _category_id, string _strWhere, string _orderby)
         {
-            this.page = DTRequest.GetQueryInt("page", 1);
-            if (this.category_id > 0)
+            page = DTRequest.GetQueryInt("page", 1);
+            if (category_id > 0)
             {
-                //this.ddlCategoryId.SelectedValue = _category_id.ToString();
+                //ddlCategoryId.SelectedValue = _category_id.ToString();
             }
-            //this.ddlProperty.SelectedValue = this.property;
-            //this.txtKeywords.Text = this.keywords;
+            //ddlProperty.SelectedValue = property;
+            //txtKeywords.Text = keywords;
             //图表或列表显示
             BLL.article bll = new BLL.article();
-            switch (this.prolistview)
+            switch (prolistview)
             {
                 //case "Txt":
-                //    this.rptList2.Visible = false;
-                //    this.rptList1.DataSource = bll.GetList(_channel_id, _category_id, this.pageSize, this.page, _strWhere, _orderby, out this.totalCount);
-                //    this.rptList1.DataBind();
+                //    rptList2.Visible = false;
+                //    rptList1.DataSource = bll.GetList(_channel_id, _category_id, pageSize, page, _strWhere, _orderby, out totalCount);
+                //    rptList1.DataBind();
                 //    break;
                 //default:
-                //    this.rptList1.Visible = false;
-                //    this.rptList2.DataSource = bll.GetList(_channel_id, _category_id, this.pageSize, this.page, _strWhere, _orderby, out this.totalCount);
-                //    this.rptList2.DataBind();
+                //    rptList1.Visible = false;
+                //    rptList2.DataSource = bll.GetList(_channel_id, _category_id, pageSize, page, _strWhere, _orderby, out totalCount);
+                //    rptList2.DataBind();
                 //    break;
             }
             //绑定页码
-            //txtPageNum.Text = this.pageSize.ToString();
+            //txtPageNum.Text = pageSize.ToString();
             string pageUrl = Utils.CombUrlTxt("article_list.aspx", "channel_id={0}&category_id={1}&keywords={2}&property={3}&page={4}",
-                _channel_id.ToString(), _category_id.ToString(), this.keywords, this.property, "__id__");
-            //PageContent.InnerHtml = Utils.OutPageList(this.pageSize, this.page, this.totalCount, pageUrl, 8);
+                _channel_id.ToString(), _category_id.ToString(), keywords, property, "__id__");
+            //PageContent.InnerHtml = Utils.OutPageList(pageSize, page, totalCount, pageUrl, 8);
         }
         #endregion
 
@@ -201,15 +208,15 @@ namespace DTcms.Web.Controllers.Admin
         #region category_list
         public ActionResult Category_list()
         {
-            this.channel_id = DTRequest.GetQueryInt("channel_id");
-            this.channel_name = new BLL.site_channel().GetChannelName(this.channel_id); //取得频道名称
-            if (this.channel_id == 0)
+            channel_id = DTRequest.GetQueryInt("channel_id");
+            channel_name = new BLL.site_channel().GetChannelName(channel_id); //取得频道名称
+            if (channel_id == 0)
             {
                 return RedirectToAction("Error", "Admin", new { msg = "频道参数不正确！" });
             }
-            ChkAdminLevel("channel_" + this.channel_name + "_category", DTEnums.ActionEnum.View.ToString()); //检查权限
+            ChkAdminLevel("channel_" + channel_name + "_category", DTEnums.ActionEnum.View.ToString()); //检查权限
             BLL.article_category bll = new BLL.article_category();
-            DataTable dt = bll.GetList(0, this.channel_id);
+            DataTable dt = bll.GetList(0, channel_id);
             ViewBag.channel_id = channel_id;
             ViewBag.channel_name = channel_name;
             return View(dt);
@@ -219,8 +226,144 @@ namespace DTcms.Web.Controllers.Admin
         #region Category_edit
         public ActionResult Category_edit()
         {
+            string _action = DTRequest.GetQueryString("action");
+            channel_id = DTRequest.GetQueryInt("channel_id");
+            id = DTRequest.GetQueryInt("id");
+
+            if (channel_id == 0)
+            {
+                return RedirectToAction("Error", "Admin", new { msg = "频道参数不正确！" });
+            }
+            channelModel = new BLL.site_channel().GetModel(channel_id); //频道实体
+
+            if (!string.IsNullOrEmpty(_action) && _action == DTEnums.ActionEnum.Edit.ToString())
+            {
+                action = DTEnums.ActionEnum.Edit.ToString();//修改类型
+                if (id == 0)
+                {
+                    return RedirectToAction("Error", "Admin", new { msg = "传输参数不正确！" });
+                }
+                if (!new BLL.article_category().Exists(id))
+                {
+                    return RedirectToAction("Error", "Admin", new { msg = "类别不存在或已被删除！" });
+                }
+            }
+            ChkAdminLevel("channel_" + channelModel.name + "_category", DTEnums.ActionEnum.View.ToString()); //检查权限
+            Category_editTreeBind(channel_id); //绑定类别
+            Model.article_category model = new Model.article_category();
+            if (action == DTEnums.ActionEnum.Edit.ToString()) //修改
+            {
+                BLL.article_category bll = new BLL.article_category();
+                model = bll.GetModel(id);
+                return View(model);
+            }
+            return View(model);
+        }
+        #region 绑定类别=================================
+        private void Category_editTreeBind(int _channel_id)
+        {
+            BLL.article_category bll = new BLL.article_category();
+            DataTable dt = bll.GetList(0, _channel_id);
+
+            List<SelectListItem> list = new List<SelectListItem>();
+            list.Add(new SelectListItem { Text = "无父级分类", Value = "0" });
+            foreach (DataRow dr in dt.Rows)
+            {
+                string Id = dr["id"].ToString();
+                int ClassLayer = int.Parse(dr["class_layer"].ToString());
+                string Title = dr["title"].ToString().Trim();
+
+                if (ClassLayer == 1)
+                {
+                    list.Add(new SelectListItem { Text = Title, Value = Id });
+                }
+                else
+                {
+                    Title = "├ " + Title;
+                    Title = Utils.StringOfChar(ClassLayer - 1, "　") + Title;
+                    list.Add(new SelectListItem { Text = Title, Value = Id });
+                }
+            }
+            ViewBag.ddlParentId = list;
+        }
+        #endregion
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
+        public ActionResult Category_edit(article_category model,string submitAction,int id,int channel_id) {
+            channelModel = new BLL.site_channel().GetModel(channel_id); //频道实体
+            if (ModelState.IsValid) {
+                if (submitAction == DTEnums.ActionEnum.Edit.ToString()) //修改
+                {
+                    ChkAdminLevel("channel_" + channelModel.name + "_category", DTEnums.ActionEnum.Edit.ToString()); //检查权限
+                    if (!Category_editDoEdit(id,model))
+                    {
+                        return RedirectToAction("Error", "Admin", new { msg = "保存过程中发生错误！" });
+                    }
+                    return RedirectToAction("category_list",new { channel_id });
+                }
+                else //添加
+                {
+                    ChkAdminLevel("channel_" + channelModel.name + "_category", DTEnums.ActionEnum.Add.ToString()); //检查权限
+                    if (!Category_editDoAdd(model))
+                    {
+                        return RedirectToAction("Error", "Admin", new { msg = "保存过程中发生错误！" });
+                    }
+                    return RedirectToAction("category_list", new { channel_id });
+                }
+            }
             return View();
         }
+
+        #region 增加操作=================================
+        private bool Category_editDoAdd(article_category model)
+        {
+            try
+            {
+                BLL.article_category bll = new BLL.article_category();
+
+                if (bll.Add(model) > 0)
+                {
+                    AddAdminLog(DTEnums.ActionEnum.Add.ToString(), "添加" + channelModel.name + "频道栏目分类:" + model.title); //记录日志
+                    return true;
+                }
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+            return false;
+        }
+        #endregion
+
+        #region 修改操作=================================
+        private bool Category_editDoEdit(int _id, article_category model)
+        {
+            try
+            {
+                BLL.article_category bll = new BLL.article_category();
+                int parentId = model.parent_id;
+                
+                //如果选择的父ID不是自己,则更改
+                if (parentId != model.id)
+                {
+                    model.parent_id = parentId;
+                }
+
+                if (bll.Update(model))
+                {
+                    AddAdminLog(DTEnums.ActionEnum.Edit.ToString(), "修改" + channelModel.name + "频道栏目分类:" + model.title); //记录日志
+                    return true;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            return false;
+        }
+        #endregion
         #endregion
 
         #region comment_edit

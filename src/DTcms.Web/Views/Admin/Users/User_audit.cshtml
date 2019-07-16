@@ -39,7 +39,7 @@
                     <a class="menu-btn"><i class="iconfont icon-more"></i></a>
                     <div class="l-list">
                         <ul class="icon-list">
-                            <li><a href="user_edit.aspx?action=<%=DTEnums.ActionEnum.Add %>"><i class="iconfont icon-close"></i><span>新增</span></a></li>
+                            <li><a href="user_edit?action=<%=DTEnums.ActionEnum.Add %>"><i class="iconfont icon-close"></i><span>新增</span></a></li>
                             <li><a href="javascript:;" onclick="checkAll(this);"><i class="iconfont icon-check"></i><span>全选</span></a></li>
                             <li><asp:LinkButton ID="btnAudit" runat="server" OnClientClick="return ExePostBack('btnAudit','审核通过后会员正常使用，是否继续？');" onclick="btnAudit_Click"><i class="iconfont icon-survey"></i><span>审核</span></asp:LinkButton></li>
                             <li><asp:LinkButton ID="btnDelete" runat="server" OnClientClick="return ExePostBack('btnDelete');" onclick="btnDelete_Click"><i class="iconfont icon-delete"></i><span>删除</span></asp:LinkButton></li>
@@ -77,7 +77,7 @@
                         </td>
                         <td>
                             <div class="user-box" style="padding-left:0;">
-                                <h4><b><a href="user_edit.aspx?action=@DTEnums.ActionEnum.Edit&id=<%#Eval(" id")%>"><%#Eval("user_name")%></a></b> (昵称：<%#Eval("nick_name")%>)</h4>
+                                <h4><b><a href="user_edit?action=@DTEnums.ActionEnum.Edit&id=<%#Eval(" id")%>"><%#Eval("user_name")%></a></b> (昵称：<%#Eval("nick_name")%>)</h4>
                                 <i>注册时间：<%#string.Format("{0:g}",Eval("reg_time"))%></i>
                             </div>
                         </td>

@@ -104,13 +104,13 @@
                                     @item["id"]
                                 </div>
                                 <div class="col index col-3">
-                                    <a href="category_edit.aspx?action=@DTEnums.ActionEnum.Edit&channel_id=@ViewBag.channel_id&id=@item["id"]">@item["title"]</a>
+                                    <a href="category_edit?action=@DTEnums.ActionEnum.Edit&channel_id=@ViewBag.channel_id&id=@item["id"]">@item["title"]</a>
                                 </div>
                                 <div class="col col-4">
                                     @item["call_index"]
                                 </div>
                                 <div class="col col-5">
-                                    <input type="text" id="txtSortId" value="@item["sort_id"]" class="sort" onkeydown="return checkNumber(event);" />
+                                    <input type="text" value="@item["sort_id"]" class="sort" onkeydown="return checkNumber(event);" />
                                 </div>
                                 <div class="col col-6">
                                     <a href="category_edit?action=@DTEnums.ActionEnum.Add&channel_id=@ViewBag.channel_id&id=@item["id"]">添加子类</a>

@@ -120,10 +120,10 @@
     <form id="form1" runat="server">
         <!--导航栏-->
         <div class="location">
-            <a href="article_list.aspx?channel_id=<%=this.channel_id %>" class="back"><i class="iconfont icon-up"></i><span>返回列表页</span></a>
-            <a href="../center.aspx"><i class="iconfont icon-home"></i><span>首页</span></a>
+            <a href="article_list?channel_id=@ViewBag.channel_id" class="back"><i class="iconfont icon-up"></i><span>返回列表页</span></a>
+            <a href="/admin/center"><i class="iconfont icon-home"></i><span>首页</span></a>
             <i class="arrow iconfont icon-arrow-right"></i>
-            <a href="article_list.aspx?channel_id=<%=this.channel_id %>"><span>内容管理</span></a>
+            <a href="article_list?channel_id=@ViewBag.channel_id"><span>内容管理</span></a>
             <i class="arrow iconfont icon-arrow-right"></i>
             <span>编辑内容</span>
         </div>
