@@ -53,7 +53,7 @@
 </head>
 
 <body class="mainbody">
-    <form id="form1" runat="server">
+    <form id="form1">
         <!--导航栏-->
         <div class="location">
             <a href="javascript:history.back(-1);" class="back"><i class="iconfont icon-up"></i><span>返回上一页</span></a>
@@ -72,7 +72,7 @@
                     <div class="l-list">
                         <ul class="icon-list">
                             <li><a href="category_edit?channel_id=@ViewBag.channel_id&action=@DTEnums.ActionEnum.Add"><i class="iconfont icon-close"></i><span>新增</span></a></li>
-                            <li><a href="javascript:;" id="btnSave" onclick='btnSave("Category_list_btnSave",@ViewBag.channel_id,"@ViewBag.channel_name")'><i class="iconfont icon-save"></i><span>保存</span></a></li>
+                            <li><a href="javascript:;" id="btnSave" ><i class="iconfont icon-save"></i><span>保存</span></a></li>
                             <li><a href="javascript:;" onclick="checkAll(this);"><i class="iconfont icon-check"></i><span>全选</span></a></li>
                             <li><a href="javascript:;" id="btnDelete" onclick='btnDelete("Category_list_btnDelete",@ViewBag.channel_id, "@ViewBag.channel_name","本操作会删除本类别及下属子类别，是否继续？")'><i class="iconfont icon-delete"></i><span>删除</span></a></li>
                         </ul>
@@ -122,7 +122,32 @@
                 </ul>
             </div>
         </div>
-
+        <script>
+            //列表页保存
+            $("#btnSave").click(function () {
+                var arr = new Array()
+                $(".checkall input").each(function () {
+                    arr.push({ id: $(this).val(), Value: $(this).parents(".tbody").find(".sort").val() });
+                })
+                var data = {
+                    channel_id: "@ViewBag.channel_id", channel_name: "@ViewBag.channel_name", sort_data: JSON.stringify(arr)
+                };
+                var obj = { action: "Category_list_btnSave", data: data };
+                __doPostBack(obj);
+            })
+            //列表页删除
+            $("#btnDelete").click(function () {
+                var arr = new Array()
+                $(".checkall input:checked").each(function () {
+                    arr.push({ id: $(this).val() });
+                });
+                var data = {
+                    channel_id: "@ViewBag.channel_id", channel_name: "@ViewBag.channel_name", delete_data: JSON.stringify(arr)
+                };
+                var obj = { action: "Category_list_btnDelete", data: data };
+                ExePostBack('btnDelete', deletip, __doPostBack, obj);
+            })
+        </script>
     </form>
 </body>
 </html>

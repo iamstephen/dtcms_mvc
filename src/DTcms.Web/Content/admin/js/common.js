@@ -201,30 +201,6 @@ function ExeNoCheckPostBack(objId, objmsg) {
 
     return false;
 }
-//列表页保存
-function btnSave(action, channel_id, channel_name) {
-    var arr = new Array()
-    $(".checkall input").each(function () {
-        arr.push({ id: $(this).val(), Value: $(this).parents(".tbody").find(".sort").val() });
-    })
-    var data = {
-        channel_id: channel_id, channel_name: channel_name, sort_data: JSON.stringify(arr)
-    };
-    var obj = { action: action, data: data };
-    __doPostBack(obj);
-}
-//列表页删除
-function btnDelete(action, channel_id, channel_name, deletip) {
-    var arr = new Array()
-    $(".checkall input:checked").each(function () {
-        arr.push({ id: $(this).val() });
-    });
-    var data = {
-        channel_id: channel_id, channel_name: channel_name, delete_data: JSON.stringify(arr)
-    };
-    var obj = { action: action, data: data };
-    ExePostBack('btnDelete', deletip, __doPostBack, obj);
-}
 //异步请求
 function __doPostBack(obj) {
     $.ajax({

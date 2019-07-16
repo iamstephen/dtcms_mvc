@@ -36,7 +36,100 @@ namespace DTcms.Web.tools
                 case "Category_list_btnDelete"://删除类别
                     Category_list_btnDelete(context);
                     break;
+                case "Article_list_btnSave"://文章保存排序
+                    Article_list_btnSave(context);
+                    break;
+                case "Article_list_btnDelete"://删除文章
+                    Article_list_btnDelete(context);
+                    break;
+                case "Article_list_btnAudit"://审核文章
+                    Article_list_btnAudit(context);
+                    break;
             }
+        }
+
+        private void Article_list_btnAudit(HttpContext context)
+        {
+            int channel_id = DTRequest.GetString("channel_id").ToInt();
+            string channel_name = DTRequest.GetString("channel_name");
+            string audit_data = DTRequest.GetString("audit_data");
+
+            string category_id = DTRequest.GetString("category_id");
+            string keywords = DTRequest.GetString("keywords");
+            string property = DTRequest.GetString("property");
+
+            new ManagePage().ChkAdminLevel(context, "channel_" + channel_name + "_list", DTEnums.ActionEnum.Audit.ToString()); //检查权限
+            BLL.article bll = new BLL.article();
+            List<Ids> list = JsonHelper.JSONToObject<List<Ids>>(audit_data);
+            foreach (var item in list)
+            {
+                bll.UpdateField(channel_id, item.id, "status=0");
+            }
+            new ManagePage().AddAdminLog(context, DTEnums.ActionEnum.Audit.ToString(), "审核" + channel_name + "频道内容信息"); //记录日志
+            string url = Utils.CombUrlTxt("article_list", "channel_id={0}&category_id={1}&keywords={2}&property={3}", channel_id.ToString(), category_id, keywords, property);
+            context.Response.Write("{\"status\": 1, \"msg\": \"保存排序成功！\",\"url\":\"" + url + "\"}");
+        }
+
+        private void Article_list_btnDelete(HttpContext context)
+        {
+            int channel_id = DTRequest.GetString("channel_id").ToInt();
+            string channel_name = DTRequest.GetString("channel_name");
+            string delete_data = DTRequest.GetString("delete_data");
+
+            string category_id = DTRequest.GetString("category_id");
+            string keywords = DTRequest.GetString("keywords");
+            string property = DTRequest.GetString("property");
+
+            new ManagePage().ChkAdminLevel(context, "channel_" + channel_name + "_list", DTEnums.ActionEnum.Delete.ToString()); //检查权限
+            int sucCount = 0; //成功数量
+            int errorCount = 0; //失败数量
+            BLL.article bll = new BLL.article();
+            List<Ids> list = JsonHelper.JSONToObject<List<Ids>>(delete_data);
+            foreach (var item in list)
+            {
+                if (bll.Delete(channel_id, item.id))
+                {
+                    sucCount++;
+                }
+                else
+                {
+                    errorCount++;
+                }
+            }
+            new ManagePage().AddAdminLog(context, DTEnums.ActionEnum.Edit.ToString(), "删除" + channel_name + "频道内容成功" + sucCount + "条，失败" + errorCount + "条"); //记录日志
+
+            string url = Utils.CombUrlTxt("article_list", "channel_id={0}&category_id={1}&keywords={2}&property={3}", channel_id.ToString(), category_id, keywords, property);
+            string msg = "删除成功" + sucCount + "条，失败" + errorCount + "条！";
+            context.Response.Write("{\"status\": 1, \"msg\": \"" + msg + "\",\"url\":\"" + url + "\"}");
+        }
+
+        private void Article_list_btnSave(HttpContext context)
+        {
+            int channel_id = DTRequest.GetString("channel_id").ToInt();
+            string channel_name = DTRequest.GetString("channel_name");
+            string sort_data = DTRequest.GetString("sort_data");
+
+            string category_id = DTRequest.GetString("category_id");
+            string keywords = DTRequest.GetString("keywords");
+            string property = DTRequest.GetString("property");
+
+            new ManagePage().ChkAdminLevel(context, "channel_" + channel_name + "_list", DTEnums.ActionEnum.Edit.ToString()); //检查权限
+            BLL.article bll = new BLL.article();
+            List<Dic> list = JsonHelper.JSONToObject<List<Dic>>(sort_data);
+
+            foreach (var item in list)
+            {
+                int id = item.id;
+                int sortId;
+                if (!int.TryParse(item.value, out sortId))
+                {
+                    sortId = 99;
+                }
+                bll.UpdateField(channel_id, id, "sort_id=" + sortId.ToString());
+            }
+            new ManagePage().AddAdminLog(context, DTEnums.ActionEnum.Edit.ToString(), "保存" + channel_name + "频道内容排序"); //记录日志
+            string url = Utils.CombUrlTxt("article_list", "channel_id={0}&category_id={1}&keywords={2}&property={3}", channel_id.ToString(), category_id, keywords, property);
+            context.Response.Write("{\"status\": 1, \"msg\": \"保存排序成功！\",\"url\":\"" + url + "\"}");
         }
 
         //删除类别
@@ -46,7 +139,7 @@ namespace DTcms.Web.tools
             string channel_name = DTRequest.GetString("channel_name");
             string delete_data = DTRequest.GetString("delete_data");
 
-            new ManagePage().ChkAdminLevel(context,"channel_" + channel_name + "_category", DTEnums.ActionEnum.Delete.ToString()); //检查权限
+            new ManagePage().ChkAdminLevel(context, "channel_" + channel_name + "_category", DTEnums.ActionEnum.Delete.ToString()); //检查权限
             BLL.article_category bll = new BLL.article_category();
 
             List<Ids> list = JsonHelper.JSONToObject<List<Ids>>(delete_data);
@@ -54,7 +147,7 @@ namespace DTcms.Web.tools
             {
                 bll.Delete(item.id);
             }
-            new ManagePage().AddAdminLog(DTEnums.ActionEnum.Edit.ToString(), "删除" + channel_name + "频道栏目分类数据"); //记录日志
+            new ManagePage().AddAdminLog(context, DTEnums.ActionEnum.Edit.ToString(), "删除" + channel_name + "频道栏目分类数据"); //记录日志
             string url = Utils.CombUrlTxt("category_list", "channel_id={0}", channel_id.ToString());
             context.Response.Write("{\"status\": 1, \"msg\": \"删除数据成功！\",\"url\":\"" + url + "\"}");
         }
@@ -68,7 +161,7 @@ namespace DTcms.Web.tools
 
             new ManagePage().ChkAdminLevel(context, "channel_" + channel_name + "_category", DTEnums.ActionEnum.Edit.ToString()); //检查权限
             BLL.article_category bll = new BLL.article_category();
-            
+
             List<Dic> list = JsonHelper.JSONToObject<List<Dic>>(sort_data);
 
             foreach (var item in list)
@@ -81,9 +174,9 @@ namespace DTcms.Web.tools
                 }
                 bll.UpdateField(id, "sort_id=" + sortId.ToString());
             }
-            new ManagePage().AddAdminLog(context,DTEnums.ActionEnum.Edit.ToString(), "保存" + channel_name + "频道栏目分类排序"); //记录日志
+            new ManagePage().AddAdminLog(context, DTEnums.ActionEnum.Edit.ToString(), "保存" + channel_name + "频道栏目分类排序"); //记录日志
             string url = Utils.CombUrlTxt("category_list", "channel_id={0}", channel_id.ToString());
-            context.Response.Write("{\"status\": 1, \"msg\": \"保存排序成功！\",\"url\":\""+url+"\"}");
+            context.Response.Write("{\"status\": 1, \"msg\": \"保存排序成功！\",\"url\":\"" + url + "\"}");
         }
 
         public bool IsReusable

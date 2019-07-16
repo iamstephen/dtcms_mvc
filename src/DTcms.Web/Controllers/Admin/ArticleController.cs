@@ -50,44 +50,60 @@ namespace DTcms.Web.Controllers.Admin
             prolistview = Utils.GetCookie("article_list_view"); //显示方式
 
             ChkAdminLevel("channel_" + channel_name + "_list", DTEnums.ActionEnum.View.ToString()); //检查权限
-            TreeBind(channel_id); //绑定类别
-            RptBind(channel_id, category_id, "id>0" + CombSqlTxt(keywords, property), "sort_id asc,add_time desc,id desc");
+            Article_listTreeBind(channel_id, category_id); //绑定类别
+            Article_listPropertyBind(channel_id, property); //绑定类别
+            Article_listRptBind(channel_id, category_id, "id>0" + CombSqlTxt(keywords, property), "sort_id asc,add_time desc,id desc");
 
             ViewBag.channel_id = channel_id;
-
+            ViewBag.channel_name = channel_name;
             return View();
         }
 
+        private void Article_listPropertyBind(int channel_id, string property)
+        {
+            Dictionary<string, string> list = new Dictionary<string, string>();
+            list.Add("待审核", "isLock");
+            list.Add("已审核", "unIsLock");
+            list.Add("可评论", "isMsg");
+            list.Add("置顶", "isTop");
+            list.Add("推荐", "isRed");
+            list.Add("热门", "isHot");
+            list.Add("幻灯片", "isSlide");
+            SelectList sl = new SelectList(list, "value", "key", property);
+            ViewBag.ddlProperty = sl;
+        }
+
         #region 绑定类别=================================
-        private void TreeBind(int _channel_id)
+        private void Article_listTreeBind(int _channel_id,int category_id)
         {
             BLL.article_category bll = new BLL.article_category();
             DataTable dt = bll.GetList(0, _channel_id);
 
-            //ddlCategoryId.Items.Clear();
-            //ddlCategoryId.Items.Add(new ListItem("所有类别", ""));
-            //foreach (DataRow dr in dt.Rows)
-            //{
-            //    string Id = dr["id"].ToString();
-            //    int ClassLayer = int.Parse(dr["class_layer"].ToString());
-            //    string Title = dr["title"].ToString().Trim();
+            List<article_category> list = new List<article_category>();
+            foreach (DataRow dr in dt.Rows)
+            {
+                int Id = dr["id"].ToInt();
+                int ClassLayer = int.Parse(dr["class_layer"].ToString());
+                string Title = dr["title"].ToString().Trim();
 
-            //    if (ClassLayer == 1)
-            //    {
-            //        ddlCategoryId.Items.Add(new ListItem(Title, Id));
-            //    }
-            //    else
-            //    {
-            //        Title = "├ " + Title;
-            //        Title = Utils.StringOfChar(ClassLayer - 1, "　") + Title;
-            //        ddlCategoryId.Items.Add(new ListItem(Title, Id));
-            //    }
-            //}
+                if (ClassLayer == 1)
+                {
+                    list.Add(new article_category { id = Id, title = Title });
+                }
+                else
+                {
+                    Title = "├ " + Title;
+                    Title = Utils.StringOfChar(ClassLayer - 1, "　") + Title;
+                    list.Add(new article_category { id = Id, title = Title });
+                }
+            }
+            SelectList sl = new SelectList(list, "id", "title", category_id);
+            ViewBag.ddlCategoryId = sl;
         }
         #endregion
 
         #region 数据绑定=================================
-        private void RptBind(int _channel_id, int _category_id, string _strWhere, string _orderby)
+        private void Article_listRptBind(int _channel_id, int _category_id, string _strWhere, string _orderby)
         {
             page = DTRequest.GetQueryInt("page", 1);
             if (category_id > 0)

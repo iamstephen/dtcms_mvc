@@ -76,7 +76,7 @@
                 <dt>所属父类别</dt>
                 <dd>
                     <div class="rule-single-select">
-                        @Html.DropDownList("parent_id", ViewBag.ddlParentId as List<SelectListItem>)
+                        @Html.DropDownListFor(m=>m.parent_id, ViewBag.ddlParentId as List<SelectListItem>)
                     </div>
                 </dd>
             </dl>

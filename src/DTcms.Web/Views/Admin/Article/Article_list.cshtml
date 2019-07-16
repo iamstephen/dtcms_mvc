@@ -52,34 +52,26 @@
                     <div class="l-list">
                         <ul class="icon-list">
                             <li><a href="article_edit?channel_id=@ViewBag.channel_id&action=@DTEnums.ActionEnum.Add"><i class="iconfont icon-close"></i><span>新增</span></a></li>
-                            <li><a id="btnSave" href=""><i class="iconfont icon-save"></i><span>保存</span></a></li>
-                            <li><a id="btnAudit" onclick="return ExePostBack('btnAudit','审核后前台将显示该信息，确定继续吗？');"><i class="iconfont icon-survey"></i><span>审核</span></a></li>
+                            <li><a href="javascript:;" id="btnSave"><i class="iconfont icon-save"></i><span>保存</span></a></li>
+                            <li><a href="javascript:;" id="btnAudit"><i class="iconfont icon-survey"></i><span>审核</span></a></li>
                             <li><a href="javascript:;" onclick="checkAll(this);"><i class="iconfont icon-check"></i><span>全选</span></a></li>
-                            <li><a id="btnDelete" onclick="return ExePostBack('btnDelete','删除则无法恢复，是否继续？');"><i class="iconfont icon-delete"></i><span>删除</span></a></li>
+                            <li><a href="javascript:;" id="btnDelete" onclick='btnDelete("Article_list_btnDelete",@ViewBag.channel_id, "@ViewBag.channel_name","删除则无法恢复，是否继续？")'><i class="iconfont icon-delete"></i><span>删除</span></a></li>
                         </ul>
                         <div class="menu-list">
                             <div class="rule-single-select">
-                                <asp:DropDownList ID="ddlCategoryId" runat="server" AutoPostBack="True" onselectedindexchanged="ddlCategoryId_SelectedIndexChanged"></asp:DropDownList>
+                                @Html.DropDownList("title", ViewBag.ddlCategoryId as SelectList, "所有类别")
                             </div>
                             <div class="rule-single-select">
-                                <asp:DropDownList ID="ddlProperty" runat="server" AutoPostBack="True" onselectedindexchanged="ddlProperty_SelectedIndexChanged">
-                                    <asp:ListItem Value="" Selected="True">所有属性</asp:ListItem>
-                                    <asp:ListItem Value="isLock">待审核</asp:ListItem>
-                                    <asp:ListItem Value="unIsLock">已审核</asp:ListItem>
-                                    <asp:ListItem Value="isMsg">可评论</asp:ListItem>
-                                    <asp:ListItem Value="isTop">置顶</asp:ListItem>
-                                    <asp:ListItem Value="isRed">推荐</asp:ListItem>
-                                    <asp:ListItem Value="isHot">热门</asp:ListItem>
-                                    <asp:ListItem Value="isSlide">幻灯片</asp:ListItem>
-                                </asp:DropDownList>
+                                
+                                @Html.DropDownList("key", ViewBag.ddlProperty as SelectList, "所有属性",new {id= "ddlProperty",name= "ddlProperty" })
                             </div>
                         </div>
                     </div>
                     <div class="r-list">
-                        <asp:TextBox ID="txtKeywords" runat="server" CssClass="keyword" />
-                        <asp:LinkButton ID="lbtnSearch" runat="server" CssClass="btn-search" onclick="btnSearch_Click"><i class="iconfont icon-search"></i></asp:LinkButton>
-                        <asp:LinkButton ID="lbtnViewImg" runat="server" CssClass="img-view" onclick="lbtnViewImg_Click" ToolTip="图像列表视图"><i class="iconfont icon-list-img"></i></asp:LinkButton>
-                        <asp:LinkButton ID="lbtnViewTxt" runat="server" CssClass="txt-view" onclick="lbtnViewTxt_Click" ToolTip="文字列表视图"><i class="iconfont icon-list-txt"></i></asp:LinkButton>
+                        <input name="txtKeywords" type="text" id="txtKeywords" class="keyword">
+                        <a id="lbtnSearch" class="btn-search" href="javascript:__doPostBack('lbtnSearch','')"><i class="iconfont icon-search"></i></a>
+                        <a id="lbtnViewImg" title="图像列表视图" class="img-view" href="javascript:__doPostBack('lbtnViewImg','')"><i class="iconfont icon-list-img"></i></a>
+                        <a id="lbtnViewTxt" title="文字列表视图" class="txt-view" href="javascript:__doPostBack('lbtnViewTxt','')"><i class="iconfont icon-list-txt"></i></a>
                     </div>
                 </div>
             </div>
@@ -184,7 +176,44 @@
             <div id="PageContent" runat="server" class="default"></div>
         </div>
         <!--/内容底部-->
-
+        <script>
+            //列表页保存
+            $("#btnSave").click(function () {
+                var arr = new Array()
+                $(".checkall input").each(function () {
+                    arr.push({ id: $(this).val(), Value: $(this).parents(".tbody").find(".sort").val() });
+                })
+                var data = {
+                    channel_id: "@ViewBag.channel_id", category_id: "@DTRequest.GetQueryString("category_id")", keywords: "@DTRequest.GetQueryString("keywords")", property:"@DTRequest.GetQueryString("property")", channel_name: "@ViewBag.channel_name", sort_data: JSON.stringify(arr)
+                };
+                var obj = { action: "Article_list_btnSave", data: data };
+                __doPostBack(obj);
+            })
+            //列表页删除
+            $("#btnDelete").click(function () {
+                var arr = new Array()
+                $(".checkall input:checked").each(function () {
+                    arr.push({ id: $(this).val() });
+                });
+                var data = {
+                    channel_id: "@ViewBag.channel_id", category_id: "@DTRequest.GetQueryString("category_id")", keywords: "@DTRequest.GetQueryString("keywords")", property:"@DTRequest.GetQueryString("property")",channel_name: "@ViewBag.channel_name", delete_data: JSON.stringify(arr)
+                };
+                var obj = { action: "Article_list_btnDelete", data: data };
+                ExePostBack('btnDelete', "删除则无法恢复，是否继续？", __doPostBack, obj);
+            })
+            //列表页审核
+            $("#btnAudit").click(function () {
+                var arr = new Array()
+                $(".checkall input:checked").each(function () {
+                    arr.push({ id: $(this).val() });
+                });
+                var data = {
+                    channel_id: "@ViewBag.channel_id", category_id: "@DTRequest.GetQueryString("category_id")", keywords: "@DTRequest.GetQueryString("keywords")", property: "@DTRequest.GetQueryString("property")", channel_name: "@ViewBag.channel_name", audit_data: JSON.stringify(arr)
+                };
+                var obj = { action: "Article_list_btnAudit", data: data };
+                ExePostBack('btnAudit', "审核后前台将显示该信息，确定继续吗？", __doPostBack, obj);
+            })
+        </script>
     </form>
 </body>
 </html>
