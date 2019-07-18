@@ -1,5 +1,7 @@
 ﻿@{
     Layout = null;
+    DTcms.Model.sysconfig sysConfig = ViewBag.sysConfig as DTcms.Model.sysconfig;
+    @model DTcms.Model.article
 }
 @using DTcms.Common
 
@@ -70,8 +72,8 @@
             });
 
             //初始化上传控件
-            $(".upload-img").InitUploader({ filesize: "<%=sysConfig.imgsize %>", sendurl: "../../tools/upload_ajax.ashx", swf: "../../scripts/webuploader/uploader.swf", filetypes: "<%=sysConfig.fileextension %>" });
-            $(".upload-video").InitUploader({ filesize: "<%=sysConfig.videosize %>", sendurl: "../../tools/upload_ajax.ashx", swf: "../../scripts/webuploader/uploader.swf", filetypes: "<%=sysConfig.videoextension %>" });
+            $(".upload-img").InitUploader({ filesize: "@sysConfig.imgsize", sendurl: "../../tools/upload_ajax.ashx", swf: "../../scripts/webuploader/uploader.swf", filetypes: "@sysConfig.fileextension %>" });
+            $(".upload-video").InitUploader({ filesize: "@sysConfig.videosize", sendurl: "../../tools/upload_ajax.ashx", swf: "../../scripts/webuploader/uploader.swf", filetypes: "@sysConfig.videoextension %>" });
             $(".upload-album").InitUploader({ btntext: "批量上传", multiple: true, water: true, thumbnail: true, filesize: "<%=sysConfig.imgsize %>", sendurl: "../../tools/upload_ajax.ashx", swf: "../../scripts/webuploader/uploader.swf" });
 
             //设置封面图片的样式
@@ -117,7 +119,9 @@
 </head>
 
 <body class="mainbody">
-    <form id="form1" runat="server">
+    @using (Html.BeginForm("Category_edit", "Article", new { id = DTRequest.GetString("id"), channel_id = DTRequest.GetString("channel_id"), submitAction = DTRequest.GetString("action") }, FormMethod.Post, new { id = "form1" }))
+    {
+        @Html.AntiForgeryToken()
         <!--导航栏-->
         <div class="location">
             <a href="article_list?channel_id=@ViewBag.channel_id" class="back"><i class="iconfont icon-up"></i><span>返回列表页</span></a>
@@ -148,7 +152,7 @@
                 <dt>所属类别</dt>
                 <dd>
                     <div class="rule-single-select">
-                        <asp:DropDownList id="ddlCategoryId" runat="server" datatype="*" sucmsg=" "></asp:DropDownList>
+                        @Html.DropDownListFor(m => m.category_id, ViewBag.ddlCategoryId as List<SelectListItem>)
                     </div>
                 </dd>
             </dl>
@@ -232,7 +236,7 @@
                 </dd>
             </dl>
 
-            <asp:Repeater ID="rptPrice" runat="server">
+            @*<asp:Repeater ID="rptPrice" runat="server">
                 <HeaderTemplate>
                     <dl>
                         <dt>会员价格</dt>
@@ -257,7 +261,7 @@
         </dd>
         </dl>
         </FooterTemplate>
-        </asp:Repeater>
+        </asp:Repeater>*@
 
         <dl ID="div_point" runat="server" visible="false">
             <dt><asp:Label ID="div_point_title" runat="server" Text="积分" /></dt>
@@ -413,12 +417,11 @@
         <!--工具栏-->
         <div class="page-footer">
             <div class="btn-wrap">
-                <asp:Button ID="btnSubmit" runat="server" Text="提交保存" CssClass="btn" onclick="btnSubmit_Click" />
+                <input type="submit" name="btnSubmit" value="提交保存" id="btnSubmit" class="btn">
                 <input name="btnReturn" type="button" value="返回上一页" class="btn yellow" onclick="javascript:history.back(-1);" />
             </div>
         </div>
         <!--/工具栏-->
-
-    </form>
+    }
 </body>
 </html>

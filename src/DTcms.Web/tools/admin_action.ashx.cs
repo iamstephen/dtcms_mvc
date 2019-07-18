@@ -45,9 +45,89 @@ namespace DTcms.Web.tools
                 case "Article_list_btnAudit"://审核文章
                     Article_list_btnAudit(context);
                     break;
+                case "Article_list_ToolsOperate"://设置操作
+                    Article_list_ToolsOperate(context);
+                    break;
+                case "Article_list_ChangePageSize":
+                    Article_list_ChangePageSize(context);
+                    break;
             }
         }
 
+        private void Article_list_ChangePageSize(HttpContext context)
+        {
+            int channel_id = DTRequest.GetString("channel_id").ToInt();
+            string channel_name = DTRequest.GetString("channel_name");
+            string audit_data = DTRequest.GetString("audit_data");
+
+            string category_id = DTRequest.GetString("category_id");
+            string keywords = DTRequest.GetString("keywords");
+            string property = DTRequest.GetString("property");
+            string txtPageNum = DTRequest.GetString("txtPageNum");
+
+            int _pagesize;
+            if (int.TryParse(txtPageNum.Trim(), out _pagesize))
+            {
+                if (_pagesize > 0)
+                {
+                    Utils.WriteCookie("article_page_size", "DTcmsPage", _pagesize.ToString(), 43200);
+                }
+            }
+            string url = Utils.CombUrlTxt("article_list", "channel_id={0}&category_id={1}&keywords={2}&property={3}", channel_id.ToString(), category_id, keywords, property);
+            context.Response.Write("{\"status\": 1, \"msg\": \"操作成功！\",\"url\":\"" + url + "\"}");
+        }
+
+        private void Article_list_ToolsOperate(HttpContext context)
+        {
+            int channel_id = DTRequest.GetString("channel_id").ToInt();
+            string channel_name = DTRequest.GetString("channel_name");
+            string audit_data = DTRequest.GetString("audit_data");
+
+            string category_id = DTRequest.GetString("category_id");
+            string keywords = DTRequest.GetString("keywords");
+            string property = DTRequest.GetString("property");
+
+            int id = DTRequest.GetString("id").ToInt();
+            string operrate = DTRequest.GetString("operrate");
+            new ManagePage().ChkAdminLevel(context, "channel_" + channel_name + "_list", DTEnums.ActionEnum.Edit.ToString()); //检查权限
+            BLL.article bll = new BLL.article();
+            Model.article model = bll.GetModel(channel_id, id);
+            switch (operrate)
+            {
+                case "lbtnIsMsg":
+                    if (model.is_msg == 1)
+                        bll.UpdateField(channel_id, id, "is_msg=0");
+                    else
+                        bll.UpdateField(channel_id, id, "is_msg=1");
+                    break;
+                case "lbtnIsTop":
+                    if (model.is_top == 1)
+                        bll.UpdateField(channel_id, id, "is_top=0");
+                    else
+                        bll.UpdateField(channel_id, id, "is_top=1");
+                    break;
+                case "lbtnIsRed":
+                    if (model.is_red == 1)
+                        bll.UpdateField(channel_id, id, "is_red=0");
+                    else
+                        bll.UpdateField(channel_id, id, "is_red=1");
+                    break;
+                case "lbtnIsHot":
+                    if (model.is_hot == 1)
+                        bll.UpdateField(channel_id, id, "is_hot=0");
+                    else
+                        bll.UpdateField(channel_id, id, "is_hot=1");
+                    break;
+                case "lbtnIsSlide":
+                    if (model.is_slide == 1)
+                        bll.UpdateField(channel_id, id, "is_slide=0");
+                    else
+                        bll.UpdateField(channel_id, id, "is_slide=1");
+                    break;
+            }
+            string url = Utils.CombUrlTxt("article_list", "channel_id={0}&category_id={1}&keywords={2}&property={3}", channel_id.ToString(), category_id, keywords, property);
+            context.Response.Write("{\"status\": 1, \"msg\": \"操作成功！\",\"url\":\"" + url + "\"}");
+        }
         private void Article_list_btnAudit(HttpContext context)
         {
             int channel_id = DTRequest.GetString("channel_id").ToInt();

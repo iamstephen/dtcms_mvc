@@ -2,7 +2,7 @@
     Layout = null;
 }
 @using DTcms.Common
-
+@model System.Data.DataTable
 <!DOCTYPE html>
 <html>
 <head>
@@ -59,19 +59,19 @@
                         </ul>
                         <div class="menu-list">
                             <div class="rule-single-select">
-                                @Html.DropDownList("title", ViewBag.ddlCategoryId as SelectList, "所有类别")
+                                @Html.DropDownList("title", ViewBag.ddlCategoryId as SelectList, "所有类别", new { id = "ddlCategoryId", name = "ddlCategoryId" })
                             </div>
                             <div class="rule-single-select">
-                                
-                                @Html.DropDownList("key", ViewBag.ddlProperty as SelectList, "所有属性",new {id= "ddlProperty",name= "ddlProperty" })
+
+                                @Html.DropDownList("key", ViewBag.ddlProperty as SelectList, "所有属性", new { id = "ddlProperty", name = "ddlProperty" })
                             </div>
                         </div>
                     </div>
                     <div class="r-list">
-                        <input name="txtKeywords" type="text" id="txtKeywords" class="keyword">
-                        <a id="lbtnSearch" class="btn-search" href="javascript:__doPostBack('lbtnSearch','')"><i class="iconfont icon-search"></i></a>
-                        <a id="lbtnViewImg" title="图像列表视图" class="img-view" href="javascript:__doPostBack('lbtnViewImg','')"><i class="iconfont icon-list-img"></i></a>
-                        <a id="lbtnViewTxt" title="文字列表视图" class="txt-view" href="javascript:__doPostBack('lbtnViewTxt','')"><i class="iconfont icon-list-txt"></i></a>
+                        <input name="txtKeywords" type="text" id="txtKeywords" class="keyword" value="@ViewBag.keywords">
+                        <a id="lbtnSearch" class="btn-search" href="javascript:;"><i class="iconfont icon-search"></i></a>
+                        <a id="lbtnViewImg" title="图像列表视图" class="img-view" href="javascript:ChangeViewType('Img')"><i class="iconfont icon-list-img"></i></a>
+                        <a id="lbtnViewTxt" title="文字列表视图" class="txt-view" href="javascript:ChangeViewType('Txt')"><i class="iconfont icon-list-txt"></i></a>
                     </div>
                 </div>
             </div>
@@ -79,109 +79,117 @@
         <!--/工具栏-->
         <!--列表-->
         <div class="table-container">
-            <!--文字列表-->
-            <asp:Repeater ID="rptList1" runat="server" onitemcommand="rptList_ItemCommand">
-                <HeaderTemplate>
-                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="ltable">
-                        <tr>
-                            <th width="6%">选择</th>
-                            <th align="left">标题</th>
-                            <th align="left" width="12%">所属类别</th>
-                            <th align="left" width="16%">发布时间</th>
-                            <th align="left" width="65">排序</th>
-                            <th align="left" width="120">属性</th>
-                            <th width="10%">操作</th>
-                        </tr>
-                </HeaderTemplate>
-                <ItemTemplate>
+            @if (ViewBag.prolistview == "Txt")
+            {
+                <!--文字列表-->
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" class="ltable">
                     <tr>
-                        <td align="center">
-                            <asp:CheckBox ID="chkId" CssClass="checkall" runat="server" style="vertical-align:middle;" />
-                            <asp:HiddenField ID="hidId" Value='<%#Eval("id")%>' runat="server" />
-                        </td>
-                        <td><a href="article_edit?action=@DTEnums.ActionEnum.Edit&channel_id=@ViewBag.channel_id&id=<%#Eval(" id")%>"><%#Eval("title")%></a></td>
-                        <td><%#new DTcms.BLL.article_category().GetTitle(Convert.ToInt32(Eval("category_id")))%></td>
-                        <td><%#string.Format("{0:g}",Eval("add_time"))%></td>
-                        <td><asp:TextBox ID="txtSortId" runat="server" Text='<%#Eval("sort_id")%>' CssClass="sort" onkeydown="return checkNumber(event);" /></td>
-                        <td>
-                            <div class="btn-tools">
-                                <asp:LinkButton ID="lbtnIsMsg" CommandName="lbtnIsMsg" runat="server" CssClass='<%# Convert.ToInt32(Eval("is_msg")) == 1 ? "selected" : ""%>' ToolTip='<%# Convert.ToInt32(Eval("is_msg")) == 1 ? "取消评论" : "设置评论"%>'><i class="iconfont icon-comment"></i></asp:LinkButton>
-                                <asp:LinkButton ID="lbtnIsTop" CommandName="lbtnIsTop" runat="server" CssClass='<%# Convert.ToInt32(Eval("is_top")) == 1 ? "selected" : ""%>' ToolTip='<%# Convert.ToInt32(Eval("is_top")) == 1 ? "取消置顶" : "设置置顶"%>'><i class="iconfont icon-top"></i></asp:LinkButton>
-                                <asp:LinkButton ID="lbtnIsRed" CommandName="lbtnIsRed" runat="server" CssClass='<%# Convert.ToInt32(Eval("is_red")) == 1 ? "selected" : ""%>' ToolTip='<%# Convert.ToInt32(Eval("is_red")) == 1 ? "取消推荐" : "设置推荐"%>'><i class="iconfont icon-good"></i></asp:LinkButton>
-                                <asp:LinkButton ID="lbtnIsHot" CommandName="lbtnIsHot" runat="server" CssClass='<%# Convert.ToInt32(Eval("is_hot")) == 1 ? "selected" : ""%>' ToolTip='<%# Convert.ToInt32(Eval("is_hot")) == 1 ? "取消热门" : "设置热门"%>'><i class="iconfont icon-hot"></i></asp:LinkButton>
-                                <asp:LinkButton ID="lbtnIsSlide" CommandName="lbtnIsSlide" runat="server" CssClass='<%# Convert.ToInt32(Eval("is_slide")) == 1 ? "selected" : ""%>' ToolTip='<%# Convert.ToInt32(Eval("is_slide")) == 1 ? "取消幻灯片" : "设置幻灯片"%>'><i class="iconfont icon-pic"></i></asp:LinkButton>
-                            </div>
-                        </td>
-                        <td align="center">
-                            <a href="article_edit?action=@DTEnums.ActionEnum.Edit&channel_id=@ViewBag.channel_id&id=<%#Eval(" id")%>">修改</a>
-                        </td>
+                        <th width="6%">选择</th>
+                        <th align="left">标题</th>
+                        <th align="left" width="12%">所属类别</th>
+                        <th align="left" width="16%">发布时间</th>
+                        <th align="left" width="65">排序</th>
+                        <th align="left" width="120">属性</th>
+                        <th width="10%">操作</th>
                     </tr>
-                </ItemTemplate>
-                <FooterTemplate>
-                    <%#rptList1.Items.Count == 0 ? "<tr><td align=\"center\" colspan=\"7\">暂无记录</td></tr>" : ""%>
-                    </table>
-                </FooterTemplate>
-            </asp:Repeater>
-            <!--/文字列表-->
-            <!--图片列表-->
-            <asp:Repeater ID="rptList2" runat="server" onitemcommand="rptList_ItemCommand">
-                <HeaderTemplate>
-                    <div class="imglist">
-                        <ul>
-                </HeaderTemplate>
-                <ItemTemplate>
-                    <li>
-                        <div class="details<%#Eval(" img_url").ToString() !="" ? "" : " nopic" %>
-                            ">
-                            <div class="check">
-                                <asp:CheckBox ID="chkId" CssClass="checkall" runat="server" />
-                                <asp:HiddenField ID="hidId" Value='<%#Eval("id")%>' runat="server" />
-                            </div>
-                            <%#Eval("img_url").ToString() != "" ? "<div class=\"pic\"><img src=\"../skin/default/loadimg.gif\" data-original=\"" + Eval("img_url") + "\" /></div><i class=\"absbg\"></i>" : ""%>
-                            <h1><span><a href="article_edit?action=@DTEnums.ActionEnum.Edit&channel_id=@ViewBag.channel_id&id=<%#Eval(" id")%>"><%#Eval("title")%></a></span></h1>
-                            <div class="remark">
-                                <%#Eval("zhaiyao").ToString() == "" ? "暂无内容摘要说明..." : Eval("zhaiyao").ToString()%>
-                            </div>
-                            <div class="tools">
-                                <asp:LinkButton ID="lbtnIsMsg" CommandName="lbtnIsMsg" runat="server" CssClass='<%# Convert.ToInt32(Eval("is_msg")) == 1 ? "selected" : ""%>' ToolTip='<%# Convert.ToInt32(Eval("is_msg")) == 1 ? "取消评论" : "设置评论"%>'><i class="iconfont icon-comment"></i></asp:LinkButton>
-                                <asp:LinkButton ID="lbtnIsTop" CommandName="lbtnIsTop" runat="server" CssClass='<%# Convert.ToInt32(Eval("is_top")) == 1 ? "selected" : ""%>' ToolTip='<%# Convert.ToInt32(Eval("is_top")) == 1 ? "取消置顶" : "设置置顶"%>'><i class="iconfont icon-top"></i></asp:LinkButton>
-                                <asp:LinkButton ID="lbtnIsRed" CommandName="lbtnIsRed" runat="server" CssClass='<%# Convert.ToInt32(Eval("is_red")) == 1 ? "selected" : ""%>' ToolTip='<%# Convert.ToInt32(Eval("is_red")) == 1 ? "取消推荐" : "设置推荐"%>'><i class="iconfont icon-good"></i></asp:LinkButton>
-                                <asp:LinkButton ID="lbtnIsHot" CommandName="lbtnIsHot" runat="server" CssClass='<%# Convert.ToInt32(Eval("is_hot")) == 1 ? "selected" : ""%>' ToolTip='<%# Convert.ToInt32(Eval("is_hot")) == 1 ? "取消热门" : "设置热门"%>'><i class="iconfont icon-hot"></i></asp:LinkButton>
-                                <asp:LinkButton ID="lbtnIsSlide" CommandName="lbtnIsSlide" runat="server" CssClass='<%# Convert.ToInt32(Eval("is_slide")) == 1 ? "selected" : ""%>' ToolTip='<%# Convert.ToInt32(Eval("is_slide")) == 1 ? "取消幻灯片" : "设置幻灯片"%>'><i class="iconfont icon-pic"></i></asp:LinkButton>
-                                <asp:TextBox ID="txtSortId" runat="server" Text='<%#Eval("sort_id")%>' CssClass="sort" onkeydown="return checkNumber(event);" />
-                            </div>
-                            <div class="foot">
-                                <p class="time"><%#string.Format("{0:yyyy-MM-dd HH:mm:ss}", Eval("add_time"))%></p>
-                                <a href="article_edit?action=@DTEnums.ActionEnum.Edit&channel_id=@ViewBag.channel_id&id=<%#Eval(" id")%>" title="编辑"><i class="iconfont icon-pencil"></i></a>
-                            </div>
-                        </div>
-                    </li>
-                </ItemTemplate>
-                <FooterTemplate>
-                    <%#rptList2.Items.Count == 0 ? "<div align=\"center\" style=\"font-size:12px;line-height:30px;color:#666;\">暂无记录</div>" : ""%>
+                    @if (Model.Rows.Count == 0)
+                    {
+                        <tr><td align="center" colspan="7">暂无记录</td></tr>
+                    }
+                    else
+                    {
+                        foreach (System.Data.DataRow item in Model.Rows)
+                        {
+                            <tr>
+                                <td align="center">
+                                    <span class="checkall"><input type="checkbox" name="checkallval" value="@item["id"]"></span>
+                                </td>
+                                <td><a href="article_edit?action=@DTEnums.ActionEnum.Edit&channel_id=@ViewBag.channel_id&id=@item["id"]">@item["title"]</a></td>
+                                <td>@(new DTcms.BLL.article_category().GetTitle(Convert.ToInt32(item["category_id"])))</td>
+                                <td>@string.Format("{0:g}", item["add_time"])</td>
+                                <td><input relid="@item["id"]" type="text" value="@item["sort_id"]" class="sort" onkeydown="return checkNumber(event);" /></td>
+                                <td>
+                                    <div class="btn-tools">
+                                        <a id="lbtnIsMsg" title="设置评论" href="javascript:;" class="@(Convert.ToInt32(item["is_msg"]) == 1 ? "selected" : "")" ToolTip='@(Convert.ToInt32(item["is_msg"]) == 1 ? "取消评论" : "设置评论"))' onclick='ToolsOperate("lbtnIsMsg",@item["id"])'><i class="iconfont icon-comment"></i></a>
+                                        <a id="lbtnIsTop" title="设置置顶" href="javascript:;" class="@(Convert.ToInt32(item["is_top"]) == 1 ? "selected" : "")" ToolTip='@(Convert.ToInt32(item["is_top"]) == 1 ? "取消置顶" : "设置置顶"))' onclick='ToolsOperate("lbtnIsTop",@item["id"])'><i class="iconfont icon-top"></i></a>
+                                        <a id="lbtnIsRed" title="设置推荐" href="javascript:;" class="@(Convert.ToInt32(item["is_red"]) == 1 ? "selected" : "")" ToolTip='@(Convert.ToInt32(item["is_red"]) == 1 ? "取消推荐" : "设置推荐"))' onclick='ToolsOperate("lbtnIsRed",@item["id"])'><i class="iconfont icon-good"></i></a>
+                                        <a id="lbtnIsHot" title="设置热门" href="javascript:;" class="@(Convert.ToInt32(item["is_hot"]) == 1 ? "selected" : "")" ToolTip='@(Convert.ToInt32(item["is_hot"]) == 1 ? "取消热门" : "设置热门"))' onclick='ToolsOperate("lbtnIsHot",@item["id"])'><i class="iconfont icon-hot"></i></a>
+                                        <a id="lbtnIsSlide" title="设置幻灯片" href="javascript:;" class="@(Convert.ToInt32(item["is_slide"]) == 1 ? "selected" : "")" ToolTip='@(Convert.ToInt32(item["is_slide"]) == 1 ? "取消幻灯片" : "设置幻灯片"))' onclick='ToolsOperate("lbtnIsSlide",@item["id"])'><i class="iconfont icon-pic"></i></a>
+                                    </div>
+                                </td>
+                                <td align="center">
+                                    <a href="article_edit?action=@DTEnums.ActionEnum.Edit&channel_id=@ViewBag.channel_id&id=@item["id"]">修改</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </table>
+                <!--/文字列表-->
+            }
+            else
+            {
+                <!--图片列表-->
+                <div class="imglist">
+                    <ul>
+                        @if (Model.Rows.Count == 0)
+                        {
+                            <div align="center" style="font-size:12px;line-height:30px;color:#666;">暂无记录</div>
+                        }
+                        else
+                        {
+                            foreach (System.Data.DataRow item in Model.Rows)
+                            {
+                                <li>
+                                    <div class='details@(item["img_url"].ToString()!=""?"":" nopic")'>
+                                        <div class="check">
+                                            <span class="checkall"><input type="checkbox" name="checkallval" value="@item["id"]"></span>
+                                        </div>
+                                        @if (item["img_url"].ToString() != "")
+                                        {
+                                            <div class="pic"><img src="~/Content/admin/skin/default/loadimg.gif" data-original="@item["img_url"]" /></div><i class="absbg"></i>
+                                        }
+                                        <h1><span><a href="article_edit?action=@DTEnums.ActionEnum.Edit&channel_id=@ViewBag.channel_id&id=@item["id"]">@item["title"]</a></span></h1>
+                                        <div class="remark">
+                                            @(item["zhaiyao"].ToString() == "" ? "暂无内容摘要说明..." : @item["zhaiyao"].ToString())
+                                        </div>
+                                        <div class="tools">
+                                            <a id="lbtnIsMsg" title="设置评论" href="javascript:;" class="@(Convert.ToInt32(item["is_msg"]) == 1 ? "selected" : "")" ToolTip='@(Convert.ToInt32(item["is_msg"]) == 1 ? "取消评论" : "设置评论"))' onclick='ToolsOperate("lbtnIsMsg",@item["id"])'><i class="iconfont icon-comment"></i></a>
+                                            <a id="lbtnIsTop" title="设置置顶" href="javascript:;" class="@(Convert.ToInt32(item["is_top"]) == 1 ? "selected" : "")" ToolTip='@(Convert.ToInt32(item["is_top"]) == 1 ? "取消置顶" : "设置置顶"))' onclick='ToolsOperate("lbtnIsTop",@item["id"])'><i class="iconfont icon-top"></i></a>
+                                            <a id="lbtnIsRed" title="设置推荐" href="javascript:;" class="@(Convert.ToInt32(item["is_red"]) == 1 ? "selected" : "")" ToolTip='@(Convert.ToInt32(item["is_red"]) == 1 ? "取消推荐" : "设置推荐"))' onclick='ToolsOperate("lbtnIsRed",@item["id"])'><i class="iconfont icon-good"></i></a>
+                                            <a id="lbtnIsHot" title="设置热门" href="javascript:;" class="@(Convert.ToInt32(item["is_hot"]) == 1 ? "selected" : "")" ToolTip='@(Convert.ToInt32(item["is_hot"]) == 1 ? "取消热门" : "设置热门"))' onclick='ToolsOperate("lbtnIsHot",@item["id"])'><i class="iconfont icon-hot"></i></a>
+                                            <a id="lbtnIsSlide" title="设置幻灯片" href="javascript:;" class="@(Convert.ToInt32(item["is_slide"]) == 1 ? "selected" : "")" ToolTip='@(Convert.ToInt32(item["is_slide"]) == 1 ? "取消幻灯片" : "设置幻灯片"))' onclick='ToolsOperate("lbtnIsSlide",@item["id"])'><i class="iconfont icon-pic"></i></a>
+                                            <input relid="@item["id"]" type="text" value="@item["sort_id"]" class="sort" onkeydown="return checkNumber(event);" />
+                                        </div>
+                                        <div class="foot">
+                                            <p class="time">@string.Format("{0:yyyy-MM-dd HH:mm:ss}", item["add_time"])</p>
+                                            <a href="article_edit?action=@DTEnums.ActionEnum.Edit&channel_id=@ViewBag.channel_id&id=@item["id"]" title="编辑"><i class="iconfont icon-pencil"></i></a>
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        }
                     </ul>
-        </div>
-        </FooterTemplate>
-        </asp:Repeater>
-        <!--/图片列表-->
+                </div>
+                <!--/图片列表-->
+            }
         </div>
         <!--/列表-->
         <!--内容底部-->
         <div class="line20"></div>
         <div class="pagelist">
             <div class="l-btns">
-                <span>显示</span><asp:TextBox ID="txtPageNum" runat="server" CssClass="pagenum" onkeydown="return checkNumber(event);"
-                                            OnTextChanged="txtPageNum_TextChanged" AutoPostBack="True"></asp:TextBox><span>条/页</span>
+                <span>显示</span>
+                <input name="txtPageNum" type="text" value="@ViewBag.txtPageNum" onchange="ChangePageSize(this)" id="txtPageNum" class="pagenum" onkeydown="return checkNumber(event);"><span>条/页</span>
             </div>
-            <div id="PageContent" runat="server" class="default"></div>
+            <div id="PageContent" class="default">@Html.Raw(ViewBag.PageContent)</div>
         </div>
         <!--/内容底部-->
         <script>
             //列表页保存
             $("#btnSave").click(function () {
                 var arr = new Array()
-                $(".checkall input").each(function () {
-                    arr.push({ id: $(this).val(), Value: $(this).parents(".tbody").find(".sort").val() });
+                $(".sort").each(function () {
+                    arr.push({ id: $(this).attr("relid"), Value: $(this).val() });
                 })
                 var data = {
                     channel_id: "@ViewBag.channel_id", category_id: "@DTRequest.GetQueryString("category_id")", keywords: "@DTRequest.GetQueryString("keywords")", property:"@DTRequest.GetQueryString("property")", channel_name: "@ViewBag.channel_name", sort_data: JSON.stringify(arr)
@@ -213,6 +221,53 @@
                 var obj = { action: "Article_list_btnAudit", data: data };
                 ExePostBack('btnAudit', "审核后前台将显示该信息，确定继续吗？", __doPostBack, obj);
             })
+            //类别筛选
+            $("#ddlCategoryId").change(function () {
+                var channel_id = "@DTRequest.GetString("channel_id")";
+                var category_id = $(this).val();
+                var keywords = escape("@DTRequest.GetString("keywords")");
+                var property = "@DTRequest.GetString("property")";
+                var url = "article_list?channel_id=" + channel_id + "&category_id=" + category_id + "&keywords=" + keywords + "&property=" + property;
+                location.href = url;
+            })
+            //属性筛选
+            $("#ddlProperty").change(function () {
+                var channel_id = "@DTRequest.GetString("channel_id")";
+                var category_id = "@DTRequest.GetString("category_id")";
+                var keywords = escape("@DTRequest.GetString("keywords")");
+                var property = $(this).val();
+                var url = "article_list?channel_id=" + channel_id + "&category_id=" + category_id + "&keywords=" + keywords + "&property=" + property;
+                location.href = url;
+            })
+            //搜索筛选
+            $("#lbtnSearch").click(function () {
+                var channel_id = "@DTRequest.GetString("channel_id")";
+                var category_id = "@DTRequest.GetString("category_id")";
+                var keywords = escape($("#txtKeywords").val());
+                var property = "@DTRequest.GetString("property")";
+                var url = "article_list?channel_id=" + channel_id + "&category_id=" + category_id + "&keywords=" + keywords + "&property=" + property;
+                location.href = url;
+            })
+            //改变列表显示方式
+            function ChangeViewType(type) {
+                addCookie("article_list_view", type, 240);
+                location.reload();
+            }
+            //工具按钮操作
+            function ToolsOperate(operrate, id) {
+                var data = {
+                    channel_id: "@ViewBag.channel_id", category_id: "@DTRequest.GetQueryString("category_id")", keywords: "@DTRequest.GetQueryString("keywords")", property: "@DTRequest.GetQueryString("property")", channel_name: "@ViewBag.channel_name", id: id, operrate: operrate
+                };
+                var obj = { action: "Article_list_ToolsOperate", data: data };
+                __doPostBack(obj);
+            }
+            function ChangePageSize(obj) {
+                var data = {
+                    channel_id: "@ViewBag.channel_id", category_id: "@DTRequest.GetQueryString("category_id")", keywords: "@DTRequest.GetQueryString("keywords")", property: "@DTRequest.GetQueryString("property")", channel_name: "@ViewBag.channel_name", txtPageNum: $(obj).val()
+                };
+                var obj = { action: "Article_list_ChangePageSize", data: data };
+                __doPostBack(obj);
+            }
         </script>
     </form>
 </body>
