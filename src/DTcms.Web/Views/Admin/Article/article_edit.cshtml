@@ -1,10 +1,11 @@
 ﻿@{
     Layout = null;
     DTcms.Model.sysconfig sysConfig = ViewBag.sysConfig as DTcms.Model.sysconfig;
-    @model DTcms.Model.article
+    List<DTcms.Model.article_attribute_field> OtherFieldList = ViewBag.OtherFieldList as List<DTcms.Model.article_attribute_field>;
 }
-@using DTcms.Common
-
+@using DTcms.Common;
+@using DTcms.Web.HtmlExtensions;
+@model DTcms.Model.article
 <!DOCTYPE html>
 <html>
 <head>
@@ -139,7 +140,10 @@
                 <div class="content-tab-ul-wrap">
                     <ul>
                         <li><a class="selected" href="javascript:;">基本信息</a></li>
-                        <li id="field_tab_item" runat="server" visible="false"><a href="javascript:;">扩展选项</a></li>
+                        @if (OtherFieldList.Count > 0)
+                        {
+                            <li id="field_tab_item"><a href="javascript:;">扩展选项</a></li>
+                        }
                         <li><a href="javascript:;">详细描述</a></li>
                         <li><a href="javascript:;">SEO选项</a></li>
                     </ul>
@@ -160,7 +164,7 @@
                 <dt>是否发布</dt>
                 <dd>
                     <div class="rule-single-checkbox">
-                        <asp:CheckBox ID="cbStatus" runat="server" Checked="True" />
+                        @Html.CheckBox("status", Model.status != 2)
                     </div>
                     <span class="Validform_checktip">*不发布前台则无法显示</span>
                 </dd>
@@ -169,20 +173,20 @@
                 <dt>推荐类型</dt>
                 <dd>
                     <div class="rule-multi-checkbox">
-                        <asp:CheckBoxList ID="cblItem" runat="server" RepeatDirection="Horizontal" RepeatLayout="Flow">
-                            <asp:ListItem Value="1">允许评论</asp:ListItem>
-                            <asp:ListItem Value="1">置顶</asp:ListItem>
-                            <asp:ListItem Value="1">推荐</asp:ListItem>
-                            <asp:ListItem Value="1">热门</asp:ListItem>
-                            <asp:ListItem Value="1">幻灯片</asp:ListItem>
-                        </asp:CheckBoxList>
+                        <span id="cblItem">
+                            @Html.CheckBox("is_msg", Model.is_msg == 1)<label for="is_msg">允许评论</label>
+                            @Html.CheckBox("is_top", Model.is_top == 1)<label for="is_top">置顶</label>
+                            @Html.CheckBox("is_red", Model.is_red == 1)<label for="is_red">推荐</label>
+                            @Html.CheckBox("is_hot", Model.is_hot == 1)<label for="is_hot">热门</label>
+                            @Html.CheckBox("is_slide", Model.is_slide == 1)<label for="is_slide">幻灯片</label>
+                        </span>
                     </div>
                 </dd>
             </dl>
             <dl>
                 <dt>内容标题</dt>
                 <dd>
-                    <asp:TextBox ID="txtTitle" runat="server" CssClass="input normal" datatype="*2-100" sucmsg=" " />
+                    <input type="text" id="title" name="title" class="input normal" datatype="*2-100" sucmsg=" " value="@Model.title" />
                     <span class="Validform_checktip">*标题最多100个字符</span>
                 </dd>
             </dl>
@@ -196,14 +200,14 @@
             <dl>
                 <dt>Tags标签</dt>
                 <dd>
-                    <asp:TextBox ID="txtTags" runat="server" CssClass="input normal" datatype="*0-500" sucmsg=" " />
+                    <input type="text" id="tags" name="tags" class="input normal" datatype="*0-500" sucmsg=" " value="@Model.tags" />
                     <span class="Validform_checktip">多个可用英文逗号分隔开，如：a,b</span>
                 </dd>
             </dl>
             <dl>
                 <dt>封面图片</dt>
                 <dd>
-                    <asp:TextBox ID="txtImgUrl" runat="server" CssClass="input normal upload-path" />
+                    <input name="img_url" type="text" id="img_url" class="input normal upload-path" value="@Model.img_url" />
                     <div class="upload-box upload-img"></div>
                 </dd>
             </dl>
@@ -237,127 +241,128 @@
             </dl>
 
             @*<asp:Repeater ID="rptPrice" runat="server">
-                <HeaderTemplate>
-                    <dl>
-                        <dt>会员价格</dt>
-                        <dd>
-                            <div class="table-container">
-                                <table border="0" cellspacing="0" cellpadding="0" class="border-table">
-                </HeaderTemplate>
-                <ItemTemplate>
-                    <tr>
-                        <th width="20%"><%#Eval("title")%></th>
-                        <td width="80%">
-                            <asp:HiddenField ID="hidePriceId" runat="server" />
-                            <asp:HiddenField ID="hideGroupId" Value='<%#Eval("id") %>' runat="server" />
-                            <asp:TextBox ID="txtGroupPrice" runat="server" discount='<%#Eval("discount") %>' CssClass="td-input groupprice" maxlength="10" style="width:60px;" datatype="/^(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/" sucmsg=" ">0</asp:TextBox>
-                            <span class="Validform_checktip">*享受<%#Eval("discount")%>折优惠</span>
-                        </td>
-                    </tr>
-                </ItemTemplate>
-                <FooterTemplate>
-                    </table>
-        </div>
-        </dd>
-        </dl>
-        </FooterTemplate>
-        </asp:Repeater>*@
-
-        <dl ID="div_point" runat="server" visible="false">
-            <dt><asp:Label ID="div_point_title" runat="server" Text="积分" /></dt>
-            <dd>
-                <asp:TextBox ID="field_control_point" runat="server" CssClass="input small" datatype="/^-?\d+$/" sucmsg=" ">0</asp:TextBox>
-                <asp:Label ID="div_point_tip" runat="server" CssClass="Validform_checktip" />
-            </dd>
-        </dl>
-        <dl>
-            <dt>排序数字</dt>
-            <dd>
-                <asp:TextBox ID="txtSortId" runat="server" CssClass="input small" datatype="n" sucmsg=" ">99</asp:TextBox>
-                <span class="Validform_checktip">*数字，越小越向前</span>
-            </dd>
-        </dl>
-        <dl>
-            <dt>浏览次数</dt>
-            <dd>
-                <asp:TextBox ID="txtClick" runat="server" CssClass="input small" datatype="n" sucmsg=" ">0</asp:TextBox>
-                <span class="Validform_checktip">点击浏览该信息自动+1</span>
-            </dd>
-        </dl>
-        <dl>
-            <dt>发布时间</dt>
-            <dd>
-                <asp:TextBox ID="txtAddTime" runat="server" CssClass="input rule-date-input" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" datatype="/^\s*$|^\d{4}\-\d{1,2}\-\d{1,2}\s{1}(\d{1,2}:){2}\d{1,2}$/" errormsg="请选择正确的日期" sucmsg=" " />
-                <span class="Validform_checktip">不选择默认当前发布时间</span>
-            </dd>
-        </dl>
-        <dl ID="div_albums_container" runat="server" visible="false">
-            <dt>图片相册</dt>
-            <dd>
-                <div class="upload-box upload-album"></div>
-                <input type="hidden" name="hidFocusPhoto" id="hidFocusPhoto" runat="server" class="focus-photo" />
-                <div class="photo-list">
-                    <ul>
-                        <asp:Repeater ID="rptAlbumList" runat="server">
-                            <ItemTemplate>
-                                <li>
-                                    <input type="hidden" name="hid_photo_name" value="<%#Eval(" id")%>|<%#Eval("original_path")%>|<%#Eval("thumb_path")%>" />
-                                    <input type="hidden" name="hid_photo_remark" value="<%#Eval(" remark")%>" />
-                                    <div class="img-box" onclick="setFocusImg(this);">
-                                        <img src="<%#Eval(" thumb_path")%>" bigsrc="<%#Eval("original_path")%>" />
-                                        <span class="remark"><i><%#Eval("remark").ToString() == "" ? "暂无描述..." : Eval("remark").ToString()%></i></span>
-                                    </div>
-                                    <a href="javascript:;" onclick="setRemark(this);">描述</a>
-                                    <a href="javascript:;" onclick="delImg(this);">删除</a>
-                                </li>
-                            </ItemTemplate>
-                        </asp:Repeater>
-                    </ul>
+                        <HeaderTemplate>
+                            <dl>
+                                <dt>会员价格</dt>
+                                <dd>
+                                    <div class="table-container">
+                                        <table border="0" cellspacing="0" cellpadding="0" class="border-table">
+                        </HeaderTemplate>
+                        <ItemTemplate>
+                            <tr>
+                                <th width="20%"><%#Eval("title")%></th>
+                                <td width="80%">
+                                    <asp:HiddenField ID="hidePriceId" runat="server" />
+                                    <asp:HiddenField ID="hideGroupId" Value='<%#Eval("id") %>' runat="server" />
+                                    <asp:TextBox ID="txtGroupPrice" runat="server" discount='<%#Eval("discount") %>' CssClass="td-input groupprice" maxlength="10" style="width:60px;" datatype="/^(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/" sucmsg=" ">0</asp:TextBox>
+                                    <span class="Validform_checktip">*享受<%#Eval("discount")%>折优惠</span>
+                                </td>
+                            </tr>
+                        </ItemTemplate>
+                        <FooterTemplate>
+                            </table>
                 </div>
-            </dd>
-        </dl>
-        <dl ID="div_attach_container" runat="server" visible="false">
-            <dt>上传附件</dt>
-            <dd>
-                <a class="icon-btn attach-btn"><i class="iconfont icon-add"></i><span>添加附件</span></a>
-                <div id="showAttachList" class="attach-list">
-                    <ul>
-                        <asp:Repeater ID="rptAttachList" runat="server">
-                            <ItemTemplate>
-                                <li>
-                                    <input name="hid_attach_id" type="hidden" value="<%#Eval(" id")%>" />
-                                    <input name="hid_attach_filename" type="hidden" value="<%#Eval(" file_name")%>" />
-                                    <input name="hid_attach_filepath" type="hidden" value="<%#Eval(" file_path")%>" />
-                                    <input name="hid_attach_filesize" type="hidden" value="<%#Eval(" file_size")%>" />
-                                    <i class="iconfont icon-attachment"></i>
-                                    <a href="javascript:;" onclick="delAttachNode(this);" class="del" title="删除附件"><i class="iconfont icon-remove"></i></a>
-                                    <a href="javascript:;" onclick="showAttachDialog(this);" class="edit" title="更新附件"><i class="iconfont icon-pencil"></i></a>
-                                    <div class="title"><%#Eval("file_name")%></div>
-                                    <div class="info">类型：<span class="ext"><%#Eval("file_ext")%></span> 大小：<span class="size"><%#Convert.ToInt32(Eval("file_size")) > 1024 ? Convert.ToDouble((Convert.ToDouble(Eval("file_size")) / 1024f)).ToString("0.0") + "MB" : Eval("file_size") + "KB"%></span> 下载：<span class="down"><%#Eval("down_num")%></span>次</div>
-                                    <div class="btns">下载积分：<input type="text" name="txt_attach_point" onkeydown="return checkNumber(event);" value="<%#Eval(" point")%>" /></div>
-                                </li>
-                            </ItemTemplate>
-                        </asp:Repeater>
-                    </ul>
-                </div>
-            </dd>
-        </dl>
+                </dd>
+                </dl>
+                </FooterTemplate>
+                </asp:Repeater>*@
+
+            <dl ID="div_point" runat="server" visible="false">
+                <dt><asp:Label ID="div_point_title" runat="server" Text="积分" /></dt>
+                <dd>
+                    <asp:TextBox ID="field_control_point" runat="server" CssClass="input small" datatype="/^-?\d+$/" sucmsg=" ">0</asp:TextBox>
+                    <asp:Label ID="div_point_tip" runat="server" CssClass="Validform_checktip" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>排序数字</dt>
+                <dd>
+                    <input type="text" id="sort_id" name="sort_id" class="input small" datatype="n" sucmsg=" " value="@Model.sort_id" />
+                    <span class="Validform_checktip">*数字，越小越向前</span>
+                </dd>
+            </dl>
+            <dl>
+                <dt>浏览次数</dt>
+                <dd>
+                    <input type="text" id="click" name="click" class="input small" datatype="n" sucmsg=" " value="@Model.click" />
+                    <span class="Validform_checktip">点击浏览该信息自动+1</span>
+                </dd>
+            </dl>
+            <dl>
+                <dt>发布时间</dt>
+                <dd>
+                    <input name="add_time" type="text" value="2019-07-02 09:10:45" id="add_time" class="input rule-date-input" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" datatype="/^\s*$|^\d{4}\-\d{1,2}\-\d{1,2}\s{1}(\d{1,2}:){2}\d{1,2}$/" errormsg="请选择正确的日期" sucmsg=" " />
+                    <span class="Validform_checktip">不选择默认当前发布时间</span>
+                </dd>
+            </dl>
+            <dl ID="div_albums_container" runat="server" visible="false">
+                <dt>图片相册</dt>
+                <dd>
+                    <div class="upload-box upload-album"></div>
+                    <input type="hidden" name="hidFocusPhoto" id="hidFocusPhoto" runat="server" class="focus-photo" />
+                    <div class="photo-list">
+                        <ul>
+                            <asp:Repeater ID="rptAlbumList" runat="server">
+                                <ItemTemplate>
+                                    <li>
+                                        <input type="hidden" name="hid_photo_name" value="<%#Eval(" id")%>|<%#Eval("original_path")%>|<%#Eval("thumb_path")%>" />
+                                        <input type="hidden" name="hid_photo_remark" value="<%#Eval(" remark")%>" />
+                                        <div class="img-box" onclick="setFocusImg(this);">
+                                            <img src="<%#Eval(" thumb_path")%>" bigsrc="<%#Eval("original_path")%>" />
+                                            <span class="remark"><i><%#Eval("remark").ToString() == "" ? "暂无描述..." : Eval("remark").ToString()%></i></span>
+                                        </div>
+                                        <a href="javascript:;" onclick="setRemark(this);">描述</a>
+                                        <a href="javascript:;" onclick="delImg(this);">删除</a>
+                                    </li>
+                                </ItemTemplate>
+                            </asp:Repeater>
+                        </ul>
+                    </div>
+                </dd>
+            </dl>
+            <dl ID="div_attach_container" runat="server" visible="false">
+                <dt>上传附件</dt>
+                <dd>
+                    <a class="icon-btn attach-btn"><i class="iconfont icon-add"></i><span>添加附件</span></a>
+                    <div id="showAttachList" class="attach-list">
+                        <ul>
+                            <asp:Repeater ID="rptAttachList" runat="server">
+                                <ItemTemplate>
+                                    <li>
+                                        <input name="hid_attach_id" type="hidden" value="<%#Eval(" id")%>" />
+                                        <input name="hid_attach_filename" type="hidden" value="<%#Eval(" file_name")%>" />
+                                        <input name="hid_attach_filepath" type="hidden" value="<%#Eval(" file_path")%>" />
+                                        <input name="hid_attach_filesize" type="hidden" value="<%#Eval(" file_size")%>" />
+                                        <i class="iconfont icon-attachment"></i>
+                                        <a href="javascript:;" onclick="delAttachNode(this);" class="del" title="删除附件"><i class="iconfont icon-remove"></i></a>
+                                        <a href="javascript:;" onclick="showAttachDialog(this);" class="edit" title="更新附件"><i class="iconfont icon-pencil"></i></a>
+                                        <div class="title"><%#Eval("file_name")%></div>
+                                        <div class="info">类型：<span class="ext"><%#Eval("file_ext")%></span> 大小：<span class="size"><%#Convert.ToInt32(Eval("file_size")) > 1024 ? Convert.ToDouble((Convert.ToDouble(Eval("file_size")) / 1024f)).ToString("0.0") + "MB" : Eval("file_size") + "KB"%></span> 下载：<span class="down"><%#Eval("down_num")%></span>次</div>
+                                        <div class="btns">下载积分：<input type="text" name="txt_attach_point" onkeydown="return checkNumber(event);" value="<%#Eval(" point")%>" /></div>
+                                    </li>
+                                </ItemTemplate>
+                            </asp:Repeater>
+                        </ul>
+                    </div>
+                </dd>
+            </dl>
         </div>
-
-        <div id="field_tab_content" runat="server" visible="false" class="tab-content" style="display:none"></div>
-
+        if (OtherFieldList.Count > 0)
+        {
+            <div id="field_tab_content" class="tab-content" style="display:none">@Html.Article_editCreateOtherField()</div>
+        }
         <div class="tab-content" style="display:none">
             <dl>
                 <dt>调用别名</dt>
                 <dd>
-                    <asp:TextBox ID="txtCallIndex" runat="server" CssClass="input normal" datatype="/^\s*$|^[a-zA-Z0-9\-\_]{2,50}$/" sucmsg=" "></asp:TextBox>
+                    <input name="call_index" type="text" id="call_index" class="input normal" datatype="/^\s*$|^[a-zA-Z0-9\-\_]{2,50}$/" errormsg="请填写正确的别名" sucmsg=" " value="@Model.call_index" />
                     <span class="Validform_checktip">*别名访问，非必填，不可重复</span>
                 </dd>
             </dl>
             <dl>
                 <dt>URL链接</dt>
                 <dd>
-                    <asp:TextBox ID="txtLinkUrl" runat="server" maxlength="255" CssClass="input normal" />
+                    <input name="link_url" type="text" maxlength="255" id="link_url" class="input normal" value="@Model.link_url" />
                     <span class="Validform_checktip">填写后直接跳转到该网址</span>
                 </dd>
             </dl>
@@ -378,14 +383,14 @@
             <dl>
                 <dt>内容摘要</dt>
                 <dd>
-                    <asp:TextBox ID="txtZhaiyao" runat="server" CssClass="input" TextMode="MultiLine" datatype="*0-255" sucmsg=" "></asp:TextBox>
+                    <textarea name="zhaiyao" rows="2" cols="20" id="zhaiyao" class="input" datatype="*0-255" sucmsg=" ">@Model.zhaiyao</textarea>
                     <span class="Validform_checktip">不填写则自动截取内容前255字符</span>
                 </dd>
             </dl>
             <dl>
                 <dt>内容描述</dt>
                 <dd>
-                    <textarea id="txtContent" class="editor" runat="server"></textarea>
+                    <textarea name="content" id="content" class="editor" style="width:100%;height:280px;">@Model.content</textarea>
                 </dd>
             </dl>
         </div>
@@ -394,21 +399,21 @@
             <dl>
                 <dt>SEO标题</dt>
                 <dd>
-                    <asp:TextBox ID="txtSeoTitle" runat="server" maxlength="255" CssClass="input normal" datatype="*0-100" sucmsg=" " />
+                    <input name="seo_title" type="text" maxlength="255" id="seo_title" class="input normal" datatype="s0-100" sucmsg=" " value="@Model.seo_title" />
                     <span class="Validform_checktip">255个字符以内</span>
                 </dd>
             </dl>
             <dl>
                 <dt>SEO关健字</dt>
                 <dd>
-                    <asp:TextBox ID="txtSeoKeywords" runat="server" CssClass="input" TextMode="MultiLine" datatype="*0-255" sucmsg=" "></asp:TextBox>
+                    <textarea name="seo_keywords" rows="2" cols="20" id="seo_keywords" class="input">@Model.seo_keywords</textarea>
                     <span class="Validform_checktip">以“,”逗号区分开，255个字符以内</span>
                 </dd>
             </dl>
             <dl>
                 <dt>SEO描述</dt>
                 <dd>
-                    <asp:TextBox ID="txtSeoDescription" runat="server" CssClass="input" TextMode="MultiLine" datatype="*0-255" sucmsg=" "></asp:TextBox>
+                    <textarea name="seo_description" rows="2" cols="20" id="seo_description" class="input">@Model.seo_description</textarea>
                     <span class="Validform_checktip">255个字符以内</span>
                 </dd>
             </dl>
