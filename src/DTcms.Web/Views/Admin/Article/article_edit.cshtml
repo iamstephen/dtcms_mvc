@@ -2,6 +2,10 @@
     Layout = null;
     DTcms.Model.sysconfig sysConfig = ViewBag.sysConfig as DTcms.Model.sysconfig;
     List<DTcms.Model.article_attribute_field> OtherFieldList = ViewBag.OtherFieldList as List<DTcms.Model.article_attribute_field>;
+    List<DTcms.Model.article_attribute_field> ShowSysFieldList = ViewBag.ShowSysFieldList;
+    DTcms.Model.site_channel channelModel = ViewBag.channelModel;
+    System.Data.DataTable rptPrice = ViewBag.rptPrice;
+    string filename = ViewBag.filename;
 }
 @using DTcms.Common;
 @using DTcms.Web.HtmlExtensions;
@@ -190,13 +194,17 @@
                     <span class="Validform_checktip">*标题最多100个字符</span>
                 </dd>
             </dl>
-            <dl ID="div_sub_title" runat="server" visible="false">
-                <dt><asp:Label ID="div_sub_title_title" runat="server" Text="副标题" /></dt>
-                <dd>
-                    <asp:TextBox ID="field_control_sub_title" runat="server" CssClass="input normal" datatype="*0-255" sucmsg=" " />
-                    <asp:Label ID="div_sub_title_tip" runat="server" CssClass="Validform_checktip" />
-                </dd>
-            </dl>
+            @if (ShowSysFieldList.Where(m => m.name == "sub_title").Count() == 1)
+            {
+                <dl id="div_sub_title">
+                    <dt><span id="div_sub_title_title">副标题</span></dt>
+                    <dd>
+                        <input ID="field_control_sub_title" name="field_control_sub_title" class="input normal" datatype="*0-255" sucmsg=" " value='@Model.fields["sub_title"]' />
+                        <span id="div_sub_title_tip" class="Validform_checktip"></span>
+                    </dd>
+                </dl>
+            }
+
             <dl>
                 <dt>Tags标签</dt>
                 <dd>
@@ -207,73 +215,92 @@
             <dl>
                 <dt>封面图片</dt>
                 <dd>
-                    <input name="img_url" type="text" id="img_url" class="input normal upload-path" value="@Model.img_url" />
+                    @if (!filename.StartsWith("thumb_"))
+                    {
+                        <input name="img_url" type="text" id="img_url" class="input normal upload-path" value="@Model.img_url" />
+                    }
+                    else
+                    {
+                        <input name="img_url" type="text" id="img_url" class="input normal upload-path" value="" />
+                    }
                     <div class="upload-box upload-img"></div>
                 </dd>
             </dl>
-            <dl ID="div_goods_no" runat="server" visible="false">
-                <dt><asp:Label ID="div_goods_no_title" runat="server" Text="商品货号" /></dt>
-                <dd>
-                    <asp:TextBox ID="field_control_goods_no" runat="server" CssClass="input normal" datatype="*0-100" sucmsg=" " />
-                    <asp:Label ID="div_goods_no_tip" runat="server" CssClass="Validform_checktip" />
-                </dd>
-            </dl>
-            <dl ID="div_stock_quantity" runat="server" visible="false">
-                <dt><asp:Label ID="div_stock_quantity_title" runat="server" Text="库存数量" /></dt>
-                <dd>
-                    <asp:TextBox ID="field_control_stock_quantity" runat="server" CssClass="input small" datatype="n" sucmsg=" ">0</asp:TextBox>
-                    <asp:Label ID="div_stock_quantity_tip" runat="server" CssClass="Validform_checktip" />
-                </dd>
-            </dl>
-            <dl ID="div_market_price" runat="server" visible="false">
-                <dt><asp:Label ID="div_market_price_title" runat="server" Text="市场价格" /></dt>
-                <dd>
-                    <asp:TextBox ID="field_control_market_price" runat="server" CssClass="input small" datatype="/^(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/" sucmsg=" ">0</asp:TextBox> 元
-                    <asp:Label ID="div_market_price_tip" runat="server" CssClass="Validform_checktip" />
-                </dd>
-            </dl>
-            <dl ID="div_sell_price" runat="server" visible="false">
-                <dt><asp:Label ID="div_sell_price_title" runat="server" Text="销售价格" /></dt>
-                <dd>
-                    <asp:TextBox ID="field_control_sell_price" runat="server" CssClass="input small" datatype="/^(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/" sucmsg=" ">0</asp:TextBox> 元
-                    <asp:Label ID="div_sell_price_tip" runat="server" CssClass="Validform_checktip" />
-                </dd>
-            </dl>
-
-            @*<asp:Repeater ID="rptPrice" runat="server">
-                        <HeaderTemplate>
-                            <dl>
-                                <dt>会员价格</dt>
-                                <dd>
-                                    <div class="table-container">
-                                        <table border="0" cellspacing="0" cellpadding="0" class="border-table">
-                        </HeaderTemplate>
-                        <ItemTemplate>
-                            <tr>
-                                <th width="20%"><%#Eval("title")%></th>
-                                <td width="80%">
-                                    <asp:HiddenField ID="hidePriceId" runat="server" />
-                                    <asp:HiddenField ID="hideGroupId" Value='<%#Eval("id") %>' runat="server" />
-                                    <asp:TextBox ID="txtGroupPrice" runat="server" discount='<%#Eval("discount") %>' CssClass="td-input groupprice" maxlength="10" style="width:60px;" datatype="/^(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/" sucmsg=" ">0</asp:TextBox>
-                                    <span class="Validform_checktip">*享受<%#Eval("discount")%>折优惠</span>
-                                </td>
-                            </tr>
-                        </ItemTemplate>
-                        <FooterTemplate>
-                            </table>
-                </div>
-                </dd>
+            @if (ShowSysFieldList.Where(m => m.name == "goods_no").Count() == 1)
+            {
+                <dl id="div_goods_no">
+                    <dt><span id="div_goods_no_title">商品货号</span></dt>
+                    <dd>
+                        <input ID="field_control_goods_no" name="field_control_goods_no" class="input normal" datatype="*0-100" sucmsg=" " value='@Model.fields["goods_no"]' />
+                        <span id="div_goods_no_tip" class="Validform_checktip"></span>
+                    </dd>
                 </dl>
-                </FooterTemplate>
-                </asp:Repeater>*@
+            }
+            @if (ShowSysFieldList.Where(m => m.name == "stock_quantity").Count() == 1)
+            {
+                <dl id="div_stock_quantity">
+                    <dt><span id="div_stock_quantity_title">库存数量</span></dt>
+                    <dd>
+                        <input ID="field_control_stock_quantity" name="field_control_stock_quantity" class="input small" datatype="n" sucmsg=" " value='@Model.fields["stock_quantity"]' />
+                        <span id="div_stock_quantity_tip" class="Validform_checktip"></span>
+                    </dd>
+                </dl>
+            }
+            @if (ShowSysFieldList.Where(m => m.name == "market_price").Count() == 1)
+            {
+                <dl id="div_market_price">
+                    <dt><span id="div_market_price_title">市场价格</span></dt>
+                    <dd>
+                        <input ID="field_control_market_price" name="field_control_market_price" class="input small" datatype="/^(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/" sucmsg=" "  value='@Model.fields["market_price"]'/>元
+                        <span id="div_market_price_tip" class="Validform_checktip"></span>
+                    </dd>
+                </dl>
+            }
+            @if (ShowSysFieldList.Where(m => m.name == "sell_price").Count() == 1)
+            {
+                <dl id="div_sell_price">
+                    <dt><span id="div_sell_price_title">销售价格</span></dt>
+                    <dd>
+                        <input ID="field_control_sell_price" name="field_control_sell_price" class="input small" datatype="/^(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/" sucmsg=" " value='@Model.fields["sell_price"]' />元
+                        <span id="div_sell_price_tip" class="Validform_checktip"></span>
+                    </dd>
+                </dl>
+            }
+            @if (rptPrice != null)
+            {
+                <dl>
+                    <dt>会员价格</dt>
+                    <dd>
+                        <div class="table-container">
+                            <table border="0" cellspacing="0" cellpadding="0" class="border-table">
 
-            <dl ID="div_point" runat="server" visible="false">
-                <dt><asp:Label ID="div_point_title" runat="server" Text="积分" /></dt>
-                <dd>
-                    <asp:TextBox ID="field_control_point" runat="server" CssClass="input small" datatype="/^-?\d+$/" sucmsg=" ">0</asp:TextBox>
-                    <asp:Label ID="div_point_tip" runat="server" CssClass="Validform_checktip" />
-                </dd>
-            </dl>
+                                @foreach (System.Data.DataRow dr in rptPrice.Rows)
+                                {
+                                <tr>
+                                    <th width="20%">@dr["title"]</th>
+                                    <td width="80%">
+                                        <input id="hidePriceId" type="hidden" />
+                                        <input id="hideGroupId" type="hidden" Value='@dr["id"]' />
+                                        <input id="txtGroupPrice" type="text" discount='@dr["discount"]' class="td-input groupprice" maxlength="10" style="width:60px;" datatype="/^(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/" sucmsg=" " />
+                                        <span class="Validform_checktip">*享受(@dr["discount"])折优惠</span>
+                                    </td>
+                                </tr>
+                                }
+                            </table>
+                        </div>
+                    </dd>
+                </dl>
+            }
+            @if (ShowSysFieldList.Where(m => m.name == "point").Count() == 1)
+            {
+                <dl id="div_point">
+                    <dt><span id="div_point_title">积分</span></dt>
+                    <dd>
+                        <input ID="field_control_point" name="field_control_point" class="input small" datatype="/^-?\d+$/" sucmsg=" " value='@Model.fields["point"]' />
+                        <span id="div_point_tip" class="Validform_checktip"></span>
+                    </dd>
+                </dl>
+            }
             <dl>
                 <dt>排序数字</dt>
                 <dd>
@@ -295,61 +322,73 @@
                     <span class="Validform_checktip">不选择默认当前发布时间</span>
                 </dd>
             </dl>
-            <dl ID="div_albums_container" runat="server" visible="false">
-                <dt>图片相册</dt>
-                <dd>
-                    <div class="upload-box upload-album"></div>
-                    <input type="hidden" name="hidFocusPhoto" id="hidFocusPhoto" runat="server" class="focus-photo" />
-                    <div class="photo-list">
-                        <ul>
-                            <asp:Repeater ID="rptAlbumList" runat="server">
-                                <ItemTemplate>
+            @if (channelModel.is_albums == 1)
+            {
+                <dl id="div_albums_container">
+                    <dt>图片相册</dt>
+                    <dd>
+                        <div class="upload-box upload-album"></div>
+                        @if (filename.StartsWith("thumb_"))
+                        {
+                            <input type="hidden" name="hidFocusPhoto" id="hidFocusPhoto" class="focus-photo" value="@Model.img_url" />
+                        }
+                        else
+                        {
+                            <input type="hidden" name="hidFocusPhoto" id="hidFocusPhoto" class="focus-photo" />
+                        }
+
+                        <div class="photo-list">
+                            <ul>
+                                @foreach (var item in Model.albums)
+                                {
+                                <li>
+                                    <input type="hidden" name="hid_photo_name" value="@item.id|@item.original_path|@item.thumb_path" />
+                                    <input type="hidden" name="hid_photo_remark" value="@item.remark" />
+                                    <div class="img-box" onclick="setFocusImg(this);">
+                                        <img src="@item.thumb_path" bigsrc="@item.original_path" />
+                                        <span class="remark"><i>@(item.remark.ToString() == "" ? "暂无描述..." : item.remark.ToString())</i></span>
+                                    </div>
+                                    <a href="javascript:;" onclick="setRemark(this);">描述</a>
+                                    <a href="javascript:;" onclick="delImg(this);">删除</a>
+                                </li>
+                                }
+                            </ul>
+                        </div>
+                    </dd>
+                </dl>
+            }
+            @if (channelModel.is_attach == 1)
+            {
+                <dl id="div_attach_container">
+                    <dt>上传附件</dt>
+                    <dd>
+                        <a class="icon-btn attach-btn"><i class="iconfont icon-add"></i><span>添加附件</span></a>
+                        <div id="showAttachList" class="attach-list">
+                            <ul>
+                                @foreach (var item in Model.attach)
+                                {
                                     <li>
-                                        <input type="hidden" name="hid_photo_name" value="<%#Eval(" id")%>|<%#Eval("original_path")%>|<%#Eval("thumb_path")%>" />
-                                        <input type="hidden" name="hid_photo_remark" value="<%#Eval(" remark")%>" />
-                                        <div class="img-box" onclick="setFocusImg(this);">
-                                            <img src="<%#Eval(" thumb_path")%>" bigsrc="<%#Eval("original_path")%>" />
-                                            <span class="remark"><i><%#Eval("remark").ToString() == "" ? "暂无描述..." : Eval("remark").ToString()%></i></span>
-                                        </div>
-                                        <a href="javascript:;" onclick="setRemark(this);">描述</a>
-                                        <a href="javascript:;" onclick="delImg(this);">删除</a>
-                                    </li>
-                                </ItemTemplate>
-                            </asp:Repeater>
-                        </ul>
-                    </div>
-                </dd>
-            </dl>
-            <dl ID="div_attach_container" runat="server" visible="false">
-                <dt>上传附件</dt>
-                <dd>
-                    <a class="icon-btn attach-btn"><i class="iconfont icon-add"></i><span>添加附件</span></a>
-                    <div id="showAttachList" class="attach-list">
-                        <ul>
-                            <asp:Repeater ID="rptAttachList" runat="server">
-                                <ItemTemplate>
-                                    <li>
-                                        <input name="hid_attach_id" type="hidden" value="<%#Eval(" id")%>" />
-                                        <input name="hid_attach_filename" type="hidden" value="<%#Eval(" file_name")%>" />
-                                        <input name="hid_attach_filepath" type="hidden" value="<%#Eval(" file_path")%>" />
-                                        <input name="hid_attach_filesize" type="hidden" value="<%#Eval(" file_size")%>" />
+                                        <input name="hid_attach_id" type="hidden" value="@item.id" />
+                                        <input name="hid_attach_filename" type="hidden" value="@item.file_name" />
+                                        <input name="hid_attach_filepath" type="hidden" value="@item.file_path" />
+                                        <input name="hid_attach_filesize" type="hidden" value="@item.file_size" />
                                         <i class="iconfont icon-attachment"></i>
                                         <a href="javascript:;" onclick="delAttachNode(this);" class="del" title="删除附件"><i class="iconfont icon-remove"></i></a>
                                         <a href="javascript:;" onclick="showAttachDialog(this);" class="edit" title="更新附件"><i class="iconfont icon-pencil"></i></a>
-                                        <div class="title"><%#Eval("file_name")%></div>
-                                        <div class="info">类型：<span class="ext"><%#Eval("file_ext")%></span> 大小：<span class="size"><%#Convert.ToInt32(Eval("file_size")) > 1024 ? Convert.ToDouble((Convert.ToDouble(Eval("file_size")) / 1024f)).ToString("0.0") + "MB" : Eval("file_size") + "KB"%></span> 下载：<span class="down"><%#Eval("down_num")%></span>次</div>
-                                        <div class="btns">下载积分：<input type="text" name="txt_attach_point" onkeydown="return checkNumber(event);" value="<%#Eval(" point")%>" /></div>
+                                        <div class="title">@item.file_name</div>
+                                        <div class="info">类型：<span class="ext">@item.file_ext</span> 大小：<span class="size">@(Convert.ToInt32(item.file_size) > 1024 ? Convert.ToDouble((Convert.ToDouble(item.file_size) / 1024f)).ToString("0.0") + "MB" : item.file_size + "KB")</span> 下载：<span class="down">@item.down_num</span>次</div>
+                                        <div class="btns">下载积分：<input type="text" name="txt_attach_point" onkeydown="return checkNumber(event);" value="@item.point" /></div>
                                     </li>
-                                </ItemTemplate>
-                            </asp:Repeater>
-                        </ul>
-                    </div>
-                </dd>
-            </dl>
+                                }
+                            </ul>
+                        </div>
+                    </dd>
+                </dl>
+            }
         </div>
         if (OtherFieldList.Count > 0)
         {
-            <div id="field_tab_content" class="tab-content" style="display:none">@Html.Article_editCreateOtherField()</div>
+            <div id="field_tab_content" class="tab-content" style="display:none">@Html.Article_editCreateOtherField(OtherFieldList, Model)</div>
         }
         <div class="tab-content" style="display:none">
             <dl>
@@ -366,20 +405,26 @@
                     <span class="Validform_checktip">填写后直接跳转到该网址</span>
                 </dd>
             </dl>
-            <dl ID="div_source" runat="server" visible="false">
-                <dt><asp:Label ID="div_source_title" runat="server" Text="信息来源" /></dt>
-                <dd>
-                    <asp:TextBox ID="field_control_source" runat="server" CssClass="input normal"></asp:TextBox>
-                    <asp:Label ID="div_source_tip" runat="server" CssClass="Validform_checktip" />
-                </dd>
-            </dl>
-            <dl ID="div_author" runat="server" visible="false">
-                <dt><asp:Label ID="div_author_title" runat="server" Text="文章作者" /></dt>
-                <dd>
-                    <asp:TextBox ID="field_control_author" runat="server" CssClass="input normal" datatype="s0-50" sucmsg=" "></asp:TextBox>
-                    <asp:Label ID="div_author_tip" runat="server" CssClass="Validform_checktip" />
-                </dd>
-            </dl>
+            @if (ShowSysFieldList.Where(m => m.name == "source").Count() == 1)
+            {
+                <dl id="div_source">
+                    <dt><span id="div_source_title">信息来源</span></dt>
+                    <dd>
+                        <input ID="field_control_source" name="field_control_source" class="input normal" sucmsg=" " value='@Model.fields["source"]' />
+                        <span id="div_source_tip" class="Validform_checktip"></span>
+                    </dd>
+                </dl>
+            }
+            @if (ShowSysFieldList.Where(m => m.name == "author").Count() == 1)
+            {
+                <dl id="div_author">
+                    <dt><span id="div_author_title">文章作者</span></dt>
+                    <dd>
+                        <input ID="field_control_author" name="field_control_author" class="input normal" datatype="s0-50" sucmsg=" " value='@Model.fields["author"]' />
+                        <span id="div_author_tip" class="Validform_checktip"></span>
+                    </dd>
+                </dl>
+            }
             <dl>
                 <dt>内容摘要</dt>
                 <dd>

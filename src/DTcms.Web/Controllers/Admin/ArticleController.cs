@@ -244,29 +244,10 @@ namespace DTcms.Web.Controllers.Admin
         #region 显示默认扩展字段=========================
         private void Article_editShowSysField(int _channel_id)
         {
-            ////查找该频道所选的默认字段
-            //List<Model.article_attribute_field> ls = new BLL.article_attribute_field().GetModelList(_channel_id, "is_sys=1");
-            //foreach (Model.article_attribute_field modelt in ls)
-            //{
-            //    //查找相应的控件，如找到则显示
-            //    HtmlGenericControl htmlDiv = FindControl("div_" + modelt.name) as HtmlGenericControl;
-            //    if (htmlDiv != null)
-            //    {
-            //        htmlDiv.Visible = true;
-            //        ((Label)htmlDiv.FindControl("div_" + modelt.name + "_title")).Text = modelt.title;
-            //        ((TextBox)htmlDiv.FindControl("field_control_" + modelt.name)).Text = modelt.default_value;
-            //        ((Label)htmlDiv.FindControl("div_" + modelt.name + "_tip")).Text = modelt.valid_tip_msg;
-            //    }
-            //}
-            ////查找该频道所开启的功能
-            //if (channelModel.is_albums == 1)
-            //{
-            //    div_albums_container.Visible = true;
-            //}
-            //if (channelModel.is_attach == 1)
-            //{
-            //    div_attach_container.Visible = true;
-            //}
+            //查找该频道所选的默认字段
+            List<Model.article_attribute_field> ls = new BLL.article_attribute_field().GetModelList(_channel_id, "is_sys=1");
+            ViewBag.ShowSysFieldList = ls;
+            ViewBag.channelModel = channelModel;
         }
         #endregion
 
@@ -302,23 +283,19 @@ namespace DTcms.Web.Controllers.Admin
         #region 绑定会员组===============================
         private void Article_editGroupBind(string strWhere)
         {
-            ////检查网站是否开启会员功能
-            //if (sysConfig.memberstatus == 0)
-            //{
-            //    return;
-            //}
-            ////检查该频道是否开启会员组价格
-            //if (channelModel.is_spec == 0)
-            //{
-            //    return;
-            //}
-            //BLL.user_groups bll = new BLL.user_groups();
-            //DataSet ds = bll.GetList(0, strWhere, "grade asc,id desc");
-            //if (ds.Tables[0].Rows.Count > 0)
-            //{
-            //    this.rptPrice.DataSource = ds;
-            //    this.rptPrice.DataBind();
-            //}
+            //检查网站是否开启会员功能
+            if (sysConfig.memberstatus == 0)
+            {
+                return;
+            }
+            //检查该频道是否开启会员组价格
+            if (channelModel.is_spec == 0)
+            {
+                return;
+            }
+            BLL.user_groups bll = new BLL.user_groups();
+            DataSet ds = bll.GetList(0, strWhere, "grade asc,id desc");
+            ViewBag.rptPrice = ds.Tables[0];
         }
         #endregion
 
@@ -328,101 +305,8 @@ namespace DTcms.Web.Controllers.Admin
             BLL.article bll = new BLL.article();
             article model = bll.GetModel(_channel_id, _id);
             //不是相册图片就绑定
-            //string filename = model.img_url.Substring(model.img_url.LastIndexOf("/") + 1);
-            //if (!filename.StartsWith("thumb_"))
-            //{
-            //    txtImgUrl.Text = model.img_url;
-            //}
-
-
-            ////扩展字段赋值
-            //List<Model.article_attribute_field> ls1 = new BLL.article_attribute_field().GetModelList(this.channel_id, "");
-            //foreach (Model.article_attribute_field modelt1 in ls1)
-            //{
-            //    switch (modelt1.control_type)
-            //    {
-            //        case "single-text": //单行文本
-            //            TextBox txtControl = FindControl("field_control_" + modelt1.name) as TextBox;
-            //            if (txtControl != null && model.fields.ContainsKey(modelt1.name))
-            //            {
-            //                if (modelt1.is_password == 1)
-            //                {
-            //                    txtControl.Attributes.Add("value", model.fields[modelt1.name]);
-            //                }
-            //                else
-            //                {
-            //                    txtControl.Text = model.fields[modelt1.name];
-            //                }
-            //            }
-            //            break;
-            //        case "multi-text": //多行文本
-            //            goto case "single-text";
-            //        case "editor": //编辑器
-            //            HtmlTextArea txtAreaControl = FindControl("field_control_" + modelt1.name) as HtmlTextArea;
-            //            if (txtAreaControl != null && model.fields.ContainsKey(modelt1.name))
-            //            {
-            //                txtAreaControl.Value = model.fields[modelt1.name];
-            //            }
-            //            break;
-            //        case "images": //图片上传
-            //            goto case "single-text";
-            //        case "video": //视频上传
-            //            goto case "single-text";
-            //        case "number": //数字
-            //            goto case "single-text";
-            //        case "datetime": //时间日期
-            //            goto case "single-text";
-            //        case "checkbox": //复选框
-            //            CheckBox cbControl = FindControl("field_control_" + modelt1.name) as CheckBox;
-            //            if (cbControl != null && model.fields.ContainsKey(modelt1.name))
-            //            {
-            //                if (model.fields[modelt1.name] == "1")
-            //                {
-            //                    cbControl.Checked = true;
-            //                }
-            //                else
-            //                {
-            //                    cbControl.Checked = false;
-            //                }
-            //            }
-            //            break;
-            //        case "multi-radio": //多项单选
-            //            RadioButtonList rblControl = FindControl("field_control_" + modelt1.name) as RadioButtonList;
-            //            if (rblControl != null && model.fields.ContainsKey(modelt1.name))
-            //            {
-            //                rblControl.SelectedValue = model.fields[modelt1.name];
-            //            }
-            //            break;
-            //        case "multi-checkbox": //多项多选
-            //            CheckBoxList cblControl = FindControl("field_control_" + modelt1.name) as CheckBoxList;
-            //            if (cblControl != null && model.fields.ContainsKey(modelt1.name))
-            //            {
-            //                string[] valArr = model.fields[modelt1.name].Split(',');
-            //                for (int i = 0; i < cblControl.Items.Count; i++)
-            //                {
-            //                    cblControl.Items[i].Selected = false; //先取消默认的选中
-            //                    foreach (string str in valArr)
-            //                    {
-            //                        if (cblControl.Items[i].Value == str)
-            //                        {
-            //                            cblControl.Items[i].Selected = true;
-            //                        }
-            //                    }
-            //                }
-            //            }
-            //            break;
-            //    }
-            //}
-            ////绑定图片相册
-            //if (filename.StartsWith("thumb_"))
-            //{
-            //    hidFocusPhoto.Value = model.img_url; //封面图片
-            //}
-            //rptAlbumList.DataSource = model.albums;
-            //rptAlbumList.DataBind();
-            ////绑定内容附件
-            //rptAttachList.DataSource = model.attach;
-            //rptAttachList.DataBind();
+            string filename = model.img_url.Substring(model.img_url.LastIndexOf("/") + 1);
+            ViewBag.filename = filename;
             ////赋值用户组价格
             //if (model.group_price != null)
             //{

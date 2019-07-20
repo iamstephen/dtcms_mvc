@@ -4,13 +4,16 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using DTcms.Model;
 
 namespace DTcms.Web.HtmlExtensions
 {
     public static class HtmlGenericControl
     {
-        public static MvcHtmlString Article_editCreateOtherField(this HtmlHelper htmlHelper, List<Model.article_attribute_field> ls)
+        public static MvcHtmlString Article_editCreateOtherField(this HtmlHelper htmlHelper, List<Model.article_attribute_field> ls, article model)
         {
+            string html = string.Empty;
+            bool isAdd = model.id == 0;//如果id=0，则是添加
             foreach (Model.article_attribute_field modelt in ls)
             {
                 //创建一个dl标签
@@ -25,6 +28,7 @@ namespace DTcms.Web.HtmlExtensions
                         //创建一个TextBox控件
                         TagBuilder txtControl = new TagBuilder("input");
                         txtControl.MergeAttribute("id", "field_control_" + modelt.name);
+                        txtControl.MergeAttribute("name", "field_control_" + modelt.name);
                         //CSS样式及TextMode设置
                         if (modelt.control_type == "single-text") //单行
                         {
@@ -34,7 +38,8 @@ namespace DTcms.Web.HtmlExtensions
                             {
                                 txtControl.MergeAttribute("type", "password");
                             }
-                            else {
+                            else
+                            {
                                 txtControl.MergeAttribute("type", "text");
                             }
                         }
@@ -52,7 +57,7 @@ namespace DTcms.Web.HtmlExtensions
                             txtControl.AddCssClass("input normal upload-path");
                         }
                         //设置默认值
-                        //txtControl.Text = modelt.default_value;
+                        txtControl.MergeAttribute("value", isAdd ? modelt.default_value : model.fields[modelt.name]);
                         //验证提示信息
                         if (!string.IsNullOrEmpty(modelt.valid_tip_msg))
                         {
@@ -71,7 +76,7 @@ namespace DTcms.Web.HtmlExtensions
                         }
                         //创建一个Label控件
                         TagBuilder labelControl = new TagBuilder("label");
-                        txtControl.AddCssClass("Validform_checktip");
+                        labelControl.AddCssClass("Validform_checktip");
                         labelControl.SetInnerText(modelt.valid_tip_msg);
 
                         //将控件添加至DD中
@@ -82,7 +87,7 @@ namespace DTcms.Web.HtmlExtensions
                             TagBuilder htmlBtn = new TagBuilder("div");
                             htmlBtn.Attributes.Add("class", "upload-box upload-img");
                             htmlBtn.Attributes.Add("style", "margin-left:4px;");
-                            htmlDD.InnerHtml=htmlBtn.ToString(TagRenderMode.Normal);
+                            htmlDD.InnerHtml += htmlBtn.ToString(TagRenderMode.Normal);
                         }
                         //如果是视频则添加上传按钮
                         if (modelt.control_type == "video")
@@ -90,15 +95,46 @@ namespace DTcms.Web.HtmlExtensions
                             TagBuilder htmlBtn = new TagBuilder("div");
                             htmlBtn.Attributes.Add("class", "upload-box upload-video");
                             htmlBtn.Attributes.Add("style", "margin-left:4px;");
-                            htmlDD.InnerHtml = htmlBtn.ToString(TagRenderMode.Normal);
+                            htmlDD.InnerHtml += htmlBtn.ToString(TagRenderMode.Normal);
                         }
-                        htmlDD.InnerHtml=labelControl.ToString(TagRenderMode.Normal);
+                        htmlDD.InnerHtml += labelControl.ToString(TagRenderMode.Normal);
                         break;
                     case "multi-text": //多行文本
-                        goto case "single-text";
+                        TagBuilder txtTextArea0 = new TagBuilder("textarea");
+                        txtTextArea0.MergeAttribute("id", "field_control_" + modelt.name);
+                        txtTextArea0.MergeAttribute("name", "field_control_" + modelt.name);
+                        txtTextArea0.MergeAttribute("class", "input");
+                        //设置默认值
+                        txtTextArea0.SetInnerText(isAdd ? modelt.default_value : model.fields[modelt.name]);
+                        //验证提示信息
+                        if (!string.IsNullOrEmpty(modelt.valid_tip_msg))
+                        {
+                            txtTextArea0.Attributes.Add("tipmsg", modelt.valid_tip_msg);
+                        }
+                        //验证失败提示信息
+                        if (!string.IsNullOrEmpty(modelt.valid_error_msg))
+                        {
+                            txtTextArea0.Attributes.Add("errormsg", modelt.valid_error_msg);
+                        }
+                        //验证表达式
+                        if (!string.IsNullOrEmpty(modelt.valid_pattern))
+                        {
+                            txtTextArea0.Attributes.Add("datatype", modelt.valid_pattern);
+                            txtTextArea0.Attributes.Add("sucmsg", " ");
+                        }
+                        //创建一个Label控件
+                        TagBuilder labelControl0 = new TagBuilder("label");
+                        labelControl0.AddCssClass("Validform_checktip");
+                        labelControl0.SetInnerText(modelt.valid_tip_msg);
+
+                        //将控件添加至DD中
+                        htmlDD.InnerHtml = txtTextArea0.ToString(TagRenderMode.Normal);
+                        htmlDD.InnerHtml += labelControl0.ToString(TagRenderMode.Normal);
+                        break;
                     case "editor": //编辑器
                         TagBuilder txtTextArea = new TagBuilder("textarea");
                         txtTextArea.MergeAttribute("id", "field_control_" + modelt.name);
+                        txtTextArea.MergeAttribute("name", "field_control_" + modelt.name);
                         //txtTextArea.Attributes.Add("style", "visibility:hidden;");
                         //是否简洁型编辑器
                         if (modelt.editor_type == 1)
@@ -109,7 +145,7 @@ namespace DTcms.Web.HtmlExtensions
                         {
                             txtTextArea.Attributes.Add("class", "editor");
                         }
-                        //txtTextArea.Value = modelt.default_value; //默认值
+                        txtTextArea.SetInnerText(isAdd ? modelt.default_value : model.fields[modelt.name]);
                         //验证提示信息
                         if (!string.IsNullOrEmpty(modelt.valid_tip_msg))
                         {
@@ -131,7 +167,7 @@ namespace DTcms.Web.HtmlExtensions
                         labelControl2.AddCssClass("Validform_checktip");
                         labelControl2.SetInnerText(modelt.valid_tip_msg);
                         //将控件添加至DD中
-                        htmlDD.InnerHtml = txtTextArea.ToString(TagRenderMode.Normal)+ labelControl2.ToString(TagRenderMode.Normal);
+                        htmlDD.InnerHtml = txtTextArea.ToString(TagRenderMode.Normal) + labelControl2.ToString(TagRenderMode.Normal);
                         break;
                     case "images": //图片上传
                         goto case "single-text";
@@ -144,15 +180,16 @@ namespace DTcms.Web.HtmlExtensions
                     case "checkbox": //复选框
                         TagBuilder cbControl = new TagBuilder("input");
                         cbControl.MergeAttribute("id", "field_control_" + modelt.name);
+                        cbControl.MergeAttribute("name", "field_control_" + modelt.name);
                         cbControl.MergeAttribute("type", "checkbox");
                         //默认值
-                        if (modelt.default_value == "1")
+                        if (model.fields[modelt.name] == "1")
                         {
-                            cbControl.MergeAttribute("Checked", "true");
+                            cbControl.MergeAttribute("checked", "checked");
                         }
                         TagBuilder htmlDiv1 = new TagBuilder("div");
                         htmlDiv1.Attributes.Add("class", "rule-single-checkbox");
-                        htmlDiv1.InnerHtml=cbControl.ToString(TagRenderMode.Normal);
+                        htmlDiv1.InnerHtml = cbControl.ToString(TagRenderMode.Normal);
                         //将控件添加至DD中
                         htmlDD.InnerHtml = htmlDiv1.ToString(TagRenderMode.Normal);
                         if (!string.IsNullOrEmpty(modelt.valid_tip_msg))
@@ -165,14 +202,11 @@ namespace DTcms.Web.HtmlExtensions
                         }
                         break;
                     case "multi-radio": //多项单选
-                        TagBuilder rblControl = new TagBuilder("input");
+                        TagBuilder rblControl = new TagBuilder("span");
                         rblControl.MergeAttribute("id", "field_control_" + modelt.name);
-                        rblControl.MergeAttribute("type", "radio");
-                        //rblControl.RepeatDirection = RepeatDirection.Horizontal;
-                        //rblControl.RepeatLayout = RepeatLayout.Flow;
                         TagBuilder htmlDiv2 = new TagBuilder("div");
                         htmlDiv2.Attributes.Add("class", "rule-multi-radio");
-                        htmlDiv2.InnerHtml=rblControl.ToString(TagRenderMode.SelfClosing);
+
                         //赋值选项(先根据文本是否为空，后期可能添加绑定类型字段)
                         if (!string.IsNullOrEmpty(modelt.item_option))
                         {
@@ -182,7 +216,21 @@ namespace DTcms.Web.HtmlExtensions
                                 string[] valItemArr = valArr[i].Split('|');
                                 if (valItemArr.Length == 2)
                                 {
-                                    //rblControl.Items.Add(new ListItem(valItemArr[0], valItemArr[1]));
+                                    TagBuilder rblControlitem = new TagBuilder("input");
+                                    rblControlitem.MergeAttribute("id", "field_control_" + modelt.name + "_" + i);
+                                    rblControlitem.MergeAttribute("name", "field_control_" + modelt.name);
+                                    rblControlitem.MergeAttribute("type", "radio");
+                                    rblControlitem.MergeAttribute("value", valItemArr[1]);
+
+                                    if (valItemArr[1] == model.fields[modelt.name]) {
+                                        rblControlitem.MergeAttribute("checked", "checked");
+                                    }
+
+                                    TagBuilder rblControllabel = new TagBuilder("label");
+                                    rblControllabel.MergeAttribute("for", "field_control_" + modelt.name + "_" + i);
+                                    rblControllabel.SetInnerText(valItemArr[0]);
+                                    rblControl.InnerHtml += rblControlitem.ToString(TagRenderMode.SelfClosing);
+                                    rblControl.InnerHtml += rblControllabel.ToString(TagRenderMode.Normal);
                                 }
                             }
                         }
@@ -194,41 +242,67 @@ namespace DTcms.Web.HtmlExtensions
                                 DataTable dt = DTcms.DBUtility.DbHelperSQL.Query(modelt.BindSQL).Tables[0];
                                 if (dt.Rows.Count > 0)
                                 {
-                                    foreach (DataRow dr in dt.Rows)
+                                    for (int i = 0; i < dt.Rows.Count; i++)
                                     {
-                                        //rblControl.Items.Add(new ListItem(dr[modelt.BindSQLTitle.Trim()].ToString(), dr[modelt.BindSQLValue.Trim()].ToString()));
+                                        TagBuilder rblControlitem = new TagBuilder("input");
+                                        rblControlitem.MergeAttribute("id", "field_control_" + modelt.name + "_" + i);
+                                        rblControlitem.MergeAttribute("name", "field_control_" + modelt.name);
+                                        rblControlitem.MergeAttribute("type", "radio");
+                                        rblControlitem.MergeAttribute("value", dt.Rows[i][modelt.BindSQLValue.Trim()].ToString());
+
+                                        if (dt.Rows[i][modelt.BindSQLValue.Trim()].ToString() == model.fields[modelt.name])
+                                        {
+                                            rblControlitem.MergeAttribute("checked", "checked");
+                                        }
+
+                                        TagBuilder rblControllabel = new TagBuilder("label");
+                                        rblControllabel.MergeAttribute("for", "field_control_" + modelt.name + "_" + i);
+                                        rblControllabel.SetInnerText(dt.Rows[i][modelt.BindSQLTitle.Trim()].ToString());
+                                        rblControl.InnerHtml += rblControlitem.ToString(TagRenderMode.SelfClosing);
+                                        rblControl.InnerHtml += rblControllabel.ToString(TagRenderMode.Normal);
                                     }
                                 }
                             }
                         }
-                        //rblControl.SelectedValue = modelt.default_value; //默认值
+                        htmlDiv2.InnerHtml = rblControl.ToString(TagRenderMode.Normal);
                         //创建一个Label控件
                         TagBuilder labelControl4 = new TagBuilder("label");
                         labelControl4.AddCssClass("Validform_checktip");
                         labelControl4.SetInnerText(modelt.valid_tip_msg);
                         //将控件添加至DD中
-                        htmlDD.InnerHtml = htmlDiv2.ToString(TagRenderMode.Normal)+labelControl4.ToString(TagRenderMode.Normal);
+                        htmlDD.InnerHtml = htmlDiv2.ToString(TagRenderMode.Normal) + labelControl4.ToString(TagRenderMode.Normal);
                         break;
                     case "multi-checkbox": //多项多选
-                        TagBuilder cblControl = new TagBuilder("input");
+                        TagBuilder cblControl = new TagBuilder("span");
                         cblControl.MergeAttribute("id", "field_control_" + modelt.name);
-                        cblControl.MergeAttribute("type", "checkbox");
-                        //cblControl.RepeatDirection = RepeatDirection.Horizontal;
-                        //cblControl.RepeatLayout = RepeatLayout.Flow;
                         TagBuilder htmlDiv3 = new TagBuilder("div");
                         htmlDiv3.Attributes.Add("class", "rule-multi-checkbox");
-                        htmlDiv3.InnerHtml = cblControl.ToString(TagRenderMode.SelfClosing);
+
                         //赋值选项
                         string[] valArr2 = modelt.item_option.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
                         for (int i = 0; i < valArr2.Length; i++)
                         {
                             string[] valItemArr2 = valArr2[i].Split('|');
+                            string[] valArr = model.fields[modelt.name].Split(',');//获取该字段的值，如"游泳,跑步"
                             if (valItemArr2.Length == 2)
                             {
-                                //cblControl.Items.Add(new ListItem(valItemArr2[0], valItemArr2[1]));
+                                TagBuilder rblControlitem = new TagBuilder("input");
+                                rblControlitem.MergeAttribute("id", "field_control_" + modelt.name + "_" + i);
+                                rblControlitem.MergeAttribute("name", "field_control_" + modelt.name);
+                                rblControlitem.MergeAttribute("type", "checkbox");
+                                rblControlitem.MergeAttribute("value", valItemArr2[1]);
+
+                                TagBuilder rblControllabel = new TagBuilder("label");
+                                rblControllabel.MergeAttribute("for", "field_control_" + modelt.name + "_" + i);
+                                rblControllabel.SetInnerText(valItemArr2[0]);
+                                cblControl.InnerHtml += rblControlitem.ToString(TagRenderMode.SelfClosing);
+                                cblControl.InnerHtml += rblControllabel.ToString(TagRenderMode.Normal);
+                                //判断这个选项是否在valArr
+                                if(valArr.Contains(valItemArr2[1]))
+                                    rblControlitem.MergeAttribute("checked", "checked");
                             }
                         }
-                        //cblControl.SelectedValue = modelt.default_value; //默认值
+                        htmlDiv3.InnerHtml = cblControl.ToString(TagRenderMode.Normal);
                         //创建一个Label控件
                         TagBuilder labelControl5 = new TagBuilder("label");
                         labelControl5.AddCssClass("Validform_checktip");
@@ -239,11 +313,11 @@ namespace DTcms.Web.HtmlExtensions
                 }
 
                 //将DT和DD添加到DL中
-                htmlDD.InnerHtml = htmlDT.ToString(TagRenderMode.Normal) + htmlDD.ToString(TagRenderMode.Normal);
+                htmlDL.InnerHtml = htmlDT.ToString(TagRenderMode.Normal) + htmlDD.ToString(TagRenderMode.Normal);
                 //将DL添加至field_tab_content中
-                return MvcHtmlString.Create(htmlDL.ToString(TagRenderMode.Normal));
+                html += htmlDL.ToString(TagRenderMode.Normal);
             }
-            return MvcHtmlString.Create("");
+            return MvcHtmlString.Create(html.ToString());
         }
     }
 }
