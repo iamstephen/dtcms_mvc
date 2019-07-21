@@ -37,7 +37,7 @@
             $("#form1").initValidform();
 
             //计算用户组价格
-            $("#field_control_sell_price").change(function () {
+            $("#sell_price").change(function () {
                 var sprice = parseFloat($(this).val());
                 if (sprice > 0) {
                     $(".groupprice").each(function () {
@@ -124,7 +124,7 @@
 </head>
 
 <body class="mainbody">
-    @using (Html.BeginForm("Category_edit", "Article", new { id = DTRequest.GetString("id"), channel_id = DTRequest.GetString("channel_id"), submitAction = DTRequest.GetString("action") }, FormMethod.Post, new { id = "form1" }))
+    @using (Html.BeginForm("Article_edit", "Article", new { id = DTRequest.GetString("id").ToInt(), channel_id = DTRequest.GetString("channel_id").ToInt(), submitAction = DTRequest.GetString("action") }, FormMethod.Post, new { id = "form1" }))
     {
         @Html.AntiForgeryToken()
         <!--导航栏-->
@@ -160,7 +160,7 @@
                 <dt>所属类别</dt>
                 <dd>
                     <div class="rule-single-select">
-                        @Html.DropDownListFor(m => m.category_id, ViewBag.ddlCategoryId as List<SelectListItem>)
+                        @Html.DropDownListFor(m => m.category_id, ViewBag.ddlCategoryId as List<SelectListItem>,new {datatype = "*"})
                     </div>
                 </dd>
             </dl>
@@ -199,7 +199,7 @@
                 <dl id="div_sub_title">
                     <dt><span id="div_sub_title_title">副标题</span></dt>
                     <dd>
-                        <input ID="field_control_sub_title" name="field_control_sub_title" class="input normal" datatype="*0-255" sucmsg=" " value='@Model.fields["sub_title"]' />
+                        <input id="sub_title" name="sub_title" class="input normal" datatype="*0-255" sucmsg=" " value='@(Model.fields!=null?Model.fields["sub_title"]:"")' />
                         <span id="div_sub_title_tip" class="Validform_checktip"></span>
                     </dd>
                 </dl>
@@ -215,7 +215,7 @@
             <dl>
                 <dt>封面图片</dt>
                 <dd>
-                    @if (!filename.StartsWith("thumb_"))
+                    @if (filename!=null&&!filename.StartsWith("thumb_"))
                     {
                         <input name="img_url" type="text" id="img_url" class="input normal upload-path" value="@Model.img_url" />
                     }
@@ -231,7 +231,7 @@
                 <dl id="div_goods_no">
                     <dt><span id="div_goods_no_title">商品货号</span></dt>
                     <dd>
-                        <input ID="field_control_goods_no" name="field_control_goods_no" class="input normal" datatype="*0-100" sucmsg=" " value='@Model.fields["goods_no"]' />
+                        <input ID="goods_no" name="goods_no" class="input normal" datatype="*0-100" sucmsg=" " value='@(Model.fields!=null?Model.fields["goods_no"]:"")' />
                         <span id="div_goods_no_tip" class="Validform_checktip"></span>
                     </dd>
                 </dl>
@@ -241,7 +241,7 @@
                 <dl id="div_stock_quantity">
                     <dt><span id="div_stock_quantity_title">库存数量</span></dt>
                     <dd>
-                        <input ID="field_control_stock_quantity" name="field_control_stock_quantity" class="input small" datatype="n" sucmsg=" " value='@Model.fields["stock_quantity"]' />
+                        <input ID="stock_quantity" name="stock_quantity" class="input small" datatype="n" sucmsg=" " value='@(Model.fields!=null?Model.fields["stock_quantity"]:"")' />
                         <span id="div_stock_quantity_tip" class="Validform_checktip"></span>
                     </dd>
                 </dl>
@@ -251,7 +251,7 @@
                 <dl id="div_market_price">
                     <dt><span id="div_market_price_title">市场价格</span></dt>
                     <dd>
-                        <input ID="field_control_market_price" name="field_control_market_price" class="input small" datatype="/^(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/" sucmsg=" "  value='@Model.fields["market_price"]'/>元
+                        <input ID="market_price" name="market_price" class="input small" datatype="/^(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/" sucmsg=" "  value='@(Model.fields!=null?Model.fields["market_price"]:"0")'/>元
                         <span id="div_market_price_tip" class="Validform_checktip"></span>
                     </dd>
                 </dl>
@@ -261,7 +261,7 @@
                 <dl id="div_sell_price">
                     <dt><span id="div_sell_price_title">销售价格</span></dt>
                     <dd>
-                        <input ID="field_control_sell_price" name="field_control_sell_price" class="input small" datatype="/^(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/" sucmsg=" " value='@Model.fields["sell_price"]' />元
+                        <input ID="sell_price" name="sell_price" class="input small" datatype="/^(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/" sucmsg=" " value='@(Model.fields!=null?Model.fields["sell_price"]:"0")' />元
                         <span id="div_sell_price_tip" class="Validform_checktip"></span>
                     </dd>
                 </dl>
@@ -276,12 +276,13 @@
 
                                 @foreach (System.Data.DataRow dr in rptPrice.Rows)
                                 {
-                                <tr>
+                                    List<DTcms.Model.user_group_price> user_Group_Price = Model.group_price.Where(m => m.group_id == dr["id"].ToInt()).ToList();
+                                    <tr>
                                     <th width="20%">@dr["title"]</th>
                                     <td width="80%">
-                                        <input id="hidePriceId" type="hidden" />
-                                        <input id="hideGroupId" type="hidden" Value='@dr["id"]' />
-                                        <input id="txtGroupPrice" type="text" discount='@dr["discount"]' class="td-input groupprice" maxlength="10" style="width:60px;" datatype="/^(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/" sucmsg=" " />
+                                        <input id="hidePriceId" type="hidden" value="@(user_Group_Price.Count==1?user_Group_Price[0].id.ToStr():"")" />
+                                        <input id="hideGroupId" name="hideGroupId(@dr["id"])" type="hidden" Value='@dr["id"]' />
+                                        <input id="txtGroupPrice" name="txtGroupPrice(@dr["id"])" type="text" discount='@dr["discount"]' class="td-input groupprice" maxlength="10" style="width:60px;" datatype="/^(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/" sucmsg=" "  value="@(user_Group_Price.Count==1?user_Group_Price[0].price.ToStr():"")"/>
                                         <span class="Validform_checktip">*享受(@dr["discount"])折优惠</span>
                                     </td>
                                 </tr>
@@ -296,7 +297,7 @@
                 <dl id="div_point">
                     <dt><span id="div_point_title">积分</span></dt>
                     <dd>
-                        <input ID="field_control_point" name="field_control_point" class="input small" datatype="/^-?\d+$/" sucmsg=" " value='@Model.fields["point"]' />
+                        <input ID="point" name="point" class="input small" datatype="/^-?\d+$/" sucmsg=" " value='@(Model.fields!=null?Model.fields["point"]:"")' />
                         <span id="div_point_tip" class="Validform_checktip"></span>
                     </dd>
                 </dl>
@@ -410,7 +411,7 @@
                 <dl id="div_source">
                     <dt><span id="div_source_title">信息来源</span></dt>
                     <dd>
-                        <input ID="field_control_source" name="field_control_source" class="input normal" sucmsg=" " value='@Model.fields["source"]' />
+                        <input ID="source" name="source" class="input normal" sucmsg=" " value='@(Model.fields!=null?Model.fields["source"]:"")' />
                         <span id="div_source_tip" class="Validform_checktip"></span>
                     </dd>
                 </dl>
@@ -420,7 +421,7 @@
                 <dl id="div_author">
                     <dt><span id="div_author_title">文章作者</span></dt>
                     <dd>
-                        <input ID="field_control_author" name="field_control_author" class="input normal" datatype="s0-50" sucmsg=" " value='@Model.fields["author"]' />
+                        <input ID="author" name="author" class="input normal" datatype="s0-50" sucmsg=" " value='@(Model.fields!=null?Model.fields["author"]:"")' />
                         <span id="div_author_tip" class="Validform_checktip"></span>
                     </dd>
                 </dl>

@@ -307,22 +307,6 @@ namespace DTcms.Web.Controllers.Admin
             //不是相册图片就绑定
             string filename = model.img_url.Substring(model.img_url.LastIndexOf("/") + 1);
             ViewBag.filename = filename;
-            ////赋值用户组价格
-            //if (model.group_price != null)
-            //{
-            //    for (int i = 0; i < this.rptPrice.Items.Count; i++)
-            //    {
-            //        int hideId = Convert.ToInt32(((HiddenField)this.rptPrice.Items[i].FindControl("hideGroupId")).Value);
-            //        foreach (Model.user_group_price modelt in model.group_price)
-            //        {
-            //            if (hideId == modelt.group_id)
-            //            {
-            //                ((HiddenField)this.rptPrice.Items[i].FindControl("hidePriceId")).Value = modelt.id.ToString();
-            //                ((TextBox)this.rptPrice.Items[i].FindControl("txtGroupPrice")).Text = modelt.price.ToString();
-            //            }
-            //        }
-            //    }
-            //}
             return model;
         }
         #endregion
@@ -332,75 +316,295 @@ namespace DTcms.Web.Controllers.Admin
         {
             DataTable dt = new BLL.article_attribute_field().GetList(_channel_id, "").Tables[0];
             Dictionary<string, string> dic = new Dictionary<string, string>();
-            //foreach (DataRow dr in dt.Rows)
-            //{
-            //    //查找相应的控件
-            //    switch (dr["control_type"].ToString())
-            //    {
-            //        case "single-text": //单行文本
-            //            TextBox txtControl = FindControl("field_control_" + dr["name"].ToString()) as TextBox;
-            //            if (txtControl != null)
-            //            {
-            //                dic.Add(dr["name"].ToString(), txtControl.Text.Trim());
-
-            //            }
-            //            break;
-            //        case "multi-text": //多行文本
-            //            goto case "single-text";
-            //        case "editor": //编辑器
-            //            HtmlTextArea htmlTextAreaControl = FindControl("field_control_" + dr["name"].ToString()) as HtmlTextArea;
-            //            if (htmlTextAreaControl != null)
-            //            {
-            //                dic.Add(dr["name"].ToString(), htmlTextAreaControl.Value);
-            //            }
-            //            break;
-            //        case "images": //图片上传
-            //            goto case "single-text";
-            //        case "video": //视频上传
-            //            goto case "single-text";
-            //        case "number": //数字
-            //            goto case "single-text";
-            //        case "datetime": //时间日期
-            //            goto case "single-text";
-            //        case "checkbox": //复选框
-            //            CheckBox cbControl = FindControl("field_control_" + dr["name"].ToString()) as CheckBox;
-            //            if (cbControl != null)
-            //            {
-            //                if (cbControl.Checked == true)
-            //                {
-            //                    dic.Add(dr["name"].ToString(), "1");
-            //                }
-            //                else
-            //                {
-            //                    dic.Add(dr["name"].ToString(), "0");
-            //                }
-            //            }
-            //            break;
-            //        case "multi-radio": //多项单选
-            //            RadioButtonList rblControl = FindControl("field_control_" + dr["name"].ToString()) as RadioButtonList;
-            //            if (rblControl != null)
-            //            {
-            //                dic.Add(dr["name"].ToString(), rblControl.SelectedValue);
-            //            }
-            //            break;
-            //        case "multi-checkbox": //多项多选
-            //            CheckBoxList cblControl = FindControl("field_control_" + dr["name"].ToString()) as CheckBoxList;
-            //            if (cblControl != null)
-            //            {
-            //                StringBuilder tempStr = new StringBuilder();
-            //                for (int i = 0; i < cblControl.Items.Count; i++)
-            //                {
-            //                    if (cblControl.Items[i].Selected)
-            //                    {
-            //                        tempStr.Append(cblControl.Items[i].Value.Replace(',', '，') + ",");
-            //                    }
-            //                }
-            //                dic.Add(dr["name"].ToString(), Utils.DelLastComma(tempStr.ToString()));
-            //            }
-            //            break;
-            //    }
-            //}
+            foreach (DataRow dr in dt.Rows)
+            {
+                //查找相应的控件
+                switch (dr["control_type"].ToString())
+                {
+                    case "single-text": //单行文本
+                        dic.Add(dr["name"].ToString(), DTRequest.GetFormString(dr["name"].ToString()));
+                        break;
+                    case "multi-text": //多行文本
+                        goto case "single-text";
+                    case "editor": //编辑器
+                        goto case "single-text";
+                    case "images": //图片上传
+                        goto case "single-text";
+                    case "video": //视频上传
+                        goto case "single-text";
+                    case "number": //数字
+                        goto case "single-text";
+                    case "datetime": //时间日期
+                        goto case "single-text";
+                    case "checkbox": //复选框
+                        dic.Add(dr["name"].ToString(), DTRequest.GetFormString(dr["name"].ToString())=="1"?"1":"0");
+                        break;
+                    case "multi-radio": //多项单选
+                        goto case "single-text";
+                    case "multi-checkbox": //多项多选
+                        string str = DTRequest.GetFormString(dr["name"].ToString());
+                        goto case "single-text";
+                }
+            }
             return dic;
+        }
+        #endregion
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
+        public ActionResult Article_edit([Bind(Exclude = "status,is_msg,is_top,is_red,is_hot,is_slide")] article model, string submitAction, int id, int channel_id)
+        {
+            this.channel_id = channel_id;
+            channelModel = new BLL.site_channel().GetModel(channel_id); //频道实体
+            if (ModelState.IsValid)
+            {
+                if (action == DTEnums.ActionEnum.Edit.ToString()) //修改
+                {
+                    ChkAdminLevel("channel_" + channelModel.name + "_list", DTEnums.ActionEnum.Edit.ToString()); //检查权限
+                    if (!Article_editDoEdit(id, model))
+                    {
+                        return RedirectToAction("Error", "Admin", new { msg = "保存过程中发生错误！" });
+                    }
+                    return RedirectToAction("article_list", new { channel_id });
+                }
+                else //添加
+                {
+                    ChkAdminLevel("channel_" + this.channelModel.name + "_list", DTEnums.ActionEnum.Add.ToString()); //检查权限
+                    if (!Article_editDoAdd(model))
+                    {
+                        return RedirectToAction("Error", "Admin", new { msg = "保存过程中发生错误！" });
+                    }
+                    return RedirectToAction("article_list", new { channel_id });
+                }
+            }
+            return View();
+        }
+
+        #region 增加操作=================================
+        private bool Article_editDoAdd(article model)
+        {
+            bool result = false;
+            BLL.article bll = new BLL.article();
+
+            model.site_id = channelModel.site_id;
+            model.channel_id = channel_id;
+
+            //内容摘要提取内容前255个字符
+            if (string.IsNullOrEmpty(model.zhaiyao))
+            {
+                model.zhaiyao = Utils.DropHTML(model.content, 250);
+            }
+            else
+            {
+                model.zhaiyao = Utils.DropHTML(model.zhaiyao, 250);
+            }
+            model.sort_id = Utils.StrToInt(model.sort_id.ToStr(), 99);
+
+            model.is_sys = 1; //管理员发布
+            model.user_name = GetAdminInfo().user_name; //获得当前登录用户名
+            model.is_msg = Request.Form["is_msg"].Contains("true") ? 1 : 0;
+            model.is_top = Request.Form["is_top"].Contains("true") ? 1 : 0;
+            model.is_red = Request.Form["is_red"].Contains("true") ? 1 : 0;
+            model.is_hot = Request.Form["is_hot"].Contains("true") ? 1 : 0;
+            model.is_slide = Request.Form["is_slide"].Contains("true") ? 1 : 0;
+            if (Request.Form["status"].Contains("true") == false)
+            {
+                model.status = 2;
+            }
+            else
+            {
+                model.status = GetAdminInfo().is_audit;
+            }
+            model.fields = Article_editSetFieldValues(channel_id); //扩展字段赋值
+
+            #region 保存相册====================
+            //检查是否有自定义图片
+            if (model.img_url == "")
+            {
+                model.img_url = DTRequest.GetFormString("hidFocusPhoto");
+            }
+            string[] albumArr = Request.Form.GetValues("hid_photo_name");
+            string[] remarkArr = Request.Form.GetValues("hid_photo_remark");
+            if (albumArr != null && albumArr.Length > 0)
+            {
+                List<Model.article_albums> ls = new List<Model.article_albums>();
+                for (int i = 0; i < albumArr.Length; i++)
+                {
+                    string[] imgArr = albumArr[i].Split('|');
+                    if (imgArr.Length == 3)
+                    {
+                        if (!string.IsNullOrEmpty(remarkArr[i]))
+                        {
+                            ls.Add(new Model.article_albums { channel_id = channel_id, original_path = imgArr[1], thumb_path = imgArr[2], remark = remarkArr[i] });
+                        }
+                        else
+                        {
+                            ls.Add(new Model.article_albums { channel_id = channel_id, original_path = imgArr[1], thumb_path = imgArr[2] });
+                        }
+                    }
+                }
+                model.albums = ls;
+            }
+            #endregion
+
+            #region 保存附件====================
+            //保存附件
+            string[] attachFileNameArr = Request.Form.GetValues("hid_attach_filename");
+            string[] attachFilePathArr = Request.Form.GetValues("hid_attach_filepath");
+            string[] attachFileSizeArr = Request.Form.GetValues("hid_attach_filesize");
+            string[] attachPointArr = Request.Form.GetValues("txt_attach_point");
+            if (attachFileNameArr != null && attachFilePathArr != null && attachFileSizeArr != null && attachPointArr != null
+                && attachFileNameArr.Length > 0 && attachFilePathArr.Length > 0 && attachFileSizeArr.Length > 0 && attachPointArr.Length > 0)
+            {
+                List<Model.article_attach> ls = new List<Model.article_attach>();
+                for (int i = 0; i < attachFileNameArr.Length; i++)
+                {
+                    int fileSize = Utils.StrToInt(attachFileSizeArr[i], 0);
+                    string fileExt = FileHelper.GetFileExt(attachFilePathArr[i]);
+                    int _point = Utils.StrToInt(attachPointArr[i], 0);
+                    ls.Add(new Model.article_attach { channel_id = channel_id, file_name = attachFileNameArr[i], file_path = attachFilePathArr[i], file_size = fileSize, file_ext = fileExt, point = _point });
+                }
+                model.attach = ls;
+            }
+            #endregion
+
+            #region 保存会员组价格==============
+            //检查网站是否开启会员功能&检查该频道是否开启会员组价格
+            if (sysConfig.memberstatus != 0 && channelModel.is_spec != 0)
+            {
+                List<Model.user_group_price> priceList = new List<Model.user_group_price>();
+                BLL.user_groups bll2 = new BLL.user_groups();
+                DataSet ds = bll2.GetList(0, "", "grade asc,id desc");
+                for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                {
+
+                    int _groupid = Convert.ToInt32(Request.Form.GetValues("hideGroupId" + ds.Tables[0].Rows[i]["id"]));
+                    decimal _price = Convert.ToDecimal(Request.Form.GetValues("txtGroupPrice" + ds.Tables[0].Rows[i]["id"]));
+                    priceList.Add(new Model.user_group_price { channel_id = channel_id, group_id = _groupid, price = _price });
+                }
+                model.group_price = priceList;
+            }
+            #endregion
+
+            if (bll.Add(model) > 0)
+            {
+                AddAdminLog(DTEnums.ActionEnum.Add.ToString(), "添加" + channelModel.title + "频道内容:" + model.title); //记录日志
+                result = true;
+            }
+            return result;
+        }
+        #endregion
+
+        #region 修改操作=================================
+        private bool Article_editDoEdit(int _id, article model)
+        {
+            bool result = false;
+            BLL.article bll = new BLL.article();
+
+            //内容摘要提取内容前255个字符
+            if (string.IsNullOrEmpty(model.zhaiyao))
+            {
+                model.zhaiyao = Utils.DropHTML(model.content, 250);
+            }
+            else
+            {
+                model.zhaiyao = Utils.DropHTML(model.zhaiyao, 250);
+            }
+            model.sort_id = Utils.StrToInt(model.sort_id.ToStr(), 99);
+
+            model.is_msg = Request.Form["is_msg"].Contains("true") ? 1 : 0;
+            model.is_top = Request.Form["is_top"].Contains("true") ? 1 : 0;
+            model.is_red = Request.Form["is_red"].Contains("true") ? 1 : 0;
+            model.is_hot = Request.Form["is_hot"].Contains("true") ? 1 : 0;
+            model.is_slide = Request.Form["is_slide"].Contains("true") ? 1 : 0;
+            if (Request.Form["status"].Contains("true") == false)
+            {
+                model.status = 2;
+            }
+            else
+            {
+                model.status = GetAdminInfo().is_audit;
+            }
+            model.update_time = DateTime.Now;
+            model.fields = Article_editSetFieldValues(channel_id); //扩展字段赋值
+
+            #region 保存相册====================
+            //检查是否有自定义图片
+            if (model.img_url == "")
+            {
+                model.img_url = DTRequest.GetFormString("hidFocusPhoto");
+            }
+            string[] albumArr = Request.Form.GetValues("hid_photo_name");
+            string[] remarkArr = Request.Form.GetValues("hid_photo_remark");
+            if (albumArr != null && albumArr.Length > 0)
+            {
+                List<Model.article_albums> ls = new List<Model.article_albums>();
+                for (int i = 0; i < albumArr.Length; i++)
+                {
+                    string[] imgArr = albumArr[i].Split('|');
+                    if (imgArr.Length == 3)
+                    {
+                        if (!string.IsNullOrEmpty(remarkArr[i]))
+                        {
+                            ls.Add(new Model.article_albums { channel_id = channel_id, original_path = imgArr[1], thumb_path = imgArr[2], remark = remarkArr[i] });
+                        }
+                        else
+                        {
+                            ls.Add(new Model.article_albums { channel_id = channel_id, original_path = imgArr[1], thumb_path = imgArr[2] });
+                        }
+                    }
+                }
+                model.albums = ls;
+            }
+            #endregion
+
+            #region 保存附件====================
+            //保存附件
+            string[] attachFileNameArr = Request.Form.GetValues("hid_attach_filename");
+            string[] attachFilePathArr = Request.Form.GetValues("hid_attach_filepath");
+            string[] attachFileSizeArr = Request.Form.GetValues("hid_attach_filesize");
+            string[] attachPointArr = Request.Form.GetValues("txt_attach_point");
+            if (attachFileNameArr != null && attachFilePathArr != null && attachFileSizeArr != null && attachPointArr != null
+                && attachFileNameArr.Length > 0 && attachFilePathArr.Length > 0 && attachFileSizeArr.Length > 0 && attachPointArr.Length > 0)
+            {
+                List<Model.article_attach> ls = new List<Model.article_attach>();
+                for (int i = 0; i < attachFileNameArr.Length; i++)
+                {
+                    int fileSize = Utils.StrToInt(attachFileSizeArr[i], 0);
+                    string fileExt = FileHelper.GetFileExt(attachFilePathArr[i]);
+                    int _point = Utils.StrToInt(attachPointArr[i], 0);
+                    ls.Add(new Model.article_attach { channel_id = channel_id, file_name = attachFileNameArr[i], file_path = attachFilePathArr[i], file_size = fileSize, file_ext = fileExt, point = _point });
+                }
+                model.attach = ls;
+            }
+            #endregion
+
+            #region 保存会员组价格==============
+            //检查网站是否开启会员功能&检查该频道是否开启会员组价格
+            if (sysConfig.memberstatus != 0 && channelModel.is_spec != 0)
+            {
+                List<Model.user_group_price> priceList = new List<Model.user_group_price>();
+                BLL.user_groups bll2 = new BLL.user_groups();
+                DataSet ds = bll2.GetList(0, "", "grade asc,id desc");
+                for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                {
+
+                    int _groupid = Convert.ToInt32(Request.Form.GetValues("hideGroupId" + ds.Tables[0].Rows[i]["id"]));
+                    decimal _price = Convert.ToDecimal(Request.Form.GetValues("txtGroupPrice" + ds.Tables[0].Rows[i]["id"]));
+                    priceList.Add(new Model.user_group_price { channel_id = channel_id, group_id = _groupid, price = _price });
+                }
+                model.group_price = priceList;
+            }
+            #endregion
+
+            if (bll.Update(model))
+            {
+
+                AddAdminLog(DTEnums.ActionEnum.Edit.ToString(), "修改" + channelModel.title + "频道内容:" + model.title); //记录日志
+                result = true;
+            }
+            return result;
         }
         #endregion
 

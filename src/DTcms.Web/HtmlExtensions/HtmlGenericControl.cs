@@ -27,8 +27,8 @@ namespace DTcms.Web.HtmlExtensions
                     case "single-text": //单行文本
                         //创建一个TextBox控件
                         TagBuilder txtControl = new TagBuilder("input");
-                        txtControl.MergeAttribute("id", "field_control_" + modelt.name);
-                        txtControl.MergeAttribute("name", "field_control_" + modelt.name);
+                        txtControl.MergeAttribute("id", modelt.name);
+                        txtControl.MergeAttribute("name", modelt.name);
                         //CSS样式及TextMode设置
                         if (modelt.control_type == "single-text") //单行
                         {
@@ -101,8 +101,8 @@ namespace DTcms.Web.HtmlExtensions
                         break;
                     case "multi-text": //多行文本
                         TagBuilder txtTextArea0 = new TagBuilder("textarea");
-                        txtTextArea0.MergeAttribute("id", "field_control_" + modelt.name);
-                        txtTextArea0.MergeAttribute("name", "field_control_" + modelt.name);
+                        txtTextArea0.MergeAttribute("id", modelt.name);
+                        txtTextArea0.MergeAttribute("name", modelt.name);
                         txtTextArea0.MergeAttribute("class", "input");
                         //设置默认值
                         txtTextArea0.SetInnerText(isAdd ? modelt.default_value : model.fields[modelt.name]);
@@ -133,8 +133,8 @@ namespace DTcms.Web.HtmlExtensions
                         break;
                     case "editor": //编辑器
                         TagBuilder txtTextArea = new TagBuilder("textarea");
-                        txtTextArea.MergeAttribute("id", "field_control_" + modelt.name);
-                        txtTextArea.MergeAttribute("name", "field_control_" + modelt.name);
+                        txtTextArea.MergeAttribute("id", modelt.name);
+                        txtTextArea.MergeAttribute("name", modelt.name);
                         //txtTextArea.Attributes.Add("style", "visibility:hidden;");
                         //是否简洁型编辑器
                         if (modelt.editor_type == 1)
@@ -179,13 +179,24 @@ namespace DTcms.Web.HtmlExtensions
                         goto case "single-text";
                     case "checkbox": //复选框
                         TagBuilder cbControl = new TagBuilder("input");
-                        cbControl.MergeAttribute("id", "field_control_" + modelt.name);
-                        cbControl.MergeAttribute("name", "field_control_" + modelt.name);
+                        cbControl.MergeAttribute("id", modelt.name);
+                        cbControl.MergeAttribute("name", modelt.name);
                         cbControl.MergeAttribute("type", "checkbox");
+                        cbControl.MergeAttribute("value", "1");
                         //默认值
-                        if (model.fields[modelt.name] == "1")
+                        if (isAdd)
                         {
-                            cbControl.MergeAttribute("checked", "checked");
+                            if (modelt.default_value == "1")
+                            {
+                                cbControl.MergeAttribute("checked", "checked");
+                            }
+                        }
+                        else
+                        {
+                            if (model.fields[modelt.name] == "1")
+                            {
+                                cbControl.MergeAttribute("checked", "checked");
+                            }
                         }
                         TagBuilder htmlDiv1 = new TagBuilder("div");
                         htmlDiv1.Attributes.Add("class", "rule-single-checkbox");
@@ -203,7 +214,7 @@ namespace DTcms.Web.HtmlExtensions
                         break;
                     case "multi-radio": //多项单选
                         TagBuilder rblControl = new TagBuilder("span");
-                        rblControl.MergeAttribute("id", "field_control_" + modelt.name);
+                        rblControl.MergeAttribute("id", modelt.name);
                         TagBuilder htmlDiv2 = new TagBuilder("div");
                         htmlDiv2.Attributes.Add("class", "rule-multi-radio");
 
@@ -217,17 +228,30 @@ namespace DTcms.Web.HtmlExtensions
                                 if (valItemArr.Length == 2)
                                 {
                                     TagBuilder rblControlitem = new TagBuilder("input");
-                                    rblControlitem.MergeAttribute("id", "field_control_" + modelt.name + "_" + i);
-                                    rblControlitem.MergeAttribute("name", "field_control_" + modelt.name);
+                                    rblControlitem.MergeAttribute("id", modelt.name + "_" + i);
+                                    rblControlitem.MergeAttribute("name", modelt.name);
                                     rblControlitem.MergeAttribute("type", "radio");
                                     rblControlitem.MergeAttribute("value", valItemArr[1]);
 
-                                    if (valItemArr[1] == model.fields[modelt.name]) {
-                                        rblControlitem.MergeAttribute("checked", "checked");
+                                    if (isAdd)
+                                    {
+                                        if (valItemArr[1] == modelt.default_value)
+                                        {
+                                            rblControlitem.MergeAttribute("checked", "checked");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (valItemArr[1] == model.fields[modelt.name])
+                                        {
+                                            rblControlitem.MergeAttribute("checked", "checked");
+                                        }
                                     }
 
+
+
                                     TagBuilder rblControllabel = new TagBuilder("label");
-                                    rblControllabel.MergeAttribute("for", "field_control_" + modelt.name + "_" + i);
+                                    rblControllabel.MergeAttribute("for", modelt.name + "_" + i);
                                     rblControllabel.SetInnerText(valItemArr[0]);
                                     rblControl.InnerHtml += rblControlitem.ToString(TagRenderMode.SelfClosing);
                                     rblControl.InnerHtml += rblControllabel.ToString(TagRenderMode.Normal);
@@ -245,18 +269,29 @@ namespace DTcms.Web.HtmlExtensions
                                     for (int i = 0; i < dt.Rows.Count; i++)
                                     {
                                         TagBuilder rblControlitem = new TagBuilder("input");
-                                        rblControlitem.MergeAttribute("id", "field_control_" + modelt.name + "_" + i);
-                                        rblControlitem.MergeAttribute("name", "field_control_" + modelt.name);
+                                        rblControlitem.MergeAttribute("id", modelt.name + "_" + i);
+                                        rblControlitem.MergeAttribute("name", modelt.name);
                                         rblControlitem.MergeAttribute("type", "radio");
                                         rblControlitem.MergeAttribute("value", dt.Rows[i][modelt.BindSQLValue.Trim()].ToString());
 
-                                        if (dt.Rows[i][modelt.BindSQLValue.Trim()].ToString() == model.fields[modelt.name])
+                                        if (isAdd)
                                         {
-                                            rblControlitem.MergeAttribute("checked", "checked");
+                                            if (dt.Rows[i][modelt.BindSQLValue.Trim()].ToString() == modelt.default_value)
+                                            {
+                                                rblControlitem.MergeAttribute("checked", "checked");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (dt.Rows[i][modelt.BindSQLValue.Trim()].ToString() == model.fields[modelt.name])
+                                            {
+                                                rblControlitem.MergeAttribute("checked", "checked");
+                                            }
                                         }
 
+
                                         TagBuilder rblControllabel = new TagBuilder("label");
-                                        rblControllabel.MergeAttribute("for", "field_control_" + modelt.name + "_" + i);
+                                        rblControllabel.MergeAttribute("for", modelt.name + "_" + i);
                                         rblControllabel.SetInnerText(dt.Rows[i][modelt.BindSQLTitle.Trim()].ToString());
                                         rblControl.InnerHtml += rblControlitem.ToString(TagRenderMode.SelfClosing);
                                         rblControl.InnerHtml += rblControllabel.ToString(TagRenderMode.Normal);
@@ -274,7 +309,7 @@ namespace DTcms.Web.HtmlExtensions
                         break;
                     case "multi-checkbox": //多项多选
                         TagBuilder cblControl = new TagBuilder("span");
-                        cblControl.MergeAttribute("id", "field_control_" + modelt.name);
+                        cblControl.MergeAttribute("id", modelt.name);
                         TagBuilder htmlDiv3 = new TagBuilder("div");
                         htmlDiv3.Attributes.Add("class", "rule-multi-checkbox");
 
@@ -283,23 +318,33 @@ namespace DTcms.Web.HtmlExtensions
                         for (int i = 0; i < valArr2.Length; i++)
                         {
                             string[] valItemArr2 = valArr2[i].Split('|');
-                            string[] valArr = model.fields[modelt.name].Split(',');//获取该字段的值，如"游泳,跑步"
+                            string[] valArr = { };
+                            if (model.fields != null)
+                                valArr = model.fields[modelt.name].Split(',');//获取该字段的值，如"游泳,跑步"
                             if (valItemArr2.Length == 2)
                             {
                                 TagBuilder rblControlitem = new TagBuilder("input");
-                                rblControlitem.MergeAttribute("id", "field_control_" + modelt.name + "_" + i);
-                                rblControlitem.MergeAttribute("name", "field_control_" + modelt.name);
+                                rblControlitem.MergeAttribute("id", modelt.name + "_" + i);
+                                rblControlitem.MergeAttribute("name", modelt.name);
                                 rblControlitem.MergeAttribute("type", "checkbox");
                                 rblControlitem.MergeAttribute("value", valItemArr2[1]);
 
                                 TagBuilder rblControllabel = new TagBuilder("label");
-                                rblControllabel.MergeAttribute("for", "field_control_" + modelt.name + "_" + i);
+                                rblControllabel.MergeAttribute("for", modelt.name + "_" + i);
                                 rblControllabel.SetInnerText(valItemArr2[0]);
                                 cblControl.InnerHtml += rblControlitem.ToString(TagRenderMode.SelfClosing);
                                 cblControl.InnerHtml += rblControllabel.ToString(TagRenderMode.Normal);
-                                //判断这个选项是否在valArr
-                                if(valArr.Contains(valItemArr2[1]))
-                                    rblControlitem.MergeAttribute("checked", "checked");
+
+                                if (isAdd)
+                                {
+                                    if (modelt.default_value.Contains(valItemArr2[1]))
+                                        rblControlitem.MergeAttribute("checked", "checked");
+                                }
+                                else {
+                                    //判断这个选项是否在valArr
+                                    if (valArr.Contains(valItemArr2[1]))
+                                        rblControlitem.MergeAttribute("checked", "checked");
+                                }
                             }
                         }
                         htmlDiv3.InnerHtml = cblControl.ToString(TagRenderMode.Normal);

@@ -45,7 +45,7 @@
     </script>
 </head>
 <body class="mainbody">
-    @using (Html.BeginForm("Category_edit", "Article", new {id= DTRequest.GetString("id"),channel_id= DTRequest.GetString("channel_id"), submitAction = DTRequest.GetString("action") }, FormMethod.Post,new {id="form1" }))
+    @using (Html.BeginForm("Category_edit", "Article", new {id= DTRequest.GetString("id").ToInt(),channel_id= DTRequest.GetString("channel_id").ToInt(), submitAction = DTRequest.GetString("action") }, FormMethod.Post,new {id="form1" }))
     {
         @Html.AntiForgeryToken()
         <!--导航栏-->
