@@ -332,19 +332,21 @@ namespace DTcms.Web.HtmlExtensions
                                 TagBuilder rblControllabel = new TagBuilder("label");
                                 rblControllabel.MergeAttribute("for", modelt.name + "_" + i);
                                 rblControllabel.SetInnerText(valItemArr2[0]);
-                                cblControl.InnerHtml += rblControlitem.ToString(TagRenderMode.SelfClosing);
-                                cblControl.InnerHtml += rblControllabel.ToString(TagRenderMode.Normal);
 
                                 if (isAdd)
                                 {
                                     if (modelt.default_value.Contains(valItemArr2[1]))
                                         rblControlitem.MergeAttribute("checked", "checked");
                                 }
-                                else {
+                                else
+                                {
                                     //判断这个选项是否在valArr
                                     if (valArr.Contains(valItemArr2[1]))
                                         rblControlitem.MergeAttribute("checked", "checked");
                                 }
+
+                                cblControl.InnerHtml += rblControlitem.ToString(TagRenderMode.SelfClosing);
+                                cblControl.InnerHtml += rblControllabel.ToString(TagRenderMode.Normal);
                             }
                         }
                         htmlDiv3.InnerHtml = cblControl.ToString(TagRenderMode.Normal);

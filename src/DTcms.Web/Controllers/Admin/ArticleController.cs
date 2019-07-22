@@ -359,7 +359,7 @@ namespace DTcms.Web.Controllers.Admin
             channelModel = new BLL.site_channel().GetModel(channel_id); //频道实体
             if (ModelState.IsValid)
             {
-                if (action == DTEnums.ActionEnum.Edit.ToString()) //修改
+                if (submitAction == DTEnums.ActionEnum.Edit.ToString()) //修改
                 {
                     ChkAdminLevel("channel_" + channelModel.name + "_list", DTEnums.ActionEnum.Edit.ToString()); //检查权限
                     if (!Article_editDoEdit(id, model))
