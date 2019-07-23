@@ -1,0 +1,153 @@
+﻿@{
+    Layout = null;
+}
+@using DTcms.Common
+@model System.Data.DataTable
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>栏目分类</title>
+    <link rel="stylesheet" type="text/css" href="~/scripts/artdialog/ui-dialog.css" />
+    <link rel="stylesheet" type="text/css" href="~/Content/admin/skin/icon/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="~/Content/admin/skin/default/style.css" />
+    <script type="text/javascript" src="~/scripts/jquery/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="~/scripts/artdialog/dialog-plus-min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="~/Content/admin/js/laymain.js"></script>
+    <script type="text/javascript" charset="utf-8" src="~/Content/admin/js/common.js"></script>
+    <style type="text/css">
+        .tree-list .col-1 {
+            width: 6%;
+            text-align: center;
+        }
+
+        .tree-list .col-2 {
+            width: 6%;
+        }
+
+        .tree-list .col-3 {
+            width: 52%;
+        }
+
+        .tree-list .col-4 {
+            width: 12%;
+        }
+
+        .tree-list .col-5 {
+            width: 12%;
+        }
+
+        .tree-list .col-6 {
+            width: 12%;
+            text-align: center;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            initCategoryHtml('.tree-list', 1); //初始化分类的结构
+            $('.tree-list').initCategoryTree(true); //初始化分类的事件
+        });
+    </script>
+</head>
+
+<body class="mainbody">
+    <form id="form1">
+        <!--导航栏-->
+        <div class="location">
+            <a href="javascript:history.back(-1);" class="back"><i class="iconfont icon-up"></i><span>返回上一页</span></a>
+            <a href="/admin/center" class="home"><i class="iconfont icon-home"></i><span>首页</span></a>
+            <i class="arrow iconfont icon-arrow-right"></i>
+            <span>内容管理</span>
+            <i class="arrow iconfont icon-arrow-right"></i>
+            <span>栏目类别</span>
+        </div>
+        <!--/导航栏-->
+        <!--工具栏-->
+        <div id="floatHead" class="toolbar-wrap">
+            <div class="toolbar">
+                <div class="box-wrap">
+                    <a class="menu-btn"><i class="iconfont icon-more"></i></a>
+                    <div class="l-list">
+                        <ul class="icon-list">
+                            <li><a href="category_edit?channel_id=@ViewBag.channel_id&action=@DTEnums.ActionEnum.Add"><i class="iconfont icon-close"></i><span>新增</span></a></li>
+                            <li><a href="javascript:;" id="btnSave" ><i class="iconfont icon-save"></i><span>保存</span></a></li>
+                            <li><a href="javascript:;" onclick="checkAll(this);"><i class="iconfont icon-check"></i><span>全选</span></a></li>
+                            <li><a href="javascript:;" id="btnDelete" onclick='btnDelete("Category_list_btnDelete",@ViewBag.channel_id, "@ViewBag.channel_name","本操作会删除本类别及下属子类别，是否继续？")'><i class="iconfont icon-delete"></i><span>删除</span></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/工具栏-->
+        <!--列表-->
+        <div class="table-container">
+            <div class="tree-list">
+                <div class="thead">
+                    <div class="col col-1">选择</div>
+                    <div class="col col-2">编号</div>
+                    <div class="col col-3">类别名称</div>
+                    <div class="col col-4">调用别名</div>
+                    <div class="col col-5">排序</div>
+                    <div class="col col-6">操作</div>
+                </div>
+                <ul>
+                    @foreach (System.Data.DataRow item in Model.Rows)
+                    {
+                        <li class="layer-@item["class_layer"]">
+                            <div class="tbody">
+                                <div class="col col-1">
+                                    <span class="checkall"><input type="checkbox" name="checkallval" value="@item["id"]"></span>
+                                </div>
+                                <div class="col col-2">
+                                    @item["id"]
+                                </div>
+                                <div class="col index col-3">
+                                    <a href="category_edit?action=@DTEnums.ActionEnum.Edit&channel_id=@ViewBag.channel_id&id=@item["id"]">@item["title"]</a>
+                                </div>
+                                <div class="col col-4">
+                                    @item["call_index"]
+                                </div>
+                                <div class="col col-5">
+                                    <input type="text" value="@item["sort_id"]" class="sort" onkeydown="return checkNumber(event);" />
+                                </div>
+                                <div class="col col-6">
+                                    <a href="category_edit?action=@DTEnums.ActionEnum.Add&channel_id=@ViewBag.channel_id&id=@item["id"]">添加子类</a>
+                                    <a href="category_edit?action=@DTEnums.ActionEnum.Edit&channel_id=@ViewBag.channel_id&id=@item["id"]">修改</a>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <script>
+            //列表页保存
+            $("#btnSave").click(function () {
+                var arr = new Array()
+                $(".checkall input").each(function () {
+                    arr.push({ id: $(this).val(), Value: $(this).parents(".tbody").find(".sort").val() });
+                })
+                var data = {
+                    channel_id: "@ViewBag.channel_id", channel_name: "@ViewBag.channel_name", sort_data: JSON.stringify(arr)
+                };
+                var obj = { action: "Category_list_btnSave", data: data };
+                __doPostBack(obj);
+            })
+            //列表页删除
+            $("#btnDelete").click(function () {
+                var arr = new Array()
+                $(".checkall input:checked").each(function () {
+                    arr.push({ id: $(this).val() });
+                });
+                var data = {
+                    channel_id: "@ViewBag.channel_id", channel_name: "@ViewBag.channel_name", delete_data: JSON.stringify(arr)
+                };
+                var obj = { action: "Category_list_btnDelete", data: data };
+                ExePostBack('btnDelete', deletip, __doPostBack, obj);
+            })
+        </script>
+    </form>
+</body>
+</html>
