@@ -16,19 +16,19 @@ namespace DTcms.Web.UI.Page
         /// <summary>
         /// 重写虚方法,此方法在Init事件执行
         /// </summary>
-        protected override void InitPage()
+        protected void InitPage()
         {
             id = DTRequest.GetQueryInt("id");
             BLL.orders bll = new BLL.orders();
             if (!bll.Exists(id))
             {
-                HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错了，您要浏览的页面不存在或已删除！")));
+                System.Web.HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错了，您要浏览的页面不存在或已删除！")));
                 return;
             }
             model = bll.GetModel(id);
             if (model.user_id != userModel.id)
             {
-                HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错了，您所查看的并非自己的订单信息！")));
+                System.Web.HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错了，您所查看的并非自己的订单信息！")));
                 return;
             }
             payModel = new BLL.site_payment().GetPaymentModel(model.payment_id);

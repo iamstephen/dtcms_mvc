@@ -14,7 +14,7 @@ namespace DTcms.Web.UI.Page
         /// <summary>
         /// 重写虚方法,此方法将在Init事件前执行
         /// </summary>
-        protected override void ShowPage()
+        protected void ShowPage()
         {
             action = DTRequest.GetQueryString("action");
             username = DTRequest.GetQueryString("username");
@@ -22,7 +22,7 @@ namespace DTcms.Web.UI.Page
             //检查是否关闭会员注册服务
             if (action == "" && uconfig.regstatus == 0)
             {
-                HttpContext.Current.Response.Redirect(linkurl("register", "?action=close"));
+                System.Web.HttpContext.Current.Response.Redirect(linkurl("register", "?action=close"));
                 return;
             }
             //Email验证
@@ -33,7 +33,7 @@ namespace DTcms.Web.UI.Page
                 Model.user_code model = bll.GetModel(code);
                 if (model == null) //返回出错
                 {
-                    HttpContext.Current.Response.Redirect(linkurl("register", "?action=checkerror"));
+                    System.Web.HttpContext.Current.Response.Redirect(linkurl("register", "?action=checkerror"));
                     return;
                 }
                 //修改申请码状态

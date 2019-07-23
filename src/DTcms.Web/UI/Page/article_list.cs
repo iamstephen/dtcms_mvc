@@ -15,14 +15,7 @@ namespace DTcms.Web.UI.Page
         protected string pagelist;  //分页页码
 
         protected Model.article_category model = new Model.article_category(); //分类的实体
-
-        /// <summary>
-        /// 重写虚方法,此方法将在Init事件前执行
-        /// </summary>
-        protected override void ShowPage()
-        {
-            this.Init += new EventHandler(article_list_Init);
-        }
+        
 
         /// <summary>
         /// OnInit事件,让频道名称变量先赋值
@@ -40,7 +33,7 @@ namespace DTcms.Web.UI.Page
                     model = bll.GetModel(category_id);
                     if (!string.IsNullOrEmpty(model.link_url))
                     {
-                        HttpContext.Current.Response.Redirect(model.link_url);
+                       System.Web.HttpContext.Current.Response.Redirect(model.link_url);
                     }
                 }
             }

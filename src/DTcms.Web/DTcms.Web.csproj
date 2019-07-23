@@ -193,9 +193,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="HtmlExtensions\CommonInfo.cs" />
     <Compile Include="HtmlExtensions\HtmlGenericControl.cs" />
-    <Compile Include="Models\Dic.cs" />
-    <Compile Include="Models\Ids.cs" />
+    <Compile Include="Areas\Admin\Models\Dic.cs" />
+    <Compile Include="Areas\Admin\Models\Ids.cs" />
     <Compile Include="plugins\msg\bll.cs" />
     <Compile Include="plugins\msg\dal.cs" />
     <Compile Include="plugins\msg\feedback.cs" />
@@ -218,110 +219,46 @@
     <Compile Include="tools\verify_code.ashx.cs">
       <DependentUpon>verify_code.ashx</DependentUpon>
     </Compile>
-    <Compile Include="UI\BasePage.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
+    <Compile Include="UI\BasePage.cs" />
     <Compile Include="UI\HtmlBuilder.cs" />
     <Compile Include="UI\HttpModule.cs" />
-    <Compile Include="UI\Label\article.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Label\category.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Label\channel.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Label\comment.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Label\express.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Label\orders.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Label\payment.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Label\plugin.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Label\shoppingcart.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Label\users.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
+    <Compile Include="UI\Label\article.cs" />
+    <Compile Include="UI\Label\category.cs" />
+    <Compile Include="UI\Label\channel.cs" />
+    <Compile Include="UI\Label\comment.cs" />
+    <Compile Include="UI\Label\express.cs" />
+    <Compile Include="UI\Label\orders.cs" />
+    <Compile Include="UI\Label\payment.cs" />
+    <Compile Include="UI\Label\plugin.cs" />
+    <Compile Include="UI\Label\shoppingcart.cs" />
+    <Compile Include="UI\Label\users.cs" />
     <Compile Include="UI\ManagePage.cs" />
-    <Compile Include="UI\Page\article.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Page\article_list.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Page\article_show.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Page\cart.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Page\category.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
+    <Compile Include="UI\Page\article.cs" />
+    <Compile Include="UI\Page\article_list.cs" />
+    <Compile Include="UI\Page\article_show.cs" />
+    <Compile Include="UI\Page\cart.cs" />
+    <Compile Include="UI\Page\category.cs" />
     <Compile Include="UI\Page\error.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="UI\Page\index.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Page\login.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Page\oauth_login.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Page\payment.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Page\register.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Page\repassword.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Page\search.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Page\shopping.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Page\useramount.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Page\usercenter.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Page\usermessage.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Page\usermessage_show.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Page\userorder.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Page\userorder_show.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Page\userpoint.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
+    <Compile Include="UI\Page\index.cs" />
+    <Compile Include="UI\Page\login.cs" />
+    <Compile Include="UI\Page\oauth_login.cs" />
+    <Compile Include="UI\Page\payment.cs" />
+    <Compile Include="UI\Page\register.cs" />
+    <Compile Include="UI\Page\repassword.cs" />
+    <Compile Include="UI\Page\search.cs" />
+    <Compile Include="UI\Page\shopping.cs" />
+    <Compile Include="UI\Page\useramount.cs" />
+    <Compile Include="UI\Page\usercenter.cs" />
+    <Compile Include="UI\Page\usermessage.cs" />
+    <Compile Include="UI\Page\usermessage_show.cs" />
+    <Compile Include="UI\Page\userorder.cs" />
+    <Compile Include="UI\Page\userorder_show.cs" />
+    <Compile Include="UI\Page\userpoint.cs" />
     <Compile Include="UI\ShoppingCart.cs" />
     <Compile Include="UI\UpLoad.cs" />
-    <Compile Include="UI\UserPage.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
+    <Compile Include="UI\UserPage.cs" />
     <Compile Include="UI\ViewEngine\AdminViewEngine.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -364,6 +301,34 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\css\bootstrap.css" />
+    <Content Include="Content\css\style.css" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\images\about-banner.jpg" />
+    <Content Include="Content\images\about-image2.jpg" />
+    <Content Include="Content\images\about-image3.jpg" />
+    <Content Include="Content\images\aq.jpg" />
+    <Content Include="Content\images\banner.jpg" />
+    <Content Include="Content\images\download.png" />
+    <Content Include="Content\images\home-about-bg.jpg" />
+    <Content Include="Content\images\ico1.png" />
+    <Content Include="Content\images\ico2.png" />
+    <Content Include="Content\images\ico3.png" />
+    <Content Include="Content\images\img.jpg" />
+    <Content Include="Content\images\img1.jpg" />
+    <Content Include="Content\images\img2.jpg" />
+    <Content Include="Content\images\line-bg.jpg" />
+    <Content Include="Content\images\logo.png" />
+    <Content Include="Content\images\map.jpg" />
+    <Content Include="Content\images\mask.png" />
+    <Content Include="Content\images\news-image.jpg" />
+    <Content Include="Content\images\news.jpg" />
+    <Content Include="Content\images\organizational.png" />
+    <Content Include="Content\images\qr.jpg" />
+    <Content Include="Content\images\weixn-qr.png" />
+    <Content Include="Content\images\zs.jpg" />
+    <Content Include="Content\js\bootstrap.min.js" />
+    <Content Include="Content\js\common.js" />
     <Content Include="editor\dialogs\anchor\anchor.html" />
     <Content Include="editor\dialogs\attachment\attachment.css" />
     <Content Include="editor\dialogs\attachment\attachment.html" />
@@ -744,6 +709,92 @@
     <Content Include="Areas\Admin\Views\index.cshtml" />
     <Content Include="Areas\Admin\Views\login.cshtml" />
     <Content Include="Areas\Admin\Views\center.cshtml" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Content\less\bootstrap\.csscomb.json" />
+    <Content Include="Content\less\bootstrap\.csslintrc" />
+    <Content Include="Content\less\bootstrap\alerts.less" />
+    <Content Include="Content\less\bootstrap\badges.less" />
+    <Content Include="Content\less\bootstrap\bootstrap.less" />
+    <Content Include="Content\less\bootstrap\breadcrumbs.less" />
+    <Content Include="Content\less\bootstrap\button-groups.less" />
+    <Content Include="Content\less\bootstrap\buttons.less" />
+    <Content Include="Content\less\bootstrap\carousel.less" />
+    <Content Include="Content\less\bootstrap\close.less" />
+    <Content Include="Content\less\bootstrap\code.less" />
+    <Content Include="Content\less\bootstrap\component-animations.less" />
+    <Content Include="Content\less\bootstrap\dropdowns.less" />
+    <Content Include="Content\less\bootstrap\forms.less" />
+    <Content Include="Content\less\bootstrap\glyphicons.less" />
+    <Content Include="Content\less\bootstrap\grid.less" />
+    <Content Include="Content\less\bootstrap\input-groups.less" />
+    <Content Include="Content\less\bootstrap\jumbotron.less" />
+    <Content Include="Content\less\bootstrap\labels.less" />
+    <Content Include="Content\less\bootstrap\list-group.less" />
+    <Content Include="Content\less\bootstrap\media.less" />
+    <Content Include="Content\less\bootstrap\mixins.less" />
+    <Content Include="Content\less\bootstrap\mixins\alerts.less" />
+    <Content Include="Content\less\bootstrap\mixins\background-variant.less" />
+    <Content Include="Content\less\bootstrap\mixins\border-radius.less" />
+    <Content Include="Content\less\bootstrap\mixins\buttons.less" />
+    <Content Include="Content\less\bootstrap\mixins\center-block.less" />
+    <Content Include="Content\less\bootstrap\mixins\clearfix.less" />
+    <Content Include="Content\less\bootstrap\mixins\forms.less" />
+    <Content Include="Content\less\bootstrap\mixins\gradients.less" />
+    <Content Include="Content\less\bootstrap\mixins\grid-framework.less" />
+    <Content Include="Content\less\bootstrap\mixins\grid.less" />
+    <Content Include="Content\less\bootstrap\mixins\hide-text.less" />
+    <Content Include="Content\less\bootstrap\mixins\image.less" />
+    <Content Include="Content\less\bootstrap\mixins\labels.less" />
+    <Content Include="Content\less\bootstrap\mixins\list-group.less" />
+    <Content Include="Content\less\bootstrap\mixins\nav-divider.less" />
+    <Content Include="Content\less\bootstrap\mixins\nav-vertical-align.less" />
+    <Content Include="Content\less\bootstrap\mixins\opacity.less" />
+    <Content Include="Content\less\bootstrap\mixins\pagination.less" />
+    <Content Include="Content\less\bootstrap\mixins\panels.less" />
+    <Content Include="Content\less\bootstrap\mixins\progress-bar.less" />
+    <Content Include="Content\less\bootstrap\mixins\reset-filter.less" />
+    <Content Include="Content\less\bootstrap\mixins\reset-text.less" />
+    <Content Include="Content\less\bootstrap\mixins\resize.less" />
+    <Content Include="Content\less\bootstrap\mixins\responsive-visibility.less" />
+    <Content Include="Content\less\bootstrap\mixins\size.less" />
+    <Content Include="Content\less\bootstrap\mixins\tab-focus.less" />
+    <Content Include="Content\less\bootstrap\mixins\table-row.less" />
+    <Content Include="Content\less\bootstrap\mixins\text-emphasis.less" />
+    <Content Include="Content\less\bootstrap\mixins\text-overflow.less" />
+    <Content Include="Content\less\bootstrap\mixins\vendor-prefixes.less" />
+    <Content Include="Content\less\bootstrap\modals.less" />
+    <Content Include="Content\less\bootstrap\navbar.less" />
+    <Content Include="Content\less\bootstrap\navs.less" />
+    <Content Include="Content\less\bootstrap\normalize.less" />
+    <Content Include="Content\less\bootstrap\pager.less" />
+    <Content Include="Content\less\bootstrap\pagination.less" />
+    <Content Include="Content\less\bootstrap\panels.less" />
+    <Content Include="Content\less\bootstrap\popovers.less" />
+    <Content Include="Content\less\bootstrap\print.less" />
+    <Content Include="Content\less\bootstrap\progress-bars.less" />
+    <Content Include="Content\less\bootstrap\responsive-embed.less" />
+    <Content Include="Content\less\bootstrap\responsive-utilities.less" />
+    <Content Include="Content\less\bootstrap\scaffolding.less" />
+    <Content Include="Content\less\bootstrap\tables.less" />
+    <Content Include="Content\less\bootstrap\theme.less" />
+    <Content Include="Content\less\bootstrap\thumbnails.less" />
+    <Content Include="Content\less\bootstrap\tooltip.less" />
+    <Content Include="Content\less\bootstrap\type.less" />
+    <Content Include="Content\less\bootstrap\utilities.less" />
+    <Content Include="Content\less\bootstrap\variables.less" />
+    <Content Include="Content\less\bootstrap\wells.less" />
+    <Content Include="Content\less\pages\about.less" />
+    <Content Include="Content\less\pages\contact.less" />
+    <Content Include="Content\less\pages\home.less" />
+    <Content Include="Content\less\pages\news.less" />
+    <Content Include="Content\less\pages\safe.less" />
+    <Content Include="Content\less\pages\service.less" />
+    <Content Include="Content\less\public\layout.less" />
+    <Content Include="Content\less\public\navbar.less" />
+    <Content Include="Content\less\style.less" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\cuplayer\CuSunV4set.xml" />
     <Content Include="Scripts\cuplayer\CuSunV4set15.xml" />
@@ -881,8 +932,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="xmlconfig\order.config" />
     <Content Include="xmlconfig\sys.config" />
@@ -894,11 +943,13 @@
     <Content Include="tools\upload_ajax.ashx" />
     <Content Include="tools\verify_code.ashx" />
     <Content Include="tools\admin_action.ashx" />
+    <Content Include="Views\Shared\_nav.cshtml" />
+    <Content Include="Views\Shared\_footer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
+    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

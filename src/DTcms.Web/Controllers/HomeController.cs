@@ -4,30 +4,19 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using DTcms.BLL;
+using System.Data;
+using DTcms.Web.UI;
 
 namespace DTcms.Web.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BasePage
     {
 
         public ActionResult Index()
         {
+            DataTable homeBanner = get_article_list("photo", 14, 0, "status=0");
+            ViewBag.homeBanner = homeBanner;
             return View();
-        }
-
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-            article bll = new article();
-            var model = bll.ArticleModel("content", 55);
-            return View(model);
         }
     }
 }

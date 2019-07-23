@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
+using System.Web.Mvc;
 
 namespace DTcms.Web.UI
 {
-    public partial class BasePage : System.Web.UI.Page
+    public partial class BasePage : Controller
     {
         /// <summary>
         /// 评论数据总数

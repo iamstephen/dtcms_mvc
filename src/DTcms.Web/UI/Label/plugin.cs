@@ -3,10 +3,11 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
+using System.Web.Mvc;
 
 namespace DTcms.Web.UI
 {
-    public partial class BasePage : System.Web.UI.Page
+    public partial class BasePage : Controller
     {
         /// <summary>
         /// 利用反射调用插件方法

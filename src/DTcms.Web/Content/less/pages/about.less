@@ -1,0 +1,87 @@
+#about {
+  .body-title {
+    font-size: 30px;
+    margin-bottom: 30px;
+    color: #2a2a72;
+    .en {
+      line-height: 1em;
+      font-size: 22px;
+      color: #da251c;
+      text-transform: uppercase;
+      line-height: 1.5em;
+    }
+    &.has-line {
+      &::after {
+        content: " ";
+        width: 50px;
+        height: 3px;
+        background-color: #2a2a72;
+        display: block;
+        margin-top: 15px;
+      }
+    }
+  }
+  .text-content {
+    line-height: 1.8em;
+    p {
+      margin: 15px 0;
+    }
+  }
+  .page-body-image {
+    position: relative;
+    z-index: -1;
+    background-color: #000;
+    height: 595px;
+    margin-top: -75px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  .body-image-1 {
+    .body-slogan {
+      padding-left: 100px;
+      margin-top: 220px;
+      color: #fff;
+      font-size: 30px;
+      .en {
+        opacity: 0.5;
+      }
+    }
+  }
+  .body-image-2 {
+    margin-top: -75px;
+    overflow: hidden;
+    .body-title {
+      color: #fff;
+      padding-left: 100px;
+      margin-top: 160px;
+    }
+  }
+  .body-2 {
+    position: relative;
+    margin-top: -75px;
+    .certificate {
+      position: absolute;
+      width: 475px;
+      height: 330px;
+      top: -80px;
+    }
+  }
+  .body-3 {
+    margin-top: -275px;
+    .knowledge {
+      .row {
+        margin-top: 50px;
+        margin-bottom: 50px;
+        .greed,
+        .blue {
+          color: #fff;
+          padding: 15px 40px;
+          height: 265px;
+        }
+        .greed{background-color: #009966;}
+        .blue {background-color: #1170ce;}
+      }
+    }
+  }
+}

@@ -1,0 +1,215 @@
+#home {
+  /*
+*首页公共部分
+*/
+  .block-title {
+    padding-top: 60px;
+    padding-bottom: 40px;
+    text-align: center;
+    .en {
+      color: #004cff;
+      opacity: 0.15;
+      font-size: 60px;
+      line-height: 1em;
+    }
+    .zh {
+      color: #fff;
+      font-size: 36px;
+      line-height: 1em;
+      margin-top: -10px;
+    }
+  }
+  /**
+  *banner
+  **/
+  .banner {
+    .swiper-slide {
+      .item {
+        height: 635px;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: relative;
+      }
+    }
+  }
+  /**
+  *三块
+  **/
+  .three-block {
+    padding: 30px 0;
+    .item {
+      height: 185px;
+      display: block;
+      position: relative;
+      cursor: pointer;
+      &::after {
+        content: " ";
+        width: 100%;
+        bottom: 0;
+        height: 100%;
+        background: url(../images/mask.png) repeat-x 0 bottom;
+        position: absolute;
+        z-index: 0;
+      }
+      img.bg {
+        width: 100%;
+        display: block;
+      }
+      .text-box {
+        position: absolute;
+        z-index: 1;
+        left: 0;
+        right: 0;
+        top: 50px;
+        text-align: center;
+        color: #fff;
+        font-size: 18px;
+      }
+      .title {
+        margin-top: 15px;
+        span {
+          display: block;
+          font-size: 12px;
+          opacity: 0.5;
+        }
+      }
+      .icon{
+        transition: .4s;
+      }
+      &:hover{
+        .icon{
+          transform: translateY(-15px;)
+        }
+      }
+    }
+  }
+  /**
+  *关于我们
+  **/
+  .about {
+    height: 730px;
+    background: url(../images/home-about-bg.jpg) no-repeat center 0;
+    background-size: cover;
+    text-align: center;
+    .content {
+      .content-text {
+        background-color: #fff;
+        border-top-right-radius: 30px;
+        border-bottom-left-radius: 30px;
+        padding: 60px 110px;
+        line-height: 1.8em;
+        color: #999;
+        span {
+          color: #0066cc;
+          display: block;
+          margin-bottom: 15px;
+        }
+        .more {
+          padding: 5px 20px;
+          min-width: 150px;
+          border: 3px #d9d9d9 solid;
+          border-radius: 30px;
+          display: inline-block;
+          margin-top: 20px;
+          color: #666;
+        }
+      }
+    }
+  }
+  .news {
+    position: relative;
+    margin-top: -228px;
+    a {
+      &:hover {
+        text-decoration: none;
+      }
+    }
+    .date {
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 5px;
+    }
+    .desc {
+      font-size: 14px;
+      color: #666;
+    }
+    &:after {
+      content: " ";
+      position: absolute;
+      display: block;
+      bottom: 0;
+      top: 50px;
+      left: 0;
+      right: 0;
+      background-color: #fff;
+      z-index: -1;
+    }
+    .nav-tabs {
+      border: 0;
+      & > li {
+        & > a {
+          border-radius: 0;
+          padding: 10px 20px;
+          border: 0;
+          color: #fff;
+          &:focus {
+            background: #fff;
+          }
+          &:hover {
+            background-color: transparent;
+            opacity: 0.8;
+          }
+        }
+        &.active {
+          a {
+            position: relative;
+            color: #333;
+            &:hover {
+              background: #fff;
+              opacity: 1;
+            }
+            &:after {
+              content: " ";
+              position: absolute;
+              display: block;
+              top: 0;
+              left: 0;
+              right: 0;
+              height: 3px;
+              background-color: #004d99;
+              z-index: 1;
+            }
+          }
+        }
+      }
+    }
+    .first-news {
+      .img{
+        display: block;
+        margin-bottom:15px;
+      }
+      img {
+        width: 100%;
+        display: block;
+      }
+    }
+    .tab-content {
+      ul {
+        padding: 15px 0;
+        list-style: none;
+      }
+      li {
+        padding: 15px;
+        border: 1px #eaeaea solid;
+        margin-bottom: 15px;
+        &:hover {
+          border: 1px #06c solid;
+        }
+      }
+    }
+  }
+  footer {
+    background-color: #fff;
+  }
+}

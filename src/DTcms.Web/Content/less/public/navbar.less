@@ -1,0 +1,33 @@
+.navbar-default {
+  border-radius: 0;
+  border: 0;
+  margin-bottom: 00;
+  li {
+    & > a {
+      border: 2px transparent solid;
+      border-radius: 40px;
+    }
+  }
+  .navbar-nav {
+    & > .active > a {
+      &,
+      &:hover,
+      &:focus {
+        background-color: #fff;
+        border: 2px #2a2a72 solid;
+        color: #2a2a72;
+      }
+    }
+  }
+  @media (min-width: 768px) {
+    .navbar-nav {
+      margin-top: 35px;
+      li {
+        a {
+          padding-top: 10px;
+          padding-bottom: 10px;
+        }
+      }
+    }
+  }
+}

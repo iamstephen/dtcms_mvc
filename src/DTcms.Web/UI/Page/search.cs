@@ -18,7 +18,7 @@ namespace DTcms.Web.UI.Page
         /// <summary>
         /// 重写虚方法,此方法将在Init事件前执行
         /// </summary>
-        protected override void ShowPage()
+        protected void ShowPage()
         {
             page = DTRequest.GetQueryInt("page", 1);
             tags = Utils.ToHtml(DTRequest.GetQueryString("tags"));

@@ -16,7 +16,7 @@ namespace DTcms.Web.UI.Page
         /// <summary>
         /// 重写虚方法,此方法在Init事件执行
         /// </summary>
-        protected override void InitPage()
+        protected void InitPage()
         {
             action = DTRequest.GetQueryString("action");
             page = DTRequest.GetQueryInt("page", 1);

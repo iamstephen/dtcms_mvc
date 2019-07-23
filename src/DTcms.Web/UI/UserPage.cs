@@ -21,9 +21,9 @@ namespace DTcms.Web.UI
         /// <summary>
         /// 重写父类的虚方法,此方法将在Init事件前执行
         /// </summary>
-        protected override void ShowPage()
+        protected void ShowPage()
         {
-            this.Init += new EventHandler(UserPage_Init); //加入IInit事件
+            
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace DTcms.Web.UI
             if (!IsUserLogin())
             {
                 //跳转URL
-                HttpContext.Current.Response.Redirect(linkurl("login"));
+                System.Web.HttpContext.Current.Response.Redirect(linkurl("login"));
                 return;
             }
             //获得登录用户信息

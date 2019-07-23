@@ -13,14 +13,6 @@ namespace DTcms.Web.UI.Page
         protected int id;
         protected string page = string.Empty;
         protected Model.article model = new Model.article();
-        
-        /// <summary>
-        /// 重写虚方法,此方法将在Init事件前执行
-        /// </summary>
-        protected override void ShowPage()
-        {
-            this.Init += new EventHandler(article_show_Init);
-        }
 
         /// <summary>
         /// OnInit事件,让频道名称变量先赋值
@@ -35,7 +27,7 @@ namespace DTcms.Web.UI.Page
             {
                 if (!bll.ArticleExists(channel, id))
                 {
-                    HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错啦，您要浏览的页面不存在或已删除！")));
+                    System.Web.HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错啦，您要浏览的页面不存在或已删除！")));
                     return;
                 }
                 model = bll.ArticleModel(channel, id);
@@ -44,7 +36,7 @@ namespace DTcms.Web.UI.Page
             {
                 if (!bll.ArticleExists(channel, page))
                 {
-                    HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错啦，您要浏览的页面不存在或已删除！")));
+                    System.Web.HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错啦，您要浏览的页面不存在或已删除！")));
                     return;
                 }
                 model = bll.ArticleModel(channel, page);
@@ -60,7 +52,7 @@ namespace DTcms.Web.UI.Page
             }
             if (!string.IsNullOrEmpty(model.link_url))
             {
-                HttpContext.Current.Response.Redirect(model.link_url);
+                System.Web.HttpContext.Current.Response.Redirect(model.link_url);
             }
         }
 

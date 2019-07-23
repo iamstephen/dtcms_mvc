@@ -19,7 +19,7 @@ namespace DTcms.Web.UI.Page
         /// <summary>
         /// 重写虚方法,此方法在Init事件执行
         /// </summary>
-        protected override void InitPage()
+        protected void InitPage()
         {
             action = DTRequest.GetQueryString("action");
 
@@ -44,14 +44,14 @@ namespace DTcms.Web.UI.Page
             if (action == "exit")
             {
                 //清险Session
-                HttpContext.Current.Session[DTKeys.SESSION_USER_INFO] = null;
+                Session[DTKeys.SESSION_USER_INFO] = null;
                 //清除Cookies
                 Utils.WriteCookie(DTKeys.COOKIE_USER_NAME_REMEMBER, "DTcms", -43200);
                 Utils.WriteCookie(DTKeys.COOKIE_USER_PWD_REMEMBER, "DTcms", -43200);
                 Utils.WriteCookie("UserName", "DTcms", -1);
                 Utils.WriteCookie("Password", "DTcms", -1);
                 //自动登录,跳转URL
-                HttpContext.Current.Response.Redirect(linkurl("login"));
+                System.Web.HttpContext.Current.Response.Redirect(linkurl("login"));
             }
         }
 

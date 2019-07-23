@@ -10,10 +10,11 @@ using System.Web;
 using System.Web.UI;
 using System.Configuration;
 using DTcms.Common;
+using System.Web.Mvc;
 
 namespace DTcms.Web.UI
 {
-    public partial class BasePage : System.Web.UI.Page
+    public partial class BasePage : Controller
     {
         protected internal Model.sysconfig config = new BLL.sysconfig().loadConfig();
         protected internal Model.userconfig uconfig = new BLL.userconfig().loadConfig();
@@ -26,7 +27,7 @@ namespace DTcms.Web.UI
             //是否关闭网站
             if (config.webstatus == 0)
             {
-                HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode(config.webclosereason)));
+                System.Web.HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode(config.webclosereason)));
                 return;
             }
             //取得站点信息
@@ -49,8 +50,8 @@ namespace DTcms.Web.UI
         /// </summary>
         protected Model.sites GetSiteModel()
         {
-            string requestDomain = HttpContext.Current.Request.Url.Authority.ToLower(); //获得来源域名含端口号
-            string requestPath = HttpContext.Current.Request.RawUrl.ToLower(); //当前的URL地址
+            string requestDomain = System.Web.HttpContext.Current.Request.Url.Authority.ToLower(); //获得来源域名含端口号
+            string requestPath = System.Web.HttpContext.Current.Request.RawUrl.ToLower(); //当前的URL地址
             string sitePath = GetSitePath(requestPath, requestDomain);
             Model.sites modelt = SiteDomains.GetSiteDomains().SiteList.Find(p => p.build_path == sitePath);
             return modelt;
@@ -70,8 +71,8 @@ namespace DTcms.Web.UI
                 return string.Empty;
             }
 
-            string requestDomain = HttpContext.Current.Request.Url.Authority.ToLower(); //获得来源域名含端口号
-            string requestPath = HttpContext.Current.Request.RawUrl.ToLower(); //当前的URL地址
+            string requestDomain = System.Web.HttpContext.Current.Request.Url.Authority.ToLower(); //获得来源域名含端口号
+            string requestPath = System.Web.HttpContext.Current.Request.RawUrl.ToLower(); //当前的URL地址
             string linkStartString = GetLinkStartString(requestPath, requestDomain); //链接前缀
 
             //如果URL字典表达式不需要重写则直接返回
@@ -139,7 +140,7 @@ namespace DTcms.Web.UI
             {
                 return urlpath;
             }
-            string requestDomain = HttpContext.Current.Request.Url.Authority.ToLower(); //获取来源域名含端口号
+            string requestDomain = System.Web.HttpContext.Current.Request.Url.Authority.ToLower(); //获取来源域名含端口号
             Dictionary<string, string> dic = SiteDomains.GetSiteDomains().Paths; //获取站点键值对
             //如果当前站点为默认站点则直接返回
             if (SiteDomains.GetSiteDomains().DefaultPath == sitepath.ToLower())
@@ -193,7 +194,7 @@ namespace DTcms.Web.UI
         public bool IsUserLogin()
         {
             //如果Session为Null
-            if (HttpContext.Current.Session[DTKeys.SESSION_USER_INFO] != null)
+            if (System.Web.HttpContext.Current.Session[DTKeys.SESSION_USER_INFO] != null)
             {
                 return true;
             }
@@ -208,7 +209,7 @@ namespace DTcms.Web.UI
                     Model.users model = bll.GetModel(username, password, 0, 0, false);
                     if (model != null)
                     {
-                        HttpContext.Current.Session[DTKeys.SESSION_USER_INFO] = model;
+                        System.Web.HttpContext.Current.Session[DTKeys.SESSION_USER_INFO] = model;
                         return true;
                     }
                 }
@@ -223,7 +224,7 @@ namespace DTcms.Web.UI
         {
             if (IsUserLogin())
             {
-                Model.users model = HttpContext.Current.Session[DTKeys.SESSION_USER_INFO] as Model.users;
+                Model.users model = System.Web.HttpContext.Current.Session[DTKeys.SESSION_USER_INFO] as Model.users;
                 if (model != null)
                 {
                     //为了能查询到最新的用户信息，必须查询最新的用户资料

@@ -15,7 +15,7 @@ namespace DTcms.Web.UI.Page
         /// <summary>
         /// 重写父类的虚方法,此方法将在Init事件前执行
         /// </summary>
-        protected override void ShowPage()
+        protected void ShowPage()
         {
             action = DTRequest.GetQueryString("action");
             if (action == "mobile")
@@ -28,7 +28,7 @@ namespace DTcms.Web.UI.Page
                 Model.user_code model = new BLL.user_code().GetModel(code);
                 if (model == null)
                 {
-                    HttpContext.Current.Response.Redirect(linkurl("repassword", "?action=error"));
+                    System.Web.HttpContext.Current.Response.Redirect(linkurl("repassword", "?action=error"));
                     return;
                 }
                 username = model.user_name;

@@ -11,7 +11,7 @@ namespace DTcms.Web.UI.Page
         /// <summary>
         /// 重写虚方法,此方法将在Init事件前执行
         /// </summary>
-        protected override void ShowPage()
+        protected void ShowPage()
         {
             category_id = DTRequest.GetQueryInt("category_id");
         }

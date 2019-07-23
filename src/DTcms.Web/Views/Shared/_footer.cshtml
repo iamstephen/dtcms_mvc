@@ -1,0 +1,109 @@
+﻿@using DTcms.Web.HtmlExtensions;
+<div class="footer-inner">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+                <div class="row">
+                    <div class="menu-item col-md-3">
+                        <dl>
+                            <dt>关于金冠</dt>
+                            <dd>
+
+                                <a href='/content/about.html#s54'>公司简介</a>
+
+                                <a href='/content/linian.html#s56'>企业理念</a>
+
+                                <a href='/content/honor.html#s57'>资质证书</a>
+
+                                <a href='/content/organization.html#s58'>组织架构</a>
+
+                                <a href='/content/introduce.html#s59'>管道天然气介绍</a>
+
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="menu-item col-md-2">
+                        <dl>
+                            <dt>新闻动态</dt>
+                            <dd>
+
+                                <a href='/news/56.html'>最新消息</a>
+
+                                <a href='/news/55.html'>开发公告</a>
+
+                                <a href='/news/54.html'>停气通知</a>
+
+                                <a href='/news/53.html'>法律法规</a>
+
+                                <a href='/news/3.html'>其他事项</a>
+
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="menu-item col-md-2">
+                        <dl>
+                            <dt>客服中心</dt>
+                            <dd>
+                                <a href='/content/service.html'>报装开通</a>
+
+                                <a href='/content/person.html'>用户中心</a>
+
+                                <a href='/content/show.html'>燃具展销</a>
+
+                                <a href='/content/check.html'>业务查询</a>
+
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="menu-item col-md-2">
+                        <dl>
+                            <dt>安全用气</dt>
+                            <dd>
+
+                                <a href='/cases/list-60.html'>用气知识</a>
+
+                                <a href='/cases/list-59.html'>供气保障</a>
+
+                                <a href='/cases/list-58.html'>常见问题</a>
+
+                                <a href='/cases/list-57.html'>操作提示</a>
+
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="menu-item col-md-2">
+                        <dl>
+                            <dt>联系金冠</dt>
+                            <dd>
+
+                                <a href='/content/contact.html'>联系我们</a>
+
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-5">
+                <div class="row">
+                    <div class="weixin col-md-4">
+                        <img src="~/Content/images/qr.jpg" alt="">
+                        <div>官方微信</div>
+                    </div>
+                    <div class="map col-md-8">
+                        <img src="~/Content/images/map.jpg" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <!--<div class="links">
+                <a href="">联系我们</a>
+                <a href="">法律声明</a>
+                <a href="">友情链接</a>
+                <a href="">网站地图</a>
+            </div>-->
+            @Html.GetSiteModel().copyright <a target="_blank" href="http://www.beian.miit.gov.cn">备案号：@Html.GetSiteModel().crod</a>
+        </div>
+    </div>
+</div>

@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Web.Mvc;
 
 namespace DTcms.Web.UI
 {
-    public partial class BasePage : System.Web.UI.Page
+    public partial class BasePage : Controller
     {
         /// <summary>
         /// 返回频道实体类

@@ -18,10 +18,9 @@ namespace DTcms.Web.UI.Page
         /// <summary>
         /// 重写父类的虚方法,此方法将在Init事件前执行
         /// </summary>
-        protected override void ShowPage()
+        protected void ShowPage()
         {
             goodsJsonValue = Utils.GetCookie(DTKeys.COOKIE_SHOPPING_BUY); //获取商品JSON数据
-            this.Init += new EventHandler(shopping_Init); //加入Init事件
         }
         /// <summary>
         /// 将在Init事件执行
@@ -35,7 +34,7 @@ namespace DTcms.Web.UI.Page
                 //如果不支持匿名购物则跳转到登录页面
                 if (orderConfig.anonymous == 0)
                 {
-                    HttpContext.Current.Response.Redirect(linkurl("login")); //自动跳转URL
+                    System.Web.HttpContext.Current.Response.Redirect(linkurl("login")); //自动跳转URL
                 }
             }
             else
@@ -46,7 +45,7 @@ namespace DTcms.Web.UI.Page
             //获取商品列表
             if (string.IsNullOrEmpty(goodsJsonValue))
             {
-                HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("对不起，无法获取您要购买的商品！")));
+                System.Web.HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("对不起，无法获取您要购买的商品！")));
                 return;
             }
             try
@@ -57,7 +56,7 @@ namespace DTcms.Web.UI.Page
             }
             catch
             {
-                HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("对不起，商品的传输参数有误！")));
+                System.Web.HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("对不起，商品的传输参数有误！")));
                 return;
             }
 

@@ -22,9 +22,9 @@ namespace DTcms.Web.UI.Page
         /// <summary>
         /// 重写父类的虚方法,此方法将在Init事件前执行
         /// </summary>
-        protected override void ShowPage()
+        protected void ShowPage()
         {
-            this.Init += new EventHandler(payment_Init); //加入Init事件
+            
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace DTcms.Web.UI.Page
                 case "confirm":
                     if (string.IsNullOrEmpty(action) || string.IsNullOrEmpty(order_no))
                     {
-                        HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错啦，URL传输参数有误！")));
+                        System.Web.HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错啦，URL传输参数有误！")));
                         return;
                     }
                     //是否需要支持匿名购物
@@ -59,7 +59,7 @@ namespace DTcms.Web.UI.Page
                         if (userModel == null)
                         {
                             //用户未登录
-                            HttpContext.Current.Response.Redirect(linkurl("payment", "?action=login"));
+                            System.Web.HttpContext.Current.Response.Redirect(linkurl("payment", "?action=login"));
                             return;
                         }
                     }
@@ -73,26 +73,26 @@ namespace DTcms.Web.UI.Page
                         rechargeModel = new BLL.user_recharge().GetModel(order_no);
                         if (rechargeModel == null)
                         {
-                            HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错啦，订单号不存在或已删除！")));
+                            System.Web.HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错啦，订单号不存在或已删除！")));
                             return;
                         }
                         //检查订单号是否已支付
                         if (rechargeModel.status == 1)
                         {
-                            HttpContext.Current.Response.Redirect(linkurl("payment", "?action=succeed&order_no=" + rechargeModel.recharge_no));
+                            System.Web.HttpContext.Current.Response.Redirect(linkurl("payment", "?action=succeed&order_no=" + rechargeModel.recharge_no));
                             return;
                         }
                         //检查支付方式
                         payModel = new BLL.site_payment().GetPaymentModel(rechargeModel.payment_id);
                         if (payModel == null)
                         {
-                            HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错啦，支付方式不存在或已删除！")));
+                            System.Web.HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错啦，支付方式不存在或已删除！")));
                             return;
                         }
                         //检查是否线上支付
                         if (payModel.type == 2)
                         {
-                            HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错啦，账户充值不允许线下支付！")));
+                            System.Web.HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错啦，账户充值不允许线下支付！")));
                             return;
                         }
                         order_amount = rechargeModel.amount; //订单金额
@@ -103,26 +103,26 @@ namespace DTcms.Web.UI.Page
                         orderModel = new BLL.orders().GetModel(order_no);
                         if (orderModel == null)
                         {
-                            HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错啦，订单号不存在或已删除！")));
+                            System.Web.HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错啦，订单号不存在或已删除！")));
                             return;
                         }
                         //检查是否已支付过
                         if (orderModel.payment_status == 2)
                         {
-                            HttpContext.Current.Response.Redirect(linkurl("payment", "?action=succeed&order_no=" + orderModel.order_no));
+                            System.Web.HttpContext.Current.Response.Redirect(linkurl("payment", "?action=succeed&order_no=" + orderModel.order_no));
                             return;
                         }
                         //检查支付方式
                         payModel = new BLL.site_payment().GetPaymentModel(orderModel.payment_id);
                         if (payModel == null)
                         {
-                            HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错啦，支付方式不存在或已删除！")));
+                            System.Web.HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错啦，支付方式不存在或已删除！")));
                             return;
                         }
                         //检查是否线下付款
                         if (orderModel.payment_status == 0)
                         {
-                            HttpContext.Current.Response.Redirect(linkurl("payment", "?action=succeed&order_no=" + orderModel.order_no));
+                            System.Web.HttpContext.Current.Response.Redirect(linkurl("payment", "?action=succeed&order_no=" + orderModel.order_no));
                             return;
                         }
                         //检查是否积分换购，直接跳转成功页面
@@ -132,17 +132,17 @@ namespace DTcms.Web.UI.Page
                             bool result = new BLL.orders().UpdateField(orderModel.order_no, "status=2,payment_status=2,payment_time='" + DateTime.Now + "'");
                             if (!result)
                             {
-                                HttpContext.Current.Response.Redirect(linkurl("payment", "?action=error"));
+                                System.Web.HttpContext.Current.Response.Redirect(linkurl("payment", "?action=error"));
                                 return;
                             }
-                            HttpContext.Current.Response.Redirect(linkurl("payment", "?action=succeed&order_no=" + orderModel.order_no));
+                            System.Web.HttpContext.Current.Response.Redirect(linkurl("payment", "?action=succeed&order_no=" + orderModel.order_no));
                             return;
                         }
                         order_amount = orderModel.order_amount; //订单金额
                     }
                     else
                     {
-                        HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错啦，找不到您要提交的订单类型！")));
+                        System.Web.HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错啦，找不到您要提交的订单类型！")));
                         return;
                     }
                     break;
@@ -153,7 +153,7 @@ namespace DTcms.Web.UI.Page
                         rechargeModel = new BLL.user_recharge().GetModel(order_no);
                         if (rechargeModel == null)
                         {
-                            HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错啦，订单号不存在或已删除！")));
+                            System.Web.HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错啦，订单号不存在或已删除！")));
                             return;
                         }
 
@@ -163,13 +163,13 @@ namespace DTcms.Web.UI.Page
                         orderModel = new BLL.orders().GetModel(order_no);
                         if (orderModel == null)
                         {
-                            HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错啦，订单号不存在或已删除！")));
+                            System.Web.HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错啦，订单号不存在或已删除！")));
                             return;
                         }
                     }
                     else
                     {
-                        HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错啦，找不到您要提交的订单类型！")));
+                        System.Web.HttpContext.Current.Response.Redirect(linkurl("error", "?msg=" + Utils.UrlEncode("出错啦，找不到您要提交的订单类型！")));
                         return;
                     }
                     break;

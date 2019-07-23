@@ -15,9 +15,9 @@ namespace DTcms.Web.UI.Page
         /// <summary>
         /// 重写父类的虚方法,此方法将在Init事件前执行
         /// </summary>
-        protected override void ShowPage()
+        protected void ShowPage()
         {
-            this.Init += new EventHandler(cart_Init); //加入Init事件
+            
         }
 
         /// <summary>

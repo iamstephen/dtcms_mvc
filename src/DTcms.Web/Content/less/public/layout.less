@@ -1,0 +1,136 @@
+body {
+  background-color: #f3f2f3;
+  font-size: 16px;
+  @media screen and (min-width: 1360px) {
+    padding-left: 70px;
+    padding-right: 70px;
+  }
+}
+header {
+  padding-bottom: 3px;
+  background: url("../images/line-bg.jpg") no-repeat center bottom;
+  background-size: 100% 3px;
+  &.has-subnav {
+    padding-bottom: 0;
+    background: none;
+    background-size: 0;
+  }
+  .subnav {
+    height: 46px;
+    background: url("../images/line-bg.jpg") no-repeat center bottom;
+    background-size: 100% 46px;
+    line-height: 46px;
+    color: #fff;
+    &.scroll {
+      position: fixed;
+      left:0;
+      right: 0;
+      top: 0;
+      z-index: 2;
+    }
+    .subnav-inner {
+      width: 50%;
+      float: right;
+      a {
+        color: #fff;
+        margin-right: 15px;
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+}
+
+footer {
+  padding-top: 50px;
+  .footer-inner {
+    background-color: #2c2d2e;
+    color: #fff;
+    padding: 50px 0 25px;
+  }
+  .weixin {
+    text-align: center;
+    font-size: 14px;
+    img {
+      display: block;
+      margin: 0 auto;
+      margin-bottom: 5px;
+    }
+  }
+  .map {
+    border-left: 1px #3e3f40 solid;
+    img {
+      display: block;
+      max-width: 100%;
+    }
+  }
+  .menu-item {
+    dt {
+      padding-bottom: 10px;
+    }
+    dd {
+      font-size: 14px;
+      line-height: 2em;
+      a {
+        display: block;
+        color: #acacac;
+      }
+    }
+  }
+  .copyright {
+    font-size: 14px;
+    .links {
+      margin-bottom: 5px;
+    }
+    a {
+      color: #acacac;
+    }
+  }
+}
+.page-body,
+.has-bg-block {
+  background-color: #fff;
+}
+.page-image {
+  background-position: right top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 314px;
+  padding: 95px 0 0;
+  .title {
+    padding-left: 100px;
+    font-size: 36px;
+    color: #fff;
+    .en {
+      font-size: 18px;
+      opacity: 0.8;
+      margin-top: 8px;
+    }
+  }
+}
+.page-body {
+  position: relative;
+  margin-top: -60px;
+  padding: 60px 0;
+  z-index: 1;
+}
+.main {
+  padding-left: 115px;
+  padding-right: 115px;
+}
+
+.layout-list {
+  ul {
+    padding: 0;
+    list-style: none;
+  }
+  li{
+    border-bottom:1px #f2f2f2 solid;
+    padding-bottom: 25px;
+    margin-bottom: 25px;
+    p{
+      margin-bottom: 0;
+    }
+  }
+}

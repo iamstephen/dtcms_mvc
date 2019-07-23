@@ -1,0 +1,40 @@
+#service {
+  .nav-tabs {
+    font-size: 18px;
+    margin-bottom: 30px;
+    li {
+      a {
+        border-left: 0;
+        border-right: 0;
+        border-top: 0;
+        border-bottom: 3px transparent solid;
+      }
+      &.active {
+        & > a {
+          border-bottom-color: #c00;
+        }
+      }
+    }
+  }
+  .content {
+    border-right: 1px solid #ddd;
+    padding-right: 60px;
+    line-height: 1.8em;
+    .downloads {
+      a {
+        display: block;
+        line-height: 48px;
+        i {
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+  .sidebar {
+    padding-left: 60px;
+    img {
+      display: block;
+      margin: 15px 0 8px;
+    }
+  }
+}
