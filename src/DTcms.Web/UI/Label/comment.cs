@@ -15,7 +15,7 @@ namespace DTcms.Web.UI
         /// <param name="article_id">主表ID</param>
         /// <param name="strwhere">查询条件</param>
         /// <returns>Int</returns>
-        protected int get_comment_count(int channel_id, int article_id, string strwhere)
+        public int get_comment_count(int channel_id, int article_id, string strwhere)
         {
             int count = 0;
             if (channel_id > 0 && article_id > 0)
@@ -38,7 +38,7 @@ namespace DTcms.Web.UI
         /// <param name="top">显示条数</param>
         /// <param name="strwhere">查询条件</param>
         /// <returns>DateTable</returns>
-        protected DataTable get_comment_list(int channel_id, int article_id, int top, string strwhere)
+        public DataTable get_comment_list(int channel_id, int article_id, int top, string strwhere)
         {
             DataTable dt = new DataTable();
             if (channel_id > 0 && article_id > 0)
@@ -63,7 +63,7 @@ namespace DTcms.Web.UI
         /// <param name="strwhere">查询条件</param>
         /// <param name="totalcount">总记录数</param>
         /// <returns>DateTable</returns>
-        protected DataTable get_comment_list(int channel_id, int article_id, int page_size, int page_index, string strwhere, out int totalcount)
+        public DataTable get_comment_list(int channel_id, int article_id, int page_size, int page_index, string strwhere, out int totalcount)
         {
             DataTable dt = new DataTable();
             if (channel_id > 0 && article_id > 0)

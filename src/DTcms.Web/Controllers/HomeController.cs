@@ -14,9 +14,14 @@ namespace DTcms.Web.Controllers
 
         public ActionResult Index()
         {
-            DataTable homeBanner = get_article_list("photo", 14, 0, "status=0");
-            ViewBag.homeBanner = homeBanner;
+            return View();
+        }
+
+        public ActionResult Error(string msg)
+        {
+            ViewBag.msg = msg;
             return View();
         }
     }
+    
 }

@@ -1,0 +1,78 @@
+﻿@using System.Data;
+@using DTcms.Web.UI;
+@using DTcms.Common;
+@using DTcms.Web.HtmlExtensions;
+@using System.Data;
+@{
+    DTcms.Model.article_category article_Category = ViewBag.article_category;
+    ViewBag.seo_title = article_Category.title + "_" + Html.GetSiteModel().seo_title;
+    ViewBag.seo_keyword = article_Category.seo_keywords;
+    ViewBag.seo_description = article_Category.seo_description;
+    ViewBag.navId = 4;
+
+    int category_id = ViewBag.category_id;
+    string channel = ViewBag.channel;
+    DTcms.Model.site_channel site_channel = ViewBag.site_Channel;
+    DataTable newsList1 = ViewBag.newsList1;
+    DataTable newsList = ViewBag.newsList;
+    string pagelist = ViewBag.pagelist;
+}
+<body id="safe">
+    <header class="header has-subnav">
+        @Html.Partial("~/Views/Shared/_nav.cshtml")
+        <div class="subnav">
+            <div class="subnav-inner">
+                @{ DataTable categoryList = new BasePage().get_category_child_list(channel, 0);}
+                @foreach (DataRow cdr in categoryList.Rows)
+                {
+                    if (Utils.StrToInt(Utils.ObjectToStr(cdr["id"]), 0) == category_id)
+                    {
+                        @Html.ActionLink(cdr["title"].ToStr(), "List", new { category_id = cdr["id"] }, new { @class = "active" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink(cdr["title"].ToStr(), "List", new { category_id = cdr["id"] })
+                    }
+                }
+            </div>
+        </div>
+    </header>
+    <div class="page-image" style="background-image: url(/Content/images/about-banner.jpg)">
+        <div class="container">
+            <div class="title">
+                @site_channel.title<div class="en">@site_channel.titleEn</div>
+            </div>
+        </div>
+    </div>
+    <div class="page-body container">
+        <div class="main">
+            <div class="text-list layout-list">
+                <ul>
+                    @foreach (DataRow dr in newsList.Rows)
+                    {
+                        <li>
+                            <a class="img pull-right" href='/cases/show?id=@dr["id"]'>
+                                <img src="@dr["img_url"]" alt="">
+                            </a>
+                            <h3><a href='/cases/show?id=@dr["id"]'>@Utils.DropHTML(Utils.ObjectToStr(dr["title"]), 60)</a></h3>
+                            <p>
+                                @Utils.DropHTML(Utils.ObjectToStr(dr["zhaiyao"]), 200))<a href='/cases/show?id=@dr["id"]'>[查看详情]</a>
+                            </p>
+                        </li>
+                    }
+
+                </ul>
+                <!--页码列表-->
+                <div class="page-box">
+                    <div class="digg">@Html.Raw(pagelist)</div>
+                </div>
+                <!--/页码列表-->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        @Html.Partial("~/Views/Shared/_footer.cshtml")
+    </footer>
+    <script src="~/Content/js/common.js"></script>
+</body>

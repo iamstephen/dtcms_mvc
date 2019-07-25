@@ -13,7 +13,7 @@ namespace DTcms.Web.UI
         /// </summary>
         /// <param name="channel_name">频道名称</param>
         /// <returns></returns>
-        protected Model.site_channel get_channel_model(string channel_name) {
+        public Model.site_channel get_channel_model(string channel_name) {
             return new BLL.site_channel().GetModel(channel_name);
         }
     }

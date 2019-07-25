@@ -14,7 +14,7 @@ namespace DTcms.Web.UI
         /// <param name="top">显示条数</param>
         /// <param name="strwhere">查询条件</param>
         /// <returns>DataTable</returns>
-        protected DataTable get_express_list(int top, string strwhere)
+        public DataTable get_express_list(int top, string strwhere)
         {
             DataTable dt = new DataTable();
             string _where = "is_lock=0";
@@ -31,7 +31,7 @@ namespace DTcms.Web.UI
         /// </summary>
         /// <param name="payment_id">ID</param>
         /// <returns>String</returns>
-        protected string get_express_title(int express_id)
+        public string get_express_title(int express_id)
         {
             return new BLL.express().GetTitle(express_id);
         }

@@ -14,7 +14,7 @@ namespace DTcms.Web.UI
         /// </summary>
         /// <param name="strwhere">查询条件</param>
         /// <returns>Int</returns>
-        protected int get_user_order_count(string strwhere)
+        public int get_user_order_count(string strwhere)
         {
             return new BLL.orders().GetCount(strwhere);
         }
@@ -25,7 +25,7 @@ namespace DTcms.Web.UI
         /// <param name="top">显示条数</param>
         /// <param name="strwhere">查询条件</param>
         /// <returns>DataTable</returns>
-        protected DataTable get_order_list(int top, string strwhere)
+        public DataTable get_order_list(int top, string strwhere)
         {
             return new BLL.orders().GetList(top, strwhere, "add_time desc,id desc").Tables[0];
         }
@@ -38,7 +38,7 @@ namespace DTcms.Web.UI
         /// <param name="strwhere">查询条件</param>
         /// <param name="totalcount">总记录数</param>
         /// <returns>DateTable</returns>
-        protected DataTable get_order_list(int page_size, int page_index, string strwhere, out int totalcount)
+        public DataTable get_order_list(int page_size, int page_index, string strwhere, out int totalcount)
         {
             return new BLL.orders().GetList(page_size, page_index, strwhere, "add_time desc,id desc", out totalcount).Tables[0];
         }
@@ -48,7 +48,7 @@ namespace DTcms.Web.UI
         /// </summary>
         /// <param name="order_id">订单</param>
         /// <returns>List</returns>
-        protected List<Model.article> get_order_goods_list(int order_id)
+        public List<Model.article> get_order_goods_list(int order_id)
         {
             Model.orders model = new BLL.orders().GetModel(order_id);
             if (model == null)
@@ -75,7 +75,7 @@ namespace DTcms.Web.UI
         /// </summary>
         /// <param name="_id">订单ID</param>
         /// <returns>String</returns>
-        protected string get_order_status(int _id)
+        public string get_order_status(int _id)
         {
             string _title = "";
             Model.orders model = new BLL.orders().GetModel(_id);
@@ -120,7 +120,7 @@ namespace DTcms.Web.UI
         /// </summary>
         /// <param name="order_id">订单ID</param>
         /// <returns>bool</returns>
-        protected bool get_order_payment_status(int order_id)
+        public bool get_order_payment_status(int order_id)
         {
             Model.orders model = new BLL.orders().GetModel(order_id);
             if (model == null)
@@ -148,7 +148,7 @@ namespace DTcms.Web.UI
         /// </summary>
         /// <param name="total_amount">总金额</param>
         /// <returns>decimal</returns>
-        protected decimal get_order_taxamount(decimal total_amount)
+        public decimal get_order_taxamount(decimal total_amount)
         {
             Model.orderconfig model = new BLL.orderconfig().loadConfig();
             decimal taxamount = model.taxamount;

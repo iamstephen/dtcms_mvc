@@ -1,0 +1,366 @@
+﻿@using System.Data;
+@using DTcms.Web.UI;
+@using DTcms.Common;
+@using DTcms.Web.HtmlExtensions;
+@using System.Data;
+@model DTcms.Model.article
+@{
+    DTcms.Model.sysconfig config = new DTcms.BLL.sysconfig().loadConfig();
+    DTcms.Model.sites site = new BasePage().GetSiteModel();
+    string category_title = new BasePage().get_category_title(Model.category_id, "");
+    ViewBag.seo_title = Model.title + "-" + category_title + "-" + Html.GetSiteModel().seo_title;
+    ViewBag.seo_keyword = Model.seo_keywords;
+    ViewBag.seo_description = Model.seo_description;
+    string channel = ViewBag.channel;
+    DTcms.Model.site_channel site_channel = ViewBag.site_Channel;
+}
+@if (Model.category_id == 25)
+{
+    <body id="about">
+        @{ViewBag.navId = 1;}
+        <header class="header has-subnav">
+            @Html.Partial("~/Views/Shared/_nav.cshtml")
+            <div class="subnav">
+                <div class="subnav-inner">
+                    @{ DataTable newsList = new BasePage().get_article_list("content", Model.category_id, 0, "status=0");}
+                    @foreach (DataRow dr in newsList.Rows)
+                    {
+                        <a href="#s@(dr["id"])">@dr["title"]</a>
+                    }
+                </div>
+            </div>
+        </header>
+        <div class="page-image" style="background-image: url(/Content/images/about-banner.jpg)">
+            <div class="container">
+                <div class="title">
+                    @Model.title
+                    <div class="en">ABOUT JINGUAN GAS</div>
+                </div>
+            </div>
+        </div>
+        <div id="s54" class="body-1 page-body container">
+            <div class="main">
+                <div class="profile">
+                    <div class="body-title has-line">
+                        @{ DTcms.Model.article article54 = new BasePage().GetContentModel(Model.channel_id, 54);
+                            string sub_title54 = new BasePage().get_article_field(Model.channel_id, 54, "sub_title");
+                        }
+                        @article54.title
+                        <div class="en">
+                            @sub_title54
+                        </div>
+                    </div>
+                    <div class="text-content">
+                        @Html.Raw(article54.content)
+                    </div>
+                </div>
+            </div>
+        </div>
+        @{ DTcms.Model.article article56 = new BasePage().GetContentModel(Model.channel_id, 56);
+            string sub_title56 = new BasePage().get_article_field(Model.channel_id, 56, "sub_title");
+        }
+        <div id="s56" class="body-image-1 page-body-image" style="background-image: url(@article56.img_url)">
+            <div class="container">
+                <div class="body-slogan">
+                    <div class="en">
+                        @sub_title56
+                    </div>
+                    @Html.Raw(article56.content)
+                </div>
+            </div>
+        </div>
+        <div id="s58" class="body-2 page-body container">
+            <div class="main">
+                <div id="s57" class="certificate">
+                    <div class="swiper-container">
+                        <div class="swiper-wrapper">
+                            @{ DTcms.Model.article article57 = new BasePage().GetContentModel(Model.channel_id, 57);
+                                List<DTcms.Model.article_albums> albusm = article57.albums;
+                            }
+                            @if (albusm != null)
+                            {
+                                foreach (DTcms.Model.article_albums modelt in albusm)
+                                {
+                                    <div class="swiper-slide">
+                                        <div class="item"><img src="@modelt.original_path" thumb_path="@modelt.thumb_path" alt=""></div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <!-- Add Pagination -->
+                        <div class="swiper-pagination swiper-pagination-white"></div>
+                        <!-- Add Navigation -->
+                        <div class="swiper-button-prev swiper-button-white"></div>
+                        <div class="swiper-button-next swiper-button-white"></div>
+                    </div>
+                </div>
+                <div class="organizational">
+                    <div class="body-title pull-right">
+                        @{ DTcms.Model.article article58 = new BasePage().GetContentModel(Model.channel_id, 58);
+                            string sub_title58 = new BasePage().get_article_field(Model.channel_id, 58, "sub_title");
+                            string wapbanner58 = new BasePage().get_article_field(Model.channel_id, 58, "wapbanner");
+                        }
+                        @article58.title
+                        <div class="en">@sub_title58</div>
+                    </div>
+                    <div class="text-content">
+                        <img src="@article58.img_url" wap='@wapbanner58'>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @{ DTcms.Model.article article59 = new BasePage().GetContentModel(Model.channel_id, 59);
+            string sub_title59 = new BasePage().get_article_field(Model.channel_id, 59, "sub_title");
+        }
+        <div id="s59" class="body-image-2 page-body-image" style="background-image: url(@article59.img_url)">
+            <div class="container">
+                <div class="body-title">
+                    @article59.title
+                    <div class="en">@sub_title59</div>
+                </div>
+            </div>
+        </div>
+        <div class="body-3 page-body container">
+            <div class="main knowledge">
+                <div class="text-content">
+                    @Html.Raw(@article59.content)
+                </div>
+            </div>
+        </div>
+        <footer>
+            @Html.Partial("~/Views/Shared/_footer.cshtml")
+        </footer>
+        <script src="~/Content/js/common.js"></script>
+    </body>
+}
+else if (Model.category_id == 64 || Model.category_id == 65)
+{
+    <body id="service">
+        <script>
+            @{ViewBag.navId = 3;}
+        </script>
+        <header class="header has-subnav">
+            @Html.Partial("~/Views/Shared/_nav.cshtml")
+            <div class="subnav">
+                <div class="subnav-inner">
+                    @{ DTcms.Model.article_category article_Category = new BasePage().get_category_model(65);
+                        DataTable newsList = new BasePage().get_article_list("content", 64, 0, "status=0 and category_id!=65 and category_id!=66");
+                    }
+                    <a href='/Content/Index?page=service'>@article_Category.title</a>
+                    @foreach (DataRow dr in newsList.Rows)
+                    {
+                        <a href='/Content/Index?page=@dr["call_index"]'>@dr["title"]</a>
+                    }
+                </div>
+            </div>
+        </header>
+        <div class="page-image" style="background-image: url(/Content/images/about-banner.jpg)">
+            <div class="container">
+                <div class="title">
+                    @Model.title<div class="en">service</div>
+                </div>
+            </div>
+        </div>
+        <div class="page-body container">
+            <div class="main">
+                @if (Model.category_id == 65)
+                {
+                    <ul class="nav nav-tabs">
+                        @{ DataTable newsList2 = new BasePage().get_article_list("content", 65, 0, "status=0");
+                        }
+                        @foreach (DataRow dr in newsList2.Rows)
+                        {
+                            <li id="ser@(dr["id"])"><a href='/content/Index?page=@dr["call_index"]'>@dr["title"]</a></li>
+                        }
+                    </ul>
+                }
+                <div class="row slidecontent">
+                    <div class="col-xs-8 content">
+                        @Html.Raw(Model.content)
+                        @if (Model.attach != null && Model.attach.Count > 0)
+                        {
+                            <div class="downloads">
+                                <h3>相关文件下载</h3>
+                                @foreach (DTcms.Model.article_attach modelt in Model.attach)
+                                {
+                                    <a href="javascript:;" onclick="downLink(@modelt.point,'@(config.webpath)tools/download.ashx?site=@site.build_path&id=@modelt.id');"><i><img src="~/Content/images/download.png" alt=""></i>@modelt.file_name</a>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div class="col-xs-4 sidebar">
+                        @{ DTcms.Model.article imgmodel = new BasePage().GetContentModel(6, 66);
+                        }
+                        <strong>@imgmodel.title</strong>
+                        <img src="@imgmodel.img_url" alt="">
+                        <div>@Html.Raw(imgmodel.content)</div>
+                    </div>
+                </div>
+                <script>
+                    var serid = '@Model.id';
+                    $("#ser" + serid).addClass("active");
+                            //链接下载
+                            function downLink(point, linkurl) {
+                                if (point > 0) {
+                                    var content = "下载需扣除" + point + "个积分<br />重复下载不扣积分，需要继续吗？";
+                                    if (confirm(content)) {
+                                        window.location.href = linkurl;
+                                    }
+                                } else {
+                                    window.location.href = linkurl;
+                                }
+                                return false;
+                            }
+                </script>
+            </div>
+        </div>
+        <footer>
+            @Html.Partial("~/Views/Shared/_footer.cshtml")
+        </footer>
+        <script src="~/Content/js/common.js"></script>
+    </body>
+}
+else
+{
+    <body id="contact">
+        <script>
+            @{ViewBag.navId = 5;}
+        </script>
+        <header class="header has-subnav">
+            @Html.Partial("~/Views/Shared/_nav.cshtml")
+            <div class="subnav">
+                <div class="subnav-inner">
+                    @{ DataTable newsList = new BasePage().get_article_list("content", Model.category_id, 0, "status=0");}
+                    @foreach (DataRow dr in newsList.Rows)
+                    {
+                        <a href="#s@(dr["id"])">@dr["title"]</a>
+                    }
+                </div>
+            </div>
+        </header>
+        <div class="page-image" style="background-image: url(/Content/images/about-banner.jpg)">
+            <div class="container">
+                <div class="title">
+                    @{ DTcms.Model.article_category article_Category = new BasePage().get_category_model(Model.category_id);
+                    }
+                    @article_Category.title<div class="en">Contact us</div>
+                </div>
+            </div>
+        </div>
+        <div class="page-body container">
+            <div class="main">
+                @Html.Raw(Model.content)
+            </div>
+            <script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true"></script>
+            <div class="bdmap-wrap">
+                <div class="map-inner">
+                    <div class="bdmap" id="dituContent">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            @Html.Partial("~/Views/Shared/_footer.cshtml")
+        </footer>
+        <script src="~/Content/js/common.js"></script>
+        <script type="text/javascript">
+            //创建和初始化地图函数：
+            function initMap() {
+                createMap();//创建地图
+                setMapEvent();//设置地图事件
+                addMapControl();//向地图添加控件
+                addMarker();//向地图中添加marker
+            }
+
+            //创建地图函数：
+            function createMap() {
+                var map = new BMap.Map("dituContent");//在百度地图容器中创建一个地图
+                var point = new BMap.Point(113.237566, 23.088361);//定义一个中心点坐标
+                map.centerAndZoom(point, 17);//设定地图的中心点和坐标并将地图显示在地图容器中
+                window.map = map;//将map变量存储在全局
+            }
+
+            //地图事件设置函数：
+            function setMapEvent() {
+                map.enableDragging();//启用地图拖拽事件，默认启用(可不写)
+                map.enableScrollWheelZoom();//启用地图滚轮放大缩小
+                map.enableDoubleClickZoom();//启用鼠标双击放大，默认启用(可不写)
+                map.enableKeyboard();//启用键盘上下左右键移动地图
+            }
+
+            //地图控件添加函数：
+            function addMapControl() {
+                //向地图中添加缩放控件
+                var ctrl_nav = new BMap.NavigationControl({ anchor: BMAP_ANCHOR_TOP_LEFT, type: BMAP_NAVIGATION_CONTROL_LARGE });
+                map.addControl(ctrl_nav);
+                //向地图中添加缩略图控件
+                var ctrl_ove = new BMap.OverviewMapControl({ anchor: BMAP_ANCHOR_BOTTOM_RIGHT, isOpen: 1 });
+                map.addControl(ctrl_ove);
+                //向地图中添加比例尺控件
+                var ctrl_sca = new BMap.ScaleControl({ anchor: BMAP_ANCHOR_BOTTOM_LEFT });
+                map.addControl(ctrl_sca);
+            }
+
+            //标注点数组
+            var markerArr = [{ title: "广州金冠燃气技术开发有限公司", content: "地址：广州荔湾区浣花路109号8012房<br/>电话：020-81406162&nbsp;/&nbsp;81405151<br/>传真：020-81511752&nbsp;/&nbsp;81512605", point: "113.237512|23.088344", isOpen: 1, icon: { w: 21, h: 21, l: 0, t: 0, x: 6, lb: 5 } }
+            ];
+            //创建marker
+            function addMarker() {
+                for (var i = 0; i < markerArr.length; i++) {
+                    var json = markerArr[i];
+                    var p0 = json.point.split("|")[0];
+                    var p1 = json.point.split("|")[1];
+                    var point = new BMap.Point(p0, p1);
+                    var iconImg = createIcon(json.icon);
+                    var marker = new BMap.Marker(point, { icon: iconImg });
+                    var iw = createInfoWindow(i);
+                    var label = new BMap.Label(json.title, { "offset": new BMap.Size(json.icon.lb - json.icon.x + 10, -20) });
+                    marker.setLabel(label);
+                    map.addOverlay(marker);
+                    label.setStyle({
+                        borderColor: "#808080",
+                        color: "#333",
+                        cursor: "pointer"
+                    });
+
+                    (function () {
+                        var index = i;
+                        var _iw = createInfoWindow(i);
+                        var _marker = marker;
+                        _marker.addEventListener("click", function () {
+                            this.openInfoWindow(_iw);
+                        });
+                        _iw.addEventListener("open", function () {
+                            _marker.getLabel().hide();
+                        })
+                        _iw.addEventListener("close", function () {
+                            _marker.getLabel().show();
+                        })
+                        label.addEventListener("click", function () {
+                            _marker.openInfoWindow(_iw);
+                        })
+                        if (!!json.isOpen) {
+                            label.hide();
+                            _marker.openInfoWindow(_iw);
+                        }
+                    })()
+                }
+            }
+            //创建InfoWindow
+            function createInfoWindow(i) {
+                var json = markerArr[i];
+                var iw = new BMap.InfoWindow("<b class='iw_poi_title' title='" + json.title + "'>" + json.title + "</b><div class='iw_poi_content'>" + json.content + "</div>");
+                return iw;
+            }
+            //创建一个Icon
+            function createIcon(json) {
+                var icon = new BMap.Icon("http://api.map.baidu.com/img/markers.png", new BMap.Size(json.w, json.h), { imageOffset: new BMap.Size(-json.l, -json.t), infoWindowOffset: new BMap.Size(json.lb + 5, 1), offset: new BMap.Size(json.x, json.h) })
+                return icon;
+            }
+
+            initMap();//创建和初始化地图
+        </script>
+    </body>
+}

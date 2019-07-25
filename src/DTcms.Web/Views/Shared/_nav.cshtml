@@ -1,4 +1,11 @@
 ﻿@using DTcms.Web.HtmlExtensions;
+@{
+    DTcms.Model.article_category nav1 = new DTcms.BLL.article_category().GetModel(25);
+    DTcms.Model.site_channel nav2 = new DTcms.BLL.site_channel().GetModel("news");
+    DTcms.Model.article_category nav3 = new DTcms.BLL.article_category().GetModel(64);
+    DTcms.Model.site_channel nav4 = new DTcms.BLL.site_channel().GetModel("cases");
+    DTcms.Model.article_category nav5 = new DTcms.BLL.article_category().GetModel(61);
+}
 <nav class="navbar navbar-default">
     <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -18,12 +25,13 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
-                <li id="navId0" class="active"><a href="/index.html">金冠首页</a></li>
-                <li id="navId1"><a href="/content/about.html">关于金冠</a></li>
-                <li id="navId2"><a href="/news/56.html">新闻动态</a></li>
-                <li id="navId3"><a href="/content/service.html">客服中心</a></li>
-                <li id="navId4"><a href="/cases/list-60.html">安全用气</a></li>
-                <li id="navId5"><a href="/content/contact.html">联系金冠</a></li>
+                <li id="navId0"><a href="/">金冠首页</a></li>
+                <li id="navId1"><a href="/content/index?page=about">@nav1.title</a></li>
+                <li id="navId2"><a href="/news/list?id=56">@nav2.title</a></li>
+                <li id="navId3"><a href="/content/index?page=service">@nav3.title</a></li>
+                <li id="navId4"><a href="/cases/list?id=60">@nav4.title</a></li>
+                <li id="navId5"><a href="/content/index?page=contact">@nav5.title</a></li>
+
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->

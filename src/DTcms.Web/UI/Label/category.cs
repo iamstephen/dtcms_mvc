@@ -13,7 +13,7 @@ namespace DTcms.Web.UI
         /// </summary>
         /// <param name="category_id">类别ID</param>
         /// <returns>String</returns>
-        protected string get_category_title(int category_id, string default_value)
+        public string get_category_title(int category_id, string default_value)
         {
             BLL.article_category bll = new BLL.article_category();
             if (bll.Exists(category_id))
@@ -28,7 +28,7 @@ namespace DTcms.Web.UI
         /// </summary>
         /// <param name="category_id">类别ID</param>
         /// <returns>Model.category</returns>
-        protected Model.article_category get_category_model(int category_id)
+        public Model.article_category get_category_model(int category_id)
         {
             return new BLL.article_category().GetModel(category_id);
         }
@@ -39,7 +39,7 @@ namespace DTcms.Web.UI
         /// <param name="urlKey">URL重写Name</param>
         /// <param name="category_id">类别ID</param>
         /// <returns>String</returns>
-        protected string get_category_menu(string urlKey, int category_id)
+        public string get_category_menu(string urlKey, int category_id)
         {
             StringBuilder strTxt = new StringBuilder();
             if (category_id > 0)
@@ -55,7 +55,7 @@ namespace DTcms.Web.UI
         /// <param name="channel_name">频道名称</param>
         /// <param name="parent_id">父类别ID</param>
         /// <returns>DataTable</returns>
-        protected DataTable get_category_list(string channel_name, int parent_id)
+        public DataTable get_category_list(string channel_name, int parent_id)
         {
             return new BLL.article_category().GetList(parent_id, channel_name);
         }
@@ -66,7 +66,7 @@ namespace DTcms.Web.UI
         /// <param name="channel_name">频道名称</param>
         /// <param name="parent_id">父类别ID</param>
         /// <returns>DataTable</returns>
-        protected DataTable get_category_child_list(string channel_name, int parent_id)
+        public DataTable get_category_child_list(string channel_name, int parent_id)
         {
             return new BLL.article_category().GetChildList(0, parent_id, channel_name);
         }
@@ -77,7 +77,7 @@ namespace DTcms.Web.UI
         /// <param name="channel_name">频道名称</param>
         /// <param name="parent_id">父类别ID</param>
         /// <returns>DataTable</returns>
-        protected DataTable get_category_child_list(int top, string channel_name, int parent_id)
+        public DataTable get_category_child_list(int top, string channel_name, int parent_id)
         {
             return new BLL.article_category().GetChildList(top, parent_id, channel_name);
         }

@@ -187,8 +187,11 @@
     <Compile Include="Areas\Admin\Controllers\OrderController.cs" />
     <Compile Include="Areas\Admin\Controllers\SettingsController.cs" />
     <Compile Include="Areas\Admin\Controllers\UsersController.cs" />
+    <Compile Include="Controllers\CasesController.cs" />
+    <Compile Include="Controllers\ContentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\ManagerController.cs" />
+    <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Filter\AdminAuthorize.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -705,10 +708,10 @@
     <Content Include="Areas\Admin\Views\Users\User_list.cshtml" />
     <Content Include="Areas\Admin\Views\Users\User_oauth.cshtml" />
     <Content Include="Areas\Admin\Views\Users\User_sms.cshtml" />
-    <Content Include="Areas\Admin\Views\Error.cshtml" />
-    <Content Include="Areas\Admin\Views\index.cshtml" />
-    <Content Include="Areas\Admin\Views\login.cshtml" />
-    <Content Include="Areas\Admin\Views\center.cshtml" />
+    <Content Include="Areas\Admin\Views\Admin\Error.cshtml" />
+    <Content Include="Areas\Admin\Views\Admin\index.cshtml" />
+    <Content Include="Areas\Admin\Views\Admin\login.cshtml" />
+    <Content Include="Areas\Admin\Views\Admin\center.cshtml" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
@@ -919,6 +922,11 @@
     <Content Include="Scripts\webuploader\uploader.swf" />
     <Content Include="Scripts\webuploader\webuploader.min.js" />
     <Content Include="Content\admin\ie6update.html" />
+    <None Include="Views\Cases\List.cshtml" />
+    <None Include="Views\Cases\Show.cshtml" />
+    <Content Include="Views\Content\Index.cshtml" />
+    <None Include="Views\News\List.cshtml" />
+    <None Include="Views\News\Show.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

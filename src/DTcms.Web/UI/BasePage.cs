@@ -32,23 +32,13 @@ namespace DTcms.Web.UI
             }
             //取得站点信息
             site = GetSiteModel();
-            //抛出一个虚方法给继承重写
-            ShowPage();
-        }
-
-        /// <summary>
-        /// 页面处理虚方法
-        /// </summary>
-        protected virtual void ShowPage()
-        {
-            //虚方法代码
         }
 
         #region 页面通用方法==========================================
         /// <summary>
         /// 返回站点信息
         /// </summary>
-        protected Model.sites GetSiteModel()
+        public Model.sites GetSiteModel()
         {
             string requestDomain = System.Web.HttpContext.Current.Request.Url.Authority.ToLower(); //获得来源域名含端口号
             string requestPath = System.Web.HttpContext.Current.Request.RawUrl.ToLower(); //当前的URL地址
@@ -169,7 +159,7 @@ namespace DTcms.Web.UI
         /// <param name="totalcount">记录总数</param>
         /// <param name="_key">URL映射Name名称</param>
         /// <param name="_params">传输参数</param>
-        protected string get_page_link(int pagesize, int pageindex, int totalcount, string _key, params object[] _params)
+        public string get_page_link(int pagesize, int pageindex, int totalcount, string _key, params object[] _params)
         {
             return Utils.OutPageList(pagesize, pageindex, totalcount, linkurl(_key, _params), 8);
         }
@@ -181,7 +171,7 @@ namespace DTcms.Web.UI
         /// <param name="pageindex">当前页</param>
         /// <param name="totalcount">记录总数</param>
         /// <param name="linkurl">链接地址</param>
-        protected string get_page_link(int pagesize, int pageindex, int totalcount, string linkurl)
+        public string get_page_link(int pagesize, int pageindex, int totalcount, string linkurl)
         {
             return Utils.OutPageList(pagesize, pageindex, totalcount, linkurl, 8);
         }
@@ -240,7 +230,7 @@ namespace DTcms.Web.UI
         /// <summary>
         /// 获取当前页面包含的站点目录
         /// </summary>
-        private string GetFirstPath(string requestPath)
+        public string GetFirstPath(string requestPath)
         {
             int indexNum = config.webpath.Length; //安装目录长度
             //如果包含安装目录和aspx目录也要过滤掉
@@ -266,7 +256,7 @@ namespace DTcms.Web.UI
         /// <param name="requestPath">当前的URL地址</param>
         /// <param name="requestDomain">获得来源域名含端口号</param>
         /// <returns>String</returns>
-        private string GetLinkStartString(string requestPath, string requestDomain)
+        public string GetLinkStartString(string requestPath, string requestDomain)
         {
             string requestFirstPath = GetFirstPath(requestPath);//获得二级目录(不含站点安装目录)
 
@@ -291,7 +281,7 @@ namespace DTcms.Web.UI
         /// <param name="requestPath">获取的页面，包含目录</param>
         /// <param name="requestDomain">获取的域名(含端口号)</param>
         /// <returns>String</returns>
-        private string GetSitePath(string requestPath, string requestDomain)
+        public string GetSitePath(string requestPath, string requestDomain)
         {
             //当前域名是否存在于站点目录列表
             if (SiteDomains.GetSiteDomains().Paths.ContainsValue(requestDomain))
@@ -311,7 +301,7 @@ namespace DTcms.Web.UI
         /// <summary>
         /// 参数个数是否匹配
         /// </summary>
-        private bool IsUrlMatch(Model.url_rewrite_item item, params object[] _params)
+        public bool IsUrlMatch(Model.url_rewrite_item item, params object[] _params)
         {
             int strLength = 0;
             if (!string.IsNullOrEmpty(item.querystring))
@@ -332,7 +322,7 @@ namespace DTcms.Web.UI
         /// <summary>
         /// 替换扩展名
         /// </summary>
-        private string GetUrlExtension(string urlPage, string staticExtension)
+        public string GetUrlExtension(string urlPage, string staticExtension)
         {
             return Utils.GetUrlExtension(urlPage, staticExtension);
         }

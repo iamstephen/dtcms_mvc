@@ -1,24 +1,27 @@
 ﻿@using System.Data;
+@using DTcms.Web.UI;
+@using DTcms.Common;
+@using DTcms.Web.HtmlExtensions;
 @{
-    ViewBag.seo_title = "Home Page";
-    ViewBag.seo_keyword = "Home Page";
-    ViewBag.seo_description = "Home Page";
+    ViewBag.seo_title = Html.GetSiteModel().seo_title;
+    ViewBag.seo_keyword = Html.GetSiteModel().seo_keyword;
+    ViewBag.seo_description = Html.GetSiteModel().seo_description;
     ViewBag.navId = 0;
-
-    DataTable homeBanner = ViewBag.homeBanner;
 }
 <body id="home">
     <header class="header" data-aos="fade-in">
-        @Html.Partial("~/Views/Shared/_nav.cshtml");
+        @Html.Partial("~/Views/Shared/_nav.cshtml")
     </header>
     <div class="banner" data-aos="fade-in">
         <div class="swiper-container">
             <div class="swiper-wrapper">
+                @{DataTable homeBanner = new BasePage().get_article_list("photo", 14, 0, "status=0"); }
                 @foreach (System.Data.DataRow item in homeBanner.Rows)
                 {
-                <div class="swiper-slide">
-                    <div class="item" style="background-image: url(@item["img_url"])" wapbanner=''></div>
-                </div>
+                    var wapbanner = new BasePage().get_article_field(Utils.ObjToInt(item["channel_id"]), Utils.ObjToInt(item["id"]), "wapbanner").ToString();
+                    <div class="swiper-slide">
+                        <div class="item" style="background-image: url(@item["img_url"])" wapbanner='@wapbanner'></div>
+                    </div>
                 }
             </div>
             <!-- Add Pagination -->
@@ -31,19 +34,21 @@
     <div class="three-block has-bg-block">
         <div class="container">
             <div class="row">
-                <%set DataTable homePro=get_article_list("photo", 62, 0, "status=0")%>
-                <%set int indexNum=1%>
-                <%foreach(DataRow dr in homePro.Rows)%>
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100" indexNum="<%=indexNum++%>">
-                    <a class="item" href="{dr[link_url]}">
-                        <img class="bg" src="<%templateskin%>/images/img.jpg" />
-                        <div class="text-box">
-                            <img class="icon" src="{dr[img_url]}" alt="">
-                            <div class="title"><span>{dr[sub_title]}</span>{dr[title]}</div>
-                        </div>
-                    </a>
-                </div>
-                <%/foreach%>
+                @{ DataTable homePro = new BasePage().get_article_list("photo", 62, 0, "status=0");
+                    int indexNum = 1; int homeProindexNum = 1;
+                }
+                @foreach (DataRow dr in homePro.Rows)
+                {
+                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="100" indexNum="@indexNum++">
+                        <a class="item" href="@dr["link_url"]">
+                            <img class="bg" src="@dr["img_url"]" />
+                            <div class="text-box">
+                                <img class="icon" src="/Content/images/ico@(homeProindexNum).png" alt="">
+                                <div class="title"><span>@dr["sub_title"]</span>@dr["title"]</div>
+                            </div>
+                        </a>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -54,73 +59,79 @@
         </div>
         <div class="content container">
             <div class="content-text">
-                <%set DataTable homeAbout=get_article_list("photo", 63, 1, "status=0")%>
-                <%foreach(DataRow dr in homeAbout.Rows)%>
-                <span data-aos="fade-up" data-aos-duration="300">{dr[title]}</span>
-                <p data-aos="fade-up" data-aos-duration="400">
-                    {dr[zhaiyao]}
-                </p>
-                <%/foreach%>
-                <a class="more" href='<%linkurl("content","about")%>' data-aos-duration="500">了解更多</a>
+                @{ DataTable homeAbout = new BasePage().get_article_list("photo", 63, 1, "status=0");}
+                @foreach (DataRow dr in homeAbout.Rows)
+                {
+                    <span data-aos="fade-up" data-aos-duration="300">@dr["title"]</span>
+                    <p data-aos="fade-up" data-aos-duration="400">
+                        @dr["zhaiyao"]
+                    </p>
+                }
+                <a class="more" href='/content/index?page=about' data-aos-duration="500">了解更多</a>
             </div>
         </div>
     </div>
     <div class="news">
         <div class="block-title" data-aos="fade-up">
-            <div class="en">news center</div>
+            <div class="en hidden-xs">news center</div>
             <div class="zh">新闻动态</div>
         </div>
         <div class="container">
             <div class="row">
                 <div class="first-news col-md-6" data-aos="fade-up" data-aos-duration="500">
-                    <%set DataTable homeNewsTop=get_article_list("news", 1, "status=0 and is_red=1 and is_top=1")%>
-                    <%foreach(DataRow dr in homeNewsTop.Rows)%>
-                    <a class="img" href='<%linkurl("news_show",{dr[id]})%>'><img src="{dr[img_url]}" alt=""></a>
-                    <a href='<%linkurl("news_show",{dr[id]})%>' data-aos="fade-up" data-aos-duration="800">
-                        <div class="item-title">
-                            <%cutstring({dr[title]},60)%>
-                        </div>
-                        <div class="date"><%datetostr({dr[add_time]},yyyy-MM-dd)%></div>
-                        <div class="desc"><%cutstring({dr[zhaiyao]},130)%>[查看详情]</div>
-                    </a>
-                    <%/foreach%>
+                    @{ DataTable homeNewsTop = new BasePage().get_article_list("news", 1, "status=0 and is_red=1 and is_top=1");}
+                    @foreach (DataRow dr in homeNewsTop.Rows)
+                    {
+                        <a class="img" href='/news/show?id=@dr["id"]'><img src="@dr["img_url"]" alt=""></a>
+                        <a href='/news/show?id=@dr["id"]' data-aos="fade-up" data-aos-duration="800">
+                            <div class="item-title">
+                                @Utils.DropHTML(Utils.ObjectToStr(dr["title"]), 60)
+                            </div>
+                            <div class="date">@Utils.ObjectToDateTime(Utils.ObjectToStr(dr["add_time"])).ToString("yyyy-MM-dd")</div>
+                            <div class="desc">@Utils.DropHTML(Utils.ObjectToStr(dr["zhaiyao"]), 130))[查看详情]</div>
+                        </a>
+                    }
                 </div>
                 <div class="col-md-6" data-aos="fade-up" data-aos-duration="950">
                     <div class="tabs">
                         <ul class="nav nav-tabs" role="tablist">
-                            <%set DataTable homecategoryList=get_category_child_list("news",0)%>
-                            <%foreach(DataRow cdr in homecategoryList.Rows)%>
-                            <li role="presentation">
-                                <a href="#t{cdr[id]}" aria-controls="t{cdr[id]}" role="tab" data-toggle="tab">{cdr[title]}</a>
-                            </li>
-                            <%/foreach%>
+                            @{ DataTable homecategoryList = new BasePage().get_category_child_list("news", 0);}
+                            @foreach (DataRow cdr in homecategoryList.Rows)
+                            {
+                                <li role="presentation">
+                                    <a href="#t@(cdr["id"])" aria-controls="t@(cdr["id"])" role="tab" data-toggle="tab">@(cdr["title"])</a>
+                                </li>
+                            }
                         </ul>
                     </div>
 
                     <div class="tab-content">
                         <!-- loop leve1 -->
-                        <%set DataTable homecategoryList1=get_category_child_list("news",0)%>
-                        <%foreach(DataRow cdr in homecategoryList1.Rows)%>
-                        <div role="tabpanel" class="tab-pane" id="t{cdr[id]}">
-                            <ul>
-                                <!-- loop leve2 -->
-                                <%set DataTable homeNewsRec1=get_article_list("news", {strtoint({cdr[id]})}, 3, "status=0 and is_red=1 and is_top=0")%>
-                                <%foreach(DataRow dr in homeNewsRec1.Rows)%>
-                                <li>
-                                    <a href='<%linkurl("news_show",{dr[id]})%>'>
-                                        <%cutstring({dr[title]},60)%>
-                                        <div class="date"><%datetostr({dr[add_time]},yyyy-MM-dd)%></div>
-                                        <div class="desc">
-                                            <%cutstring({dr[zhaiyao]},130)%>[查看详情]
-                                        </div>
-                                    </a>
-                                </li>
-                                <%/foreach%>
-                                <!-- /loop leve2 -->
-                            </ul>
-                        </div>
-                        <!-- /loop leve1 -->
-                        <%/foreach%>
+                        @{DataTable homecategoryList1 = new BasePage().get_category_child_list("news", 0);}
+                        @foreach (DataRow cdr in homecategoryList1.Rows)
+                        {
+                            <div role="tabpanel" class="tab-pane" id="t@(cdr["id"])">
+                                <ul>
+                                    <!-- loop leve2 -->
+                                    @{ DataTable homeNewsRec1 = new BasePage().get_article_list("news", Utils.StrToInt(Utils.ObjectToStr(cdr["id"]), 0), 3, "status=0 and is_red=1 and is_top=0"); }
+                                    @foreach (DataRow dr in homeNewsRec1.Rows)
+                                    {
+                                        int newsIndexNum = 2;
+                                        <li data-aos="fade-up" data-aos-delay="@(newsIndexNum++)00">
+                                            <a href='/news/show?id=@dr["id"]'>
+                                                @Utils.DropHTML(Utils.ObjectToStr(dr["title"]),60)
+                                                <div class="date">@Utils.ObjectToDateTime(Utils.ObjectToStr(dr["add_time"])).ToString("yyyy-MM-dd")</div>
+                                                <div class="desc">
+                                                    @Utils.DropHTML(Utils.ObjectToStr(dr["zhaiyao"]), 130))[查看详情]
+                                                </div>
+                                            </a>
+                                        </li>
+                                    }
+                                    <!-- /loop leve2 -->
+                                </ul>
+                            </div>
+                            <!-- /loop leve1 -->
+                        }
                     </div>
                 </div>
             </div>
@@ -131,7 +142,7 @@
         $(".news .tab-content .tab-pane:eq(0)").addClass("active");
     </script>
     <footer data-aos="fade-up">
-        @Html.Partial("~/Views/Shared/_footer.cshtml");
+        @Html.Partial("~/Views/Shared/_footer.cshtml")
     </footer>
     <script src="~/Content/js/common.js"></script>
 </body>

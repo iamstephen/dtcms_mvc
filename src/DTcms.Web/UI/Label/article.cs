@@ -17,7 +17,7 @@ namespace DTcms.Web.UI
         /// <param name="top">显示条数</param>
         /// <param name="strwhere">查询条件</param>
         /// <returns>DataTable</returns>
-        protected DataTable get_article_list(string channel_name, int top, string strwhere)
+        public DataTable get_article_list(string channel_name, int top, string strwhere)
         {
             DataTable dt = new DataTable();
             if (!string.IsNullOrEmpty(channel_name))
@@ -35,7 +35,7 @@ namespace DTcms.Web.UI
         /// <param name="top">显示条数</param>
         /// <param name="strwhere">查询条件</param>
         /// <returns>DataTable</returns>
-        protected DataTable get_article_list(string channel_name, int category_id, int top, string strwhere)
+        public DataTable get_article_list(string channel_name, int category_id, int top, string strwhere)
         {
             DataTable dt = new DataTable();
             if (!string.IsNullOrEmpty(channel_name))
@@ -54,7 +54,7 @@ namespace DTcms.Web.UI
         /// <param name="strwhere">查询条件</param>
         /// <param name="orderby">排序</param>
         /// <returns>DataTable</returns>
-        protected DataTable get_article_list(string channel_name, int category_id, int top, string strwhere, string orderby)
+        public DataTable get_article_list(string channel_name, int category_id, int top, string strwhere, string orderby)
         {
             DataTable dt = new DataTable();
             if (!string.IsNullOrEmpty(channel_name))
@@ -75,7 +75,7 @@ namespace DTcms.Web.UI
         /// <param name="orderby">排序</param>
         /// <param name="totalcount">总记录数</param>
         /// <returns>DateTable</returns>
-        protected DataTable get_article_list(string channel_name, int category_id, int page_size, int page_index, string strwhere, string orderby, out int totalcount)
+        public DataTable get_article_list(string channel_name, int category_id, int page_size, int page_index, string strwhere, string orderby, out int totalcount)
         {
             DataTable dt = new DataTable();
             if (!string.IsNullOrEmpty(channel_name))
@@ -101,7 +101,7 @@ namespace DTcms.Web.UI
         /// <param name="_key">URL配置名称</param>
         /// <param name="_params">传输参数</param>
         /// <returns>DataTable</returns>
-        protected DataTable get_article_list(string channel_name, int category_id, int page_size, int page_index, string strwhere, out int totalcount, out string pagelist, string _key, params object[] _params)
+        public DataTable get_article_list(string channel_name, int category_id, int page_size, int page_index, string strwhere, out int totalcount, out string pagelist, string _key, params object[] _params)
         {
             DataTable dt = new DataTable();
             if (!string.IsNullOrEmpty(channel_name))
@@ -130,7 +130,7 @@ namespace DTcms.Web.UI
         /// <param name="_key">URL配置名称</param>
         /// <param name="_params">传输参数</param>
         /// <returns>DataTable</returns>
-        protected DataTable get_article_list(string channel_name, int category_id, int page_size, int page_index, string strwhere, string orderby, out int totalcount, out string pagelist, string _key, params object[] _params)
+        public DataTable get_article_list(string channel_name, int category_id, int page_size, int page_index, string strwhere, string orderby, out int totalcount, out string pagelist, string _key, params object[] _params)
         {
             DataTable dt = new DataTable();
             if (!string.IsNullOrEmpty(channel_name))
@@ -158,7 +158,7 @@ namespace DTcms.Web.UI
         /// <param name="orderby">排序</param>
         /// <param name="totalcount">总记录数</param>
         /// <returns>DataTable</returns>
-        protected DataTable get_article_list(string channel_name, int category_id, Dictionary<string, string> spec_ids, int page_size, int page_index, string strwhere, string orderby, out int totalcount)
+        public DataTable get_article_list(string channel_name, int category_id, Dictionary<string, string> spec_ids, int page_size, int page_index, string strwhere, string orderby, out int totalcount)
         {
             DataTable dt = new DataTable();
             if (!string.IsNullOrEmpty(channel_name))
@@ -178,7 +178,7 @@ namespace DTcms.Web.UI
         /// <param name="top">显示条数</param>
         /// <param name="strwhere">查询条件</param>
         /// <returns>DataTable</returns>
-        protected DataTable get_article_tags(int top, string strwhere)
+        public DataTable get_article_tags(int top, string strwhere)
         {
             return new BLL.article_tags().GetList(top, strwhere, "count desc").Tables[0];
         }
@@ -191,7 +191,7 @@ namespace DTcms.Web.UI
         /// <param name="channel_name">频道名称</param>
         /// <param name="call_index">调用别名</param>
         /// <returns>String</returns>
-        protected string get_article_content(string channel_name, string call_index)
+        public string get_article_content(string channel_name, string call_index)
         {
             if (!string.IsNullOrEmpty(channel_name) && !string.IsNullOrEmpty(call_index))
             {
@@ -206,7 +206,7 @@ namespace DTcms.Web.UI
         /// <param name="channel_id">频道ID</param>
         /// <param name="article_id">信息ID</param>
         /// <returns>String</returns>
-        protected string get_article_img_url(int channel_id, int article_id)
+        public string get_article_img_url(int channel_id, int article_id)
         {
             if (channel_id > 0)
             {
@@ -222,7 +222,7 @@ namespace DTcms.Web.UI
         /// <param name="article_id">内容ID</param>
         /// <param name="field_name">扩展字段名</param>
         /// <returns>String</returns>
-        protected string get_article_field(int channel_id, int article_id, string field_name)
+        public string get_article_field(int channel_id, int article_id, string field_name)
         {
             Model.article model = new BLL.article().GetModel(channel_id, article_id);
             if (model != null && model.fields.ContainsKey(field_name))
@@ -239,7 +239,7 @@ namespace DTcms.Web.UI
         /// <param name="call_index">调用别名</param>
         /// <param name="field_name">扩展字段名</param>
         /// <returns>String</returns>
-        protected string get_article_field(int channel_id, string call_index, string field_name)
+        public string get_article_field(int channel_id, string call_index, string field_name)
         {
             if (string.IsNullOrEmpty(call_index))
                 return string.Empty;
@@ -256,7 +256,7 @@ namespace DTcms.Web.UI
             return string.Empty;
         }
 
-        protected DTcms.Model.article GetContentModel(int channel_id,int id) {
+        public DTcms.Model.article GetContentModel(int channel_id,int id) {
             BLL.article bll = new BLL.article();
             Model.article model = bll.GetModel(channel_id, id);
             return model;

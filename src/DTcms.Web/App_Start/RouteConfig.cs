@@ -27,8 +27,8 @@ namespace DTcms.Web
             //);
             routes.MapRoute(
                 name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
+                url: "{controller}/{action}",
+                defaults: new { controller = "Home", action = "Index" },
                 namespaces: new[] { "DTcms.Web.Controllers" }//和area存在同名controller时候以这个命名空间的控制器为主
             );
         }

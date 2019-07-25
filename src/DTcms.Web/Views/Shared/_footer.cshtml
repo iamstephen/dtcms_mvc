@@ -1,4 +1,14 @@
 ﻿@using DTcms.Web.HtmlExtensions;
+@using DTcms.Web.UI;
+@using System.Data;
+
+@{
+    DTcms.Model.article_category nav1 = new DTcms.BLL.article_category().GetModel(25);
+    DTcms.Model.site_channel nav2 = new DTcms.BLL.site_channel().GetModel("news");
+    DTcms.Model.article_category nav3 = new DTcms.BLL.article_category().GetModel(64);
+    DTcms.Model.site_channel nav4 = new DTcms.BLL.site_channel().GetModel("cases");
+    DTcms.Model.article_category nav5 = new DTcms.BLL.article_category().GetModel(61);
+}
 <div class="footer-inner">
     <div class="container">
         <div class="row">
@@ -6,83 +16,61 @@
                 <div class="row">
                     <div class="menu-item col-md-3">
                         <dl>
-                            <dt>关于金冠</dt>
+                            <dt>@nav1.title</dt>
                             <dd>
-
-                                <a href='/content/about.html#s54'>公司简介</a>
-
-                                <a href='/content/linian.html#s56'>企业理念</a>
-
-                                <a href='/content/honor.html#s57'>资质证书</a>
-
-                                <a href='/content/organization.html#s58'>组织架构</a>
-
-                                <a href='/content/introduce.html#s59'>管道天然气介绍</a>
-
+                                @{ DataTable btmList = new BasePage().get_article_list("content", 25, 0, "status=0");}
+                                @foreach(DataRow dr in btmList.Rows){
+                                <a href='/content/index?page=@(dr["call_index"])#s@(dr["id"])'>@dr["title"]</a>
+                                }
                             </dd>
                         </dl>
                     </div>
                     <div class="menu-item col-md-2">
                         <dl>
-                            <dt>新闻动态</dt>
+                            <dt>@nav2.title</dt>
                             <dd>
-
-                                <a href='/news/56.html'>最新消息</a>
-
-                                <a href='/news/55.html'>开发公告</a>
-
-                                <a href='/news/54.html'>停气通知</a>
-
-                                <a href='/news/53.html'>法律法规</a>
-
-                                <a href='/news/3.html'>其他事项</a>
-
+                                @{ DataTable btmList2 = new BasePage().get_category_child_list("news", 0);}
+                                @foreach(DataRow cdr in btmList2.Rows) { 
+                                <a href='/news/list?category_id=@cdr["id"]'>@cdr["title"]</a>
+                                }
                             </dd>
                         </dl>
                     </div>
                     <div class="menu-item col-md-2">
                         <dl>
-                            <dt>客服中心</dt>
+                            <dt>@nav3.title</dt>
                             <dd>
-                                <a href='/content/service.html'>报装开通</a>
-
-                                <a href='/content/person.html'>用户中心</a>
-
-                                <a href='/content/show.html'>燃具展销</a>
-
-                                <a href='/content/check.html'>业务查询</a>
-
+                                <a href='/content/index?page=service'>报装开通</a>
+                                @{ DataTable btmList3 = new BasePage().get_article_list("content", 64, 0, "status=0 and category_id!=65 and category_id!=66"); }
+                                @foreach(DataRow dr in btmList3.Rows) { 
+                                <a href='/content/index?page=@dr["call_index"]'>@dr["title"]</a>
+                                }
                             </dd>
                         </dl>
                     </div>
                     <div class="menu-item col-md-2">
                         <dl>
-                            <dt>安全用气</dt>
+                            <dt>@nav4.title</dt>
                             <dd>
-
-                                <a href='/cases/list-60.html'>用气知识</a>
-
-                                <a href='/cases/list-59.html'>供气保障</a>
-
-                                <a href='/cases/list-58.html'>常见问题</a>
-
-                                <a href='/cases/list-57.html'>操作提示</a>
-
+                                @{ DataTable btmList4 = new BasePage().get_category_child_list("cases", 0); }
+                                @foreach(DataRow cdr in btmList4.Rows) { 
+                                <a href='/cases/list?category_id=@cdr["id"]'>@cdr["title"]</a>
+                                }
                             </dd>
                         </dl>
                     </div>
                     <div class="menu-item col-md-2">
                         <dl>
-                            <dt>联系金冠</dt>
+                            <dt>@nav5.title</dt>
                             <dd>
-
-                                <a href='/content/contact.html'>联系我们</a>
-
+                                @{ DataTable btmList5 = new BasePage().get_article_list("content", 61, 0, "status=0"); }
+                                @foreach(DataRow dr in btmList5.Rows) { 
+                                <a href='/content/index?page=@dr["call_index"]'>@dr["title"]</a>
+                                }
                             </dd>
                         </dl>
                     </div>
                 </div>
-
             </div>
             <div class="col-md-5">
                 <div class="row">

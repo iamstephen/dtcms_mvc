@@ -12,7 +12,7 @@ namespace DTcms.Web.UI
         /// 返回购物车商品总数
         /// </summary>
         /// <returns>Int</returns>
-        protected int get_cart_quantity()
+        public int get_cart_quantity()
         {
             return Web.UI.ShopCart.GetQuantityCount();
         }
@@ -21,7 +21,7 @@ namespace DTcms.Web.UI
         /// 返回购物车列表
         /// </summary>
         /// <returns>IList</returns>
-        protected List<Model.cart_items> get_cart_list()
+        public List<Model.cart_items> get_cart_list()
         {
             int group_id = 0;
             Model.users userModel = GetUserInfo();

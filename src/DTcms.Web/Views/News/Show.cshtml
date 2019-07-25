@@ -1,0 +1,61 @@
+﻿@using System.Data;
+@using DTcms.Web.UI;
+@using DTcms.Common;
+@using DTcms.Web.HtmlExtensions;
+@using System.Data;
+@model DTcms.Model.article
+@{
+    string category_title = new BasePage().get_category_title(Model.category_id, "");
+    ViewBag.seo_title = Model.title + "-" + category_title + "-" + Html.GetSiteModel().seo_title;
+    ViewBag.seo_keyword = Model.seo_keywords;
+    ViewBag.seo_description = Model.seo_description;
+    ViewBag.navId = 2;
+    string channel = ViewBag.channel;
+    DTcms.Model.site_channel site_channel = ViewBag.site_Channel;
+}
+<body id="news">
+    <header class="header has-subnav">
+        @Html.Partial("~/Views/Shared/_nav.cshtml")
+        <div class="subnav">
+            <div class="subnav-inner">
+                @{ DataTable categoryList = new BasePage().get_category_child_list(channel, 0);}
+                @foreach (DataRow cdr in categoryList.Rows)
+                {
+                    if (Utils.StrToInt(Utils.ObjectToStr(cdr["id"]), 0) == Model.category_id)
+                    {
+                        @Html.ActionLink(cdr["title"].ToStr(), "List", new { category_id = cdr["id"] }, new { @class = "active" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink(cdr["title"].ToStr(), "List", new { category_id = cdr["id"] })
+                    }
+                }
+            </div>
+        </div>
+    </header>
+    <div class="page-image" style="background-image: url(/Content/images/about-banner.jpg)">
+        <div class="container">
+            <div class="title">
+                @site_channel.title<div class="en">@site_channel.titleEn</div>
+            </div>
+        </div>
+    </div>
+    <div class="page-body container">
+        <div class="main">
+            <div class="main">
+                <h3>@Model.title</h3>
+                <div class="date">
+                    @Utils.ObjectToDateTime(Model.add_time).ToString("yyyy-MM-dd")
+                </div>
+                <div class="content">
+                    @Html.Raw(Model.content)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        @Html.Partial("~/Views/Shared/_footer.cshtml")
+    </footer>
+    <script src="~/Content/js/common.js"></script>
+</body>
